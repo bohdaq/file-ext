@@ -1,8 +1,16 @@
 [package]
 name = "file-ext"
-version = "0.1.0"
+version = "1.0.0"
+authors = ["Bohdan Tsap <bohdan.tsap@tutanota.com>"]
+repository = "https://github.com/bohdaq/file-ext"
+description = "Collection of utility functions to work with files"
 edition = "2021"
+license = "MIT OR Apache-2.0 OR ISC OR LGPL-3.0-or-later OR CC-BY-4.0"
+rust-version = "1.64"
+categories = ["filesystem", "operating-systems"]
+keywords = ["file", "read", "create", "update", "delete"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+rust-web-server = "2.0.0"
