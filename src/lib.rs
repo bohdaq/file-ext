@@ -1,4 +1,4 @@
-use std::env;
+use std::{env, fs};
 use std::fs::{File, OpenOptions};
 use std::io::{BufReader, Read, Seek, SeekFrom, Write};
 use std::path::Path;
@@ -171,9 +171,15 @@ impl FileExt {
         Ok(())
     }
 
-    pub fn is_symlink(path: &str) -> bool {
+    pub fn is_symlink(path: &str) -> Result<bool, String> {
+        let boxed_symlink_metadata = fs::symlink_metadata(path);
+        if boxed_symlink_metadata.is_err() {
+            let msg = boxed_symlink_metadata.err().unwrap().to_string();
+            return Err(msg)
+        }
 
-        false
+        let symlink_metadata = boxed_symlink_metadata.unwrap();
+        Ok(symlink_metadata.file_type().is_symlink())
     }
 }
 
