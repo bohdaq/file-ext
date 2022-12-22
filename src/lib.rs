@@ -6,6 +6,9 @@ use rust_web_server::ext::date_time_ext::DateTimeExt;
 use rust_web_server::range::Range;
 use rust_web_server::symbol::SYMBOL;
 
+#[cfg(test)]
+mod tests;
+
 pub struct FileExt;
 
 impl FileExt {
@@ -166,6 +169,11 @@ impl FileExt {
             return Err(message)
         }
         Ok(())
+    }
+
+    pub fn is_symlink(path: &str) -> bool {
+
+        false
     }
 }
 
