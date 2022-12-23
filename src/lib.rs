@@ -203,6 +203,7 @@ impl FileExt {
     ///     let points_to = FileExt::symlink_points_to(path).unwrap();
     ///     assert_eq!("index.html", points_to);
     /// }
+    /// ```
     pub fn symlink_points_to(path: &str) -> Result<String, String> {
         let boxed_path_buff = fs::read_link(path);
         if boxed_path_buff.is_err() {
