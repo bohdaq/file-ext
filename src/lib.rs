@@ -181,6 +181,17 @@ impl FileExt {
     }
 
     /// Checks if the file is symlink
+    /// # Examples
+    ///
+    /// ```
+    /// use file_ext::FileExt;
+    /// #[test]
+    /// fn link_points_to() {
+    ///     let path = "test/index_rewrite";
+    ///     let is_symlink = FileExt::is_symlink(path).unwrap();
+    ///     assert!(is_symlink);
+    /// }
+    /// ```
     pub fn is_symlink(path: &str) -> Result<bool, String> {
         let boxed_symlink_metadata = fs::symlink_metadata(path);
         if boxed_symlink_metadata.is_err() {
