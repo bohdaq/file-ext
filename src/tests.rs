@@ -1,4 +1,3 @@
-use std::fs;
 use crate::FileExt;
 
 #[test]
@@ -18,7 +17,6 @@ fn not_symlink_check() {
 #[test]
 fn link_points_to() {
     let path = "test/index_rewrite";
-    let path_buff = fs::read_link(path).unwrap();
-    let points_to = path_buff.as_path().to_str().unwrap();
+    let points_to = FileExt::symlink_points_to(path).unwrap();
     assert_eq!("index.html", points_to);
 }
