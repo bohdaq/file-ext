@@ -12,6 +12,8 @@ mod tests;
 pub struct FileExt;
 
 impl FileExt {
+
+    /// Returns portion of a file of specified range. Range described as starting from byte M up to byte N.
     pub fn read_file_partially(filepath: &str, range: &Range) -> Result<Vec<u8>, String> {
         let mut file_content = Vec::new();
 
@@ -43,6 +45,7 @@ impl FileExt {
         Ok(file_content)
     }
 
+    /// Returns file content
     pub fn read_file(filepath: &str) -> Result<Vec<u8>, String> {
 
         let mut file_content = Vec::new();
@@ -63,6 +66,7 @@ impl FileExt {
         Ok(file_content)
     }
 
+    /// Returns file modification timestamp as nanoseconds in Unix epoch
     pub fn file_modified_utc(filepath: &str) -> Result<u128, String> {
 
         let boxed_open = File::open(filepath);
@@ -91,7 +95,8 @@ impl FileExt {
         Ok(nanos)
     }
 
-    pub fn get_static_filepath(request_uri: &str) -> Result<String, String> {
+    /// Will return absolute file path
+    pub fn get_static_filepath(path: &str) -> Result<String, String> {
         let boxed_dir = env::current_dir();
         if boxed_dir.is_err() {
             let error = boxed_dir.err().unwrap();
@@ -109,10 +114,11 @@ impl FileExt {
         }
 
         let working_directory = boxed_working_directory.unwrap();
-        let absolute_path = [working_directory, request_uri].join(SYMBOL.empty_string);
+        let absolute_path = [working_directory, path].join(SYMBOL.empty_string);
         Ok(absolute_path)
     }
 
+    /// Will try to read from file. If file does not exist, will create and write to it given byte array
     pub fn read_or_create_and_write(path: &str, content: &[u8]) -> Result<Vec<u8>, String> {
         let does_passphrase_exist = Self::does_file_exist(path);
         return if does_passphrase_exist {
@@ -138,6 +144,7 @@ impl FileExt {
         }
     }
 
+    /// Will create a file on the path
     pub fn create_file(path: &str) -> Result<File, String>  {
         let boxed_file = File::create(path);
 
@@ -150,11 +157,13 @@ impl FileExt {
         Ok(file)
     }
 
+    /// Returns boolean indicating file existence on the path
     pub fn does_file_exist(path: &str) -> bool {
         let file_exists = Path::new(path).is_file();
         file_exists
     }
 
+    /// Will write given byte array to a file on the path
     pub fn write_file(path: &str, file_content: &[u8]) -> Result<(), String> {
         let mut file = OpenOptions::new()
             .read(false)
@@ -171,6 +180,7 @@ impl FileExt {
         Ok(())
     }
 
+    /// Checks if the file is symlink
     pub fn is_symlink(path: &str) -> Result<bool, String> {
         let boxed_symlink_metadata = fs::symlink_metadata(path);
         if boxed_symlink_metadata.is_err() {
@@ -182,6 +192,7 @@ impl FileExt {
         Ok(symlink_metadata.file_type().is_symlink())
     }
 
+    /// Returns path to a file, symlink points to
     pub fn symlink_points_to(path: &str) -> Result<String, String> {
         let boxed_path_buff = fs::read_link(path);
         if boxed_path_buff.is_err() {
