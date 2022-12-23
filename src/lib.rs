@@ -193,6 +193,16 @@ impl FileExt {
     }
 
     /// Returns path to a file, symlink points to
+    /// # Examples
+    ///
+    /// ```
+    /// use file_ext::FileExt;
+    /// #[test]
+    /// fn link_points_to() {
+    ///     let path = "test/index_rewrite";
+    ///     let points_to = FileExt::symlink_points_to(path).unwrap();
+    ///     assert_eq!("index.html", points_to);
+    /// }
     pub fn symlink_points_to(path: &str) -> Result<String, String> {
         let boxed_path_buff = fs::read_link(path);
         if boxed_path_buff.is_err() {
