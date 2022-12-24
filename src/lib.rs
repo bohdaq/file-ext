@@ -158,6 +158,17 @@ impl FileExt {
     }
 
     /// Returns boolean indicating file existence on the path
+    /// # Examples
+    ///
+    /// ```
+    /// use file_ext::FileExt;
+    /// #[test]
+    /// fn file_exists() {
+    ///     let path = "test/index_rewrite";
+    ///     let exists = FileExt::does_file_exist(path);
+    ///     assert!(exists);
+    /// }
+    /// ```
     pub fn does_file_exist(path: &str) -> bool {
         let file_exists = Path::new(path).is_file();
         file_exists
