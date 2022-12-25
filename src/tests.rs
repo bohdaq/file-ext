@@ -15,6 +15,17 @@ fn not_symlink_check() {
 }
 
 #[test]
+fn file_content() {
+    let path = "test/index.html";
+    let file_raw_bytes = FileExt::read_file(path).unwrap();
+    let content = String::from_utf8(file_raw_bytes).unwrap();
+
+    let expected_content = "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <title>Title</title>\n</head>\n<body>\n\n</body>\n</html>";
+
+    assert_eq!(expected_content, content);
+}
+
+#[test]
 fn link_points_to() {
     let path = "test/index_rewrite";
     let points_to = FileExt::symlink_points_to(path).unwrap();

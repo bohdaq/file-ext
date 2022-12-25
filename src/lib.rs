@@ -46,6 +46,21 @@ impl FileExt {
     }
 
     /// Returns file content
+    /// # Examples
+    ///
+    /// ```
+    /// use file_ext::FileExt;
+    /// #[test]
+    /// fn file_content() {
+    ///     let path = "test/index.html";
+    ///     let file_raw_bytes = FileExt::read_file(path).unwrap();
+    ///     let content = String::from_utf8(file_raw_bytes).unwrap();
+    ///
+    ///     let expected_content = "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <title>Title</title>\n</head>\n<body>\n\n</body>\n</html>";
+    ///
+    ///     assert_eq!(expected_content, content);
+    /// }
+    /// ```
     pub fn read_file(filepath: &str) -> Result<Vec<u8>, String> {
 
         let mut file_content = Vec::new();
