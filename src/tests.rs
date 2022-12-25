@@ -26,6 +26,17 @@ fn file_content() {
 }
 
 #[test]
+fn partial_read() {
+    let path = "test/index.html";
+    let file_raw_bytes = FileExt::read_file_partially(path, 4, 10).unwrap();
+    let content = String::from_utf8(file_raw_bytes).unwrap();
+
+    let expected_content = "CTYPE h";
+
+    assert_eq!(expected_content, content);
+}
+
+#[test]
 fn link_points_to() {
     let path = "test/index_rewrite";
     let points_to = FileExt::symlink_points_to(path).unwrap();

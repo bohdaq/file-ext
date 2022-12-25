@@ -2,22 +2,38 @@ use std::{env, fs};
 use std::fs::{File, OpenOptions};
 use std::io::{BufReader, Read, Seek, SeekFrom, Write};
 use std::path::Path;
-use rust_web_server::ext::date_time_ext::DateTimeExt;
-use rust_web_server::range::Range;
-use rust_web_server::symbol::SYMBOL;
+use crate::date_time_ext::DateTimeExt;
+use crate::symbol::SYMBOL;
 
 #[cfg(test)]
 mod tests;
+mod date_time_ext;
+mod symbol;
 
 pub struct FileExt;
 
 impl FileExt {
 
     /// Returns portion of a file of specified range. Range described as starting from byte M up to byte N.
-    pub fn read_file_partially(filepath: &str, range: &Range) -> Result<Vec<u8>, String> {
+    /// # Examples
+    ///
+    /// ```
+    /// use file_ext::FileExt;
+    /// #[test]
+    /// fn partial_read() {
+    ///     let path = "test/index.html";
+    ///     let file_raw_bytes = FileExt::read_file_partially(path, 4, 10).unwrap();
+    ///     let content = String::from_utf8(file_raw_bytes).unwrap();
+    ///
+    ///     let expected_content = "CTYPE h";
+    ///
+    ///     assert_eq!(expected_content, content);
+    /// }
+    /// ```
+    pub fn read_file_partially(filepath: &str, start: u64, end: u64) -> Result<Vec<u8>, String> {
         let mut file_content = Vec::new();
 
-        let buff_length = (range.end - range.start) + 1;
+        let buff_length = (end - start) + 1;
         let boxed_open = File::open(filepath);
         if boxed_open.is_err() {
             let error_msg = boxed_open.err().unwrap();
@@ -28,7 +44,7 @@ impl FileExt {
         let file = boxed_open.unwrap();
         let mut reader = BufReader::new(file);
 
-        let boxed_seek = reader.seek(SeekFrom::Start(range.start));
+        let boxed_seek = reader.seek(SeekFrom::Start(start));
         if boxed_seek.is_ok() {
             let boxed_read = reader.take(buff_length).read_to_end(&mut file_content);
             if boxed_read.is_err() {
