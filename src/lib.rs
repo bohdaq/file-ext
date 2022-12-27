@@ -168,10 +168,9 @@ impl FileExt {
     ///     assert!(does_exist);
     ///
     ///     let new_content = "updated data".as_bytes();
-    ///     FileExt::read_or_create_and_write(path, new_content).unwrap();
+    ///     let content_from_file = FileExt::read_or_create_and_write(path, new_content).unwrap();
     ///
-    ///     let file_content = FileExt::read_file(path).unwrap();
-    ///     assert_eq!(content, file_content);
+    ///     assert_eq!(content, content_from_file);
     ///
     ///     FileExt::delete_file(path).unwrap();
     ///     let doesnt_exist = !FileExt::does_file_exist(path);
