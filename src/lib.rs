@@ -150,6 +150,34 @@ impl FileExt {
     }
 
     /// Will try to read from file. If file does not exist, will create and write to it given byte array
+    /// # Examples
+    ///
+    /// ```
+    /// use file_ext::FileExt;
+    /// #[test]
+    /// fn read_or_write() {
+    ///     let content = "data".as_bytes();
+    ///     let path = "/tmp/test.txt";
+    ///
+    ///     let doesnt_exist = !FileExt::does_file_exist(path);
+    ///     assert!(doesnt_exist);
+    ///
+    ///     FileExt::read_or_create_and_write(path, content).unwrap();
+    ///
+    ///     let does_exist = FileExt::does_file_exist(path);
+    ///     assert!(does_exist);
+    ///
+    ///     let new_content = "updated data".as_bytes();
+    ///     FileExt::read_or_create_and_write(path, new_content).unwrap();
+    ///
+    ///     let file_content = FileExt::read_file(path).unwrap();
+    ///     assert_eq!(content, file_content);
+    ///
+    ///     FileExt::delete_file(path).unwrap();
+    ///     let doesnt_exist = !FileExt::does_file_exist(path);
+    ///     assert!(doesnt_exist);
+    /// }
+    /// ```
     pub fn read_or_create_and_write(path: &str, content: &[u8]) -> Result<Vec<u8>, String> {
         let does_passphrase_exist = Self::does_file_exist(path);
         return if does_passphrase_exist {
@@ -219,6 +247,17 @@ impl FileExt {
             let message = format!("unable to write to file: {}", boxed_write.err().unwrap());
             return Err(message)
         }
+        Ok(())
+    }
+
+    /// Will delete file on a given path
+    pub fn delete_file(path: &str) -> Result<(), String> {
+        let boxed_remove = fs::remove_file(path);
+        if boxed_remove.is_err() {
+            let msg = boxed_remove.err().unwrap().to_string();
+            return Err(msg)
+        }
+
         Ok(())
     }
 

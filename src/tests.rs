@@ -56,3 +56,27 @@ fn file_exists() {
     let exists = FileExt::does_file_exist(path);
     assert!(exists);
 }
+
+#[test]
+fn read_or_write() {
+    let content = "data".as_bytes();
+    let path = "/tmp/test.txt";
+
+    let doesnt_exist = !FileExt::does_file_exist(path);
+    assert!(doesnt_exist);
+
+    FileExt::read_or_create_and_write(path, content).unwrap();
+
+    let does_exist = FileExt::does_file_exist(path);
+    assert!(does_exist);
+
+    let new_content = "updated data".as_bytes();
+    FileExt::read_or_create_and_write(path, new_content).unwrap();
+
+    let file_content = FileExt::read_file(path).unwrap();
+    assert_eq!(content, file_content);
+
+    FileExt::delete_file(path).unwrap();
+    let doesnt_exist = !FileExt::does_file_exist(path);
+    assert!(doesnt_exist);
+}
