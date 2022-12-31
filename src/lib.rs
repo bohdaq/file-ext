@@ -98,6 +98,17 @@ impl FileExt {
     }
 
     /// Returns file modification timestamp as nanoseconds in Unix epoch
+    /// # Examples
+    ///
+    /// ```
+    ///     use file_ext::FileExt;
+    ///     #[test]
+    ///     fn modification_timestamp() {
+    ///         let expected_timestamp : u128 = 1672145538390040940;
+    ///         let modified_timestamp = FileExt::file_modified_utc("test/index.html").unwrap();
+    ///         assert_eq!(expected_timestamp, modified_timestamp);
+    ///     }
+    /// ```
     pub fn file_modified_utc(filepath: &str) -> Result<u128, String> {
 
         let boxed_open = File::open(filepath);

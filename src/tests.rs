@@ -80,3 +80,10 @@ fn read_or_write() {
     let doesnt_exist = !FileExt::does_file_exist(path);
     assert!(doesnt_exist);
 }
+
+#[test]
+fn modification_timestamp() {
+    let expected_timestamp : u128 = 1672145538390040940;
+    let modified_timestamp = FileExt::file_modified_utc("test/index.html").unwrap();
+    assert_eq!(expected_timestamp, modified_timestamp);
+}
