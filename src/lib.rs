@@ -214,7 +214,7 @@ impl FileExt {
     }
 
     /// Will create a file on the path
-    pub fn create_file(path: &str) -> Result<File, String>  {
+    pub fn create_file(path: &str) -> Result<(), String>  {
         let boxed_file = File::create(path);
 
         if boxed_file.is_err() {
@@ -222,8 +222,8 @@ impl FileExt {
             return Err(message)
         }
 
-        let file = boxed_file.unwrap();
-        Ok(file)
+        boxed_file.unwrap();
+        Ok(())
     }
 
     /// Returns boolean indicating file existence on the path

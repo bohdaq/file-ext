@@ -58,6 +58,24 @@ fn file_exists() {
 }
 
 #[test]
+fn file_creation_deletion() {
+    let path = "test/file-creation.txt";
+
+    let exists = FileExt::does_file_exist(path);
+    assert!(!exists);
+
+    FileExt::create_file(path).unwrap();
+
+    let content = FileExt::read_file(path).unwrap();
+    assert_eq!(content.len(), 0);
+
+    FileExt::delete_file(path).unwrap();
+
+    let exists = FileExt::does_file_exist(path);
+    assert!(!exists);
+}
+
+#[test]
 fn read_or_write() {
     let content = "data".as_bytes();
     let path = "/tmp/test.txt";
