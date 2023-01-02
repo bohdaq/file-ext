@@ -214,6 +214,28 @@ impl FileExt {
     }
 
     /// Will create a file on the path
+    /// # Examples
+    ///
+    /// ```
+    /// use file_ext::FileExt;
+    /// #[test]
+    /// fn file_creation_deletion() {
+    ///     let path = "test/file-creation.txt";
+    ///
+    ///     let exists = FileExt::does_file_exist(path);
+    ///     assert!(!exists);
+    ///
+    ///     FileExt::create_file(path).unwrap();
+    ///
+    ///     let content = FileExt::read_file(path).unwrap();
+    ///     assert_eq!(content.len(), 0);
+    ///
+    ///     FileExt::delete_file(path).unwrap();
+    ///
+    ///     let exists = FileExt::does_file_exist(path);
+    ///     assert!(!exists);
+    /// }
+    /// ```
     pub fn create_file(path: &str) -> Result<(), String>  {
         let boxed_file = File::create(path);
 
@@ -261,6 +283,28 @@ impl FileExt {
     }
 
     /// Will delete file on a given path
+    /// # Examples
+    ///
+    /// ```
+    /// use file_ext::FileExt;
+    /// #[test]
+    /// fn file_creation_deletion() {
+    ///     let path = "test/file-creation.txt";
+    ///
+    ///     let exists = FileExt::does_file_exist(path);
+    ///     assert!(!exists);
+    ///
+    ///     FileExt::create_file(path).unwrap();
+    ///
+    ///     let content = FileExt::read_file(path).unwrap();
+    ///     assert_eq!(content.len(), 0);
+    ///
+    ///     FileExt::delete_file(path).unwrap();
+    ///
+    ///     let exists = FileExt::does_file_exist(path);
+    ///     assert!(!exists);
+    /// }
+    /// ```
     pub fn delete_file(path: &str) -> Result<(), String> {
         let boxed_remove = fs::remove_file(path);
         if boxed_remove.is_err() {
