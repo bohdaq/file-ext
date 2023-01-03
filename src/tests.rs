@@ -105,3 +105,8 @@ fn modification_timestamp() {
     let modified_timestamp = FileExt::file_modified_utc("test/index.html").unwrap();
     assert_eq!(expected_timestamp, modified_timestamp);
 }
+
+#[test]
+fn symlink_creation() {
+
+}
