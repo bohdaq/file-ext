@@ -335,9 +335,9 @@ impl FileExt {
             }
 
             let path = boxed_path.unwrap();
-            let does_file_exist = FileExt::does_file_exist(path);
+            let does_file_exist = FileExt::does_file_exist(&path);
             if does_file_exist {
-                let message = format!("There is a file on a given path: {}", path);
+                let message = format!("There is a file on a given path: {}", &path);
                 return Err(message)
             }
 
