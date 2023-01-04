@@ -320,7 +320,13 @@ impl FileExt {
     /// Paths are relative to working directory.
     /// It's allowed to create links only inside current working directory and it's descendants.
     fn create_symlink(symlink_path: &str, symlink_name: &str, symlink_points_to: &str) -> Result<(), String> {
+        //TODO: 
 
+        if cfg!(target_os = "windows") {
+
+        } else {
+
+        }
         Ok(())
     }
 
