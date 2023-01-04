@@ -1,4 +1,5 @@
 use std::{env, fs};
+use std::fmt::format;
 use std::fs::{File, OpenOptions};
 use std::io::{BufReader, Read, Seek, SeekFrom, Write};
 use std::path::Path;
@@ -325,6 +326,21 @@ impl FileExt {
         if cfg!(target_os = "windows") {
 
         } else {
+            //check if there is already a file where symlink is going to be created
+            let relative_path = [symlink_path, SYMBOL.slash, symlink_name].join("");
+            let boxed_path = FileExt::get_static_filepath(&relative_path);
+            if boxed_path.is_err() {
+                let message = boxed_path.err().unwrap();
+                return Err(message)
+            }
+
+            let path = boxed_path.unwrap();
+            let does_file_exist = FileExt::does_file_exist(path);
+            if does_file_exist {
+                let message = format!("There is a file on a given path: {}", path);
+                return Err(message)
+            }
+
 
         }
         Ok(())
