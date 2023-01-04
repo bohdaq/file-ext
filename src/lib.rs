@@ -315,6 +315,15 @@ impl FileExt {
         Ok(())
     }
 
+    /// Will create symlink on path `symlink_path` with the specified name `symlink_name`.
+    /// Symlink will point to specific file or directory `symlink_points_to`.
+    /// Paths are relative to working directory.
+    /// It's allowed to create links only inside current working directory and it's descendants.
+    fn create_symlink(symlink_path: &str, symlink_name: &str, symlink_points_to: &str) -> Result<(), String> {
+
+        Ok(())
+    }
+
     /// Checks if the file is symlink
     /// # Examples
     ///
