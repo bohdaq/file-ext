@@ -1,5 +1,4 @@
 use std::{env, fs};
-use std::fmt::format;
 use std::fs::{File, OpenOptions};
 use std::io::{BufReader, Read, Seek, SeekFrom, Write};
 use std::path::Path;
@@ -266,6 +265,23 @@ impl FileExt {
         file_exists
     }
 
+    /// Returns boolean indicating directory existence on the path
+    /// # Examples
+    ///
+    /// ```
+    /// use file_ext::FileExt;
+    /// #[test]
+    /// fn directory_exists() {
+    ///     let path = "test";
+    ///     let exists = FileExt::does_directory_exist(path);
+    ///     assert!(exists);
+    /// }
+    /// ```
+    pub fn does_directory_exist(path: &str) -> bool {
+        let file_exists = Path::new(path).is_file();
+        file_exists
+    }
+
     /// Will write given byte array to a file on the path
     pub fn write_file(path: &str, file_content: &[u8]) -> Result<(), String> {
         let mut file = OpenOptions::new()
@@ -340,7 +356,27 @@ impl FileExt {
                 let message = format!("There is a file on a given path: {}", &path);
                 return Err(message)
             }
+            let does_directory_exist = FileExt::does_directory_exist(&path);
+            if does_directory_exist {
+                let message = format!("There is a directory on a given path: {}", &path);
+                return Err(message)
+            }
 
+            //check if there is a file or directory for symlink to be created
+            let relative_path = symlink_points_to.to_string();
+            let boxed_path = FileExt::get_static_filepath(&relative_path);
+            if boxed_path.is_err() {
+                let message = boxed_path.err().unwrap();
+                return Err(message)
+            }
+            let path = boxed_path.unwrap();
+            let does_file_exist = FileExt::does_file_exist(&path);
+            let does_directory_exist = FileExt::does_directory_exist(&path);
+
+            if !does_file_exist && !does_directory_exist   {
+                let message = format!("There is no file or directory for symlink to be created: {}", &path);
+                return Err(message)
+            }
 
         }
         Ok(())
