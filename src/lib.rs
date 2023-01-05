@@ -1,6 +1,7 @@
 use std::{env, fs};
 use std::fs::{File, OpenOptions};
 use std::io::{BufReader, Read, Seek, SeekFrom, Write};
+use std::os::unix::fs::symlink;
 use std::path::Path;
 use crate::date_time_ext::DateTimeExt;
 use crate::symbol::SYMBOL;
@@ -350,15 +351,15 @@ impl FileExt {
                 return Err(message)
             }
 
-            let path = boxed_path.unwrap();
-            let does_file_exist = FileExt::does_file_exist(&path);
+            let path_to_symlink_included = boxed_path.unwrap();
+            let does_file_exist = FileExt::does_file_exist(&path_to_symlink_included);
             if does_file_exist {
-                let message = format!("There is a file on a given path: {}", &path);
+                let message = format!("There is a file on a given path: {}", &path_to_symlink_included);
                 return Err(message)
             }
-            let does_directory_exist = FileExt::does_directory_exist(&path);
+            let does_directory_exist = FileExt::does_directory_exist(&path_to_symlink_included);
             if does_directory_exist {
-                let message = format!("There is a directory on a given path: {}", &path);
+                let message = format!("There is a directory on a given path: {}", &path_to_symlink_included);
                 return Err(message)
             }
 
@@ -369,14 +370,22 @@ impl FileExt {
                 let message = boxed_path.err().unwrap();
                 return Err(message)
             }
-            let path = boxed_path.unwrap();
-            let does_file_exist = FileExt::does_file_exist(&path);
-            let does_directory_exist = FileExt::does_directory_exist(&path);
+            let path_to_original = boxed_path.unwrap();
+            let does_file_exist = FileExt::does_file_exist(&path_to_original);
+            let does_directory_exist = FileExt::does_directory_exist(&path_to_original);
 
             if !does_file_exist && !does_directory_exist   {
-                let message = format!("There is no file or directory for symlink to be created: {}", &path);
+                let message = format!("There is no file or directory for symlink to be created: {}", &path_to_original);
                 return Err(message)
             }
+
+            let boxed_symlink = symlink(path_to_original, path_to_symlink_included);
+            if boxed_symlink.is_err()   {
+                let message = boxed_symlink.err().unwrap().to_string();
+                return Err(message)
+            }
+
+            Ok(())
 
         }
         Ok(())
