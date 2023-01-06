@@ -354,8 +354,43 @@ impl FileExt {
 
     /// Will create symlink on path `symlink_path` with the specified name `symlink_name`.
     /// Symlink will point to specific file or directory `symlink_points_to`. Paths are absolute.
-    fn create_symlink(symlink_path: &str, symlink_name: &str, symlink_points_to: &str) -> Result<(), String> {
-        //TODO:
+    /// # Examples
+    /// ```
+    /// use file_ext::FileExt;
+    /// #[test]
+    ///fn symlink_creation() {
+    ///    let symlink_path = "test/index-link";
+    ///
+    ///    if FileExt::does_symlink_exist(symlink_path) {
+    ///        FileExt::delete_file(symlink_path).unwrap();
+    ///    }
+    ///
+    ///    let path_prefix = FileExt::get_static_filepath("/test/").unwrap();
+    ///    let points_to = [path_prefix.to_string(), "index.html".to_string()].join("");
+    ///
+    ///    let boxed_symlink = FileExt::create_symlink(
+    ///        path_prefix.as_str(),
+    ///        "index-link",
+    ///        points_to.as_str());
+    ///
+    ///    if cfg!(target_os = "windows") {
+    ///        let expected_message = "Not Implemented".to_string();
+    ///        let error_msg = boxed_symlink.err().unwrap().to_string();
+    ///        assert_eq!(expected_message, error_msg);
+    ///    } else {
+    ///        assert!(boxed_symlink.is_ok());
+    ///
+    ///        let symlink_created = FileExt::does_symlink_exist(symlink_path);
+    ///        assert!(symlink_created);
+    ///
+    ///        let actual_points_to = FileExt::symlink_points_to(symlink_path).unwrap();
+    ///        assert_eq!(points_to, actual_points_to);
+    ///
+    ///        FileExt::delete_file(symlink_path).unwrap();
+    ///    }
+    ///}
+    ///```
+    pub fn create_symlink(symlink_path: &str, symlink_name: &str, symlink_points_to: &str) -> Result<(), String> {
         //check if there is already a file where symlink is going to be created
         let path_to_symlink_included = [symlink_path, symlink_name].join("");
         let does_file_exist = FileExt::does_file_exist(&path_to_symlink_included);

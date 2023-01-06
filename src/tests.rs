@@ -137,7 +137,4 @@ fn symlink_creation() {
 
         FileExt::delete_file(symlink_path).unwrap();
     }
-
-
-
 }
