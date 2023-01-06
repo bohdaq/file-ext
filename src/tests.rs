@@ -116,7 +116,6 @@ fn symlink_creation() {
     FileExt::create_file(path).unwrap();
     FileExt::write_file(path, "345".as_bytes()).unwrap();
 
-    
     let symlink_path = "test/index-link";
 
     if FileExt::does_symlink_exist(symlink_path) {
@@ -125,6 +124,11 @@ fn symlink_creation() {
 
     let path_prefix = FileExt::get_static_filepath("/test/").unwrap();
     let points_to = [path_prefix.to_string(), "index.html".to_string()].join("");
+
+    FileExt::write_file(path, "\npath_prefix:".as_bytes()).unwrap();
+    FileExt::write_file(path, path_prefix.as_bytes()).unwrap();
+    FileExt::write_file(path, "\npoints_to:".as_bytes()).unwrap();
+    FileExt::write_file(path, points_to.as_bytes()).unwrap();
 
     let boxed_symlink = FileExt::create_symlink(
         path_prefix.as_str(),

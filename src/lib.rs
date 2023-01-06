@@ -379,13 +379,6 @@ impl FileExt {
                 return Err(message)
             }
 
-            FileExt::write_file(path, "\n".as_bytes()).unwrap();
-            FileExt::write_file(path, symlink_points_to.as_bytes()).unwrap();
-            FileExt::write_file(path, "\n".as_bytes()).unwrap();
-            FileExt::write_file(path, path_to_symlink_included.as_bytes()).unwrap();
-
-
-
             let boxed_symlink = symlink(symlink_points_to, path_to_symlink_included);
             if boxed_symlink.is_err()   {
                 let message = boxed_symlink.err().unwrap().to_string();
