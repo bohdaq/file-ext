@@ -140,6 +140,9 @@ fn symlink_creation() {
     let symlink_created = FileExt::does_symlink_exist(symlink_path);
     assert!(symlink_created);
 
+    let actual_points_to = FileExt::symlink_points_to(symlink_path).unwrap();
+    assert_eq!(points_to, actual_points_to);
+
     FileExt::delete_file(symlink_path).unwrap();
 
 }
