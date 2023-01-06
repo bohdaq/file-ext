@@ -108,6 +108,15 @@ fn modification_timestamp() {
 
 #[test]
 fn symlink_creation() {
+    let path = "out.log";
+    if FileExt::does_file_exist(path) {
+        FileExt::delete_file(path).unwrap();
+    }
+
+    FileExt::create_file(path).unwrap();
+    FileExt::write_file(path, "345".as_bytes()).unwrap();
+
+    
     let symlink_path = "test/index-link";
 
     if FileExt::does_symlink_exist(symlink_path) {

@@ -357,14 +357,6 @@ impl FileExt {
         if cfg!(target_os = "windows") {
 
         } else {
-            let path = "out.log";
-            if FileExt::does_file_exist(path) {
-                FileExt::delete_file(path).unwrap();
-            }
-
-            FileExt::create_file(path).unwrap();
-            FileExt::write_file(path, "345".as_bytes()).unwrap();
-
             //check if there is already a file where symlink is going to be created
             let path_to_symlink_included = [symlink_path, symlink_name].join("");
             let does_file_exist = FileExt::does_file_exist(&path_to_symlink_included);
