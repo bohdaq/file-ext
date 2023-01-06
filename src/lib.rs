@@ -1,7 +1,7 @@
 use std::{env, fs};
 use std::fs::{File, OpenOptions};
 use std::io::{BufReader, Read, Seek, SeekFrom, Write};
-use std::os::unix::fs::symlink;
+use std::os::*;
 use std::path::Path;
 use crate::date_time_ext::DateTimeExt;
 use crate::symbol::SYMBOL;
@@ -353,7 +353,7 @@ impl FileExt {
     }
 
     /// Will create symlink on path `symlink_path` with the specified name `symlink_name`.
-    /// Symlink will point to specific file or directory `symlink_points_to`.
+    /// Symlink will point to specific file or directory `symlink_points_to`. Paths are absolute.
     fn create_symlink(symlink_path: &str, symlink_name: &str, symlink_points_to: &str) -> Result<(), String> {
         //TODO:
         //check if there is already a file where symlink is going to be created
@@ -378,20 +378,20 @@ impl FileExt {
             return Err(message)
         }
 
-        if cfg!(target_os = "windows") {
-
+        return if cfg!(target_os = "windows") {
+            let message = "Not Implemented".to_string();
+            Err(message)
         } else {
 
-            let boxed_symlink = symlink(symlink_points_to, path_to_symlink_included);
+            let boxed_symlink = unix::fs::symlink(symlink_points_to, path_to_symlink_included);
             if boxed_symlink.is_err()   {
                 let message = boxed_symlink.err().unwrap().to_string();
                 return Err(message)
             }
 
-            return Ok(())
+            Ok(())
 
         }
-        Ok(())
     }
 
     /// Checks if the file is symlink

@@ -135,14 +135,22 @@ fn symlink_creation() {
         "index-link",
         points_to.as_str());
 
-    assert!(boxed_symlink.is_ok());
+    if cfg!(target_os = "windows") {
+        let expected_message = "Not Implemented".to_string();
+        let error_msg = boxed_symlink.err().unwrap().to_string();
+        assert_eq!(expected_message, error_msg);
+    } else {
+        assert!(boxed_symlink.is_ok());
 
-    let symlink_created = FileExt::does_symlink_exist(symlink_path);
-    assert!(symlink_created);
+        let symlink_created = FileExt::does_symlink_exist(symlink_path);
+        assert!(symlink_created);
 
-    let actual_points_to = FileExt::symlink_points_to(symlink_path).unwrap();
-    assert_eq!(points_to, actual_points_to);
+        let actual_points_to = FileExt::symlink_points_to(symlink_path).unwrap();
+        assert_eq!(points_to, actual_points_to);
 
-    FileExt::delete_file(symlink_path).unwrap();
+        FileExt::delete_file(symlink_path).unwrap();
+    }
+
+
 
 }
