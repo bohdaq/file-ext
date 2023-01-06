@@ -308,6 +308,9 @@ impl FileExt {
             .truncate(false)
             .open(path)
             .unwrap();
+
+        file.seek(SeekFrom::End(0)).unwrap();
+
         let boxed_write = file.write_all(file_content);
         if boxed_write.is_err() {
             let message = format!("unable to write to file: {}", boxed_write.err().unwrap());

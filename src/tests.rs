@@ -114,7 +114,7 @@ fn symlink_creation() {
     }
 
     FileExt::create_file(path).unwrap();
-    FileExt::write_file(path, "345".as_bytes()).unwrap();
+    FileExt::write_file(path, "12345".as_bytes()).unwrap();
 
     let symlink_path = "test/index-link";
 
