@@ -335,8 +335,6 @@ impl FileExt {
 
     /// Will create symlink on path `symlink_path` with the specified name `symlink_name`.
     /// Symlink will point to specific file or directory `symlink_points_to`.
-    /// Paths are relative to working directory.
-    /// It's allowed to create links only inside current working directory and it's descendants.
     fn create_symlink(symlink_path: &str, symlink_name: &str, symlink_points_to: &str) -> Result<(), String> {
         //TODO: 
 
@@ -344,14 +342,7 @@ impl FileExt {
 
         } else {
             //check if there is already a file where symlink is going to be created
-            let relative_path = [symlink_path, SYMBOL.slash, symlink_name].join("");
-            let boxed_path = FileExt::get_static_filepath(&relative_path);
-            if boxed_path.is_err() {
-                let message = boxed_path.err().unwrap();
-                return Err(message)
-            }
-
-            let path_to_symlink_included = boxed_path.unwrap();
+            let path_to_symlink_included = [symlink_path, SYMBOL.slash, symlink_name].join("");
             let does_file_exist = FileExt::does_file_exist(&path_to_symlink_included);
             if does_file_exist {
                 let message = format!("There is a file on a given path: {}", &path_to_symlink_included);
@@ -364,28 +355,21 @@ impl FileExt {
             }
 
             //check if there is a file or directory for symlink to be created
-            let relative_path = symlink_points_to.to_string();
-            let boxed_path = FileExt::get_static_filepath(&relative_path);
-            if boxed_path.is_err() {
-                let message = boxed_path.err().unwrap();
-                return Err(message)
-            }
-            let path_to_original = boxed_path.unwrap();
-            let does_file_exist = FileExt::does_file_exist(&path_to_original);
-            let does_directory_exist = FileExt::does_directory_exist(&path_to_original);
+            let does_file_exist = FileExt::does_file_exist(symlink_points_to);
+            let does_directory_exist = FileExt::does_directory_exist(symlink_points_to);
 
             if !does_file_exist && !does_directory_exist   {
-                let message = format!("There is no file or directory for symlink to be created: {}", &path_to_original);
+                let message = format!("There is no file or directory for symlink to be created: {}", symlink_points_to);
                 return Err(message)
             }
 
-            let boxed_symlink = symlink(path_to_original, path_to_symlink_included);
+            let boxed_symlink = symlink(symlink_points_to, path_to_symlink_included);
             if boxed_symlink.is_err()   {
                 let message = boxed_symlink.err().unwrap().to_string();
                 return Err(message)
             }
 
-            Ok(())
+            return Ok(())
 
         }
         Ok(())
