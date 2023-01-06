@@ -283,6 +283,22 @@ impl FileExt {
         file_exists
     }
 
+    /// Returns boolean indicating directory existence on the path
+    /// # Examples
+    ///
+    /// ```
+    /// use file_ext::FileExt;
+    /// #[test]
+    /// fn symlink_exists() {
+    ///     let path = "test/index_rewrite";
+    ///     let exists = FileExt::does_symlink_exist(path);
+    ///     assert!(exists);
+    /// }
+    /// ```
+    pub fn does_symlink_exist(path: &str) -> bool {
+        Path::new(path).is_symlink()
+    }
+
     /// Will write given byte array to a file on the path
     pub fn write_file(path: &str, file_content: &[u8]) -> Result<(), String> {
         let mut file = OpenOptions::new()
@@ -341,8 +357,16 @@ impl FileExt {
         if cfg!(target_os = "windows") {
 
         } else {
+            let path = "out.log";
+            if FileExt::does_file_exist(path) {
+                FileExt::delete_file(path).unwrap();
+            }
+
+            FileExt::create_file(path).unwrap();
+            FileExt::write_file(path, "345".as_bytes()).unwrap();
+
             //check if there is already a file where symlink is going to be created
-            let path_to_symlink_included = [symlink_path, SYMBOL.slash, symlink_name].join("");
+            let path_to_symlink_included = [symlink_path, symlink_name].join("");
             let does_file_exist = FileExt::does_file_exist(&path_to_symlink_included);
             if does_file_exist {
                 let message = format!("There is a file on a given path: {}", &path_to_symlink_included);
@@ -362,6 +386,13 @@ impl FileExt {
                 let message = format!("There is no file or directory for symlink to be created: {}", symlink_points_to);
                 return Err(message)
             }
+
+            FileExt::write_file(path, "\n".as_bytes()).unwrap();
+            FileExt::write_file(path, symlink_points_to.as_bytes()).unwrap();
+            FileExt::write_file(path, "\n".as_bytes()).unwrap();
+            FileExt::write_file(path, path_to_symlink_included.as_bytes()).unwrap();
+
+
 
             let boxed_symlink = symlink(symlink_points_to, path_to_symlink_included);
             if boxed_symlink.is_err()   {

@@ -108,5 +108,25 @@ fn modification_timestamp() {
 
 #[test]
 fn symlink_creation() {
+    let symlink_path = "test/index-link";
+
+    if FileExt::does_symlink_exist(symlink_path) {
+        FileExt::delete_file(symlink_path).unwrap();
+    }
+
+    let path_prefix = FileExt::get_static_filepath("/test/").unwrap();
+    let points_to = [path_prefix.to_string(), "index.html".to_string()].join("");
+
+    let boxed_symlink = FileExt::create_symlink(
+        path_prefix.as_str(),
+        "index-link",
+        points_to.as_str());
+
+    assert!(boxed_symlink.is_ok());
+
+    let symlink_created = FileExt::does_symlink_exist(symlink_path);
+    assert!(symlink_created);
+
+    FileExt::delete_file(symlink_path).unwrap();
 
 }
