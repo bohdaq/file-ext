@@ -536,9 +536,9 @@ impl FileExt {
     /// ```
     /// use file_ext::FileExt;
     /// #[test]
-    /// fn link_points_to() {
-    ///     let path = "test/index_rewrite";
-    ///     let is_symlink = FileExt::is_symlink(path).unwrap();
+    /// fn is_link() {
+    ///     let path: String = ["test", "index_rewrite"].join(&FileExt::get_path_separator());
+    ///     let is_symlink = FileExt::is_symlink(path.as_str()).unwrap();
     ///     assert!(is_symlink);
     /// }
     /// ```
@@ -560,8 +560,8 @@ impl FileExt {
     /// use file_ext::FileExt;
     /// #[test]
     /// fn link_points_to() {
-    ///     let path = "test/index_rewrite";
-    ///     let points_to = FileExt::symlink_points_to(path).unwrap();
+    ///     let path: String = ["test", "index_rewrite"].join(&FileExt::get_path_separator());
+    ///     let points_to = FileExt::symlink_points_to(path.as_str()).unwrap();
     ///     assert_eq!("index.html", points_to);
     /// }
     /// ```
