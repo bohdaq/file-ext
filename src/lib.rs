@@ -137,6 +137,37 @@ impl FileExt {
         Ok(nanos)
     }
 
+    #[cfg(target_family = "unix")]
+    /// # Examples
+    ///
+    /// ```
+    /// use file_ext::FileExt;
+    /// #[test]
+    /// fn unix_path_delimiter() {
+    ///     let expected = "/".to_string();
+    ///     let actual = FileExt::get_path_separator();
+    /// }
+    /// ```
+    pub fn get_path_separator() -> String {
+        SYMBOL.slash.to_string()
+    }
+
+    #[cfg(target_family = "windows")]
+    /// # Examples
+    ///
+    /// ```
+    /// use file_ext::FileExt;
+    /// #[test]
+    /// fn unix_path_delimiter() {
+    ///     let expected = "\\".to_string();
+    ///     let actual = FileExt::get_path_separator();
+    /// }
+    /// ```
+    pub fn get_path_separator() -> String {
+        "\\".to_string()
+    }
+
+
     /// Will return absolute file path
     pub fn get_static_filepath(path: &str) -> Result<String, String> {
         let boxed_dir = env::current_dir();
