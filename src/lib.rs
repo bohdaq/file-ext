@@ -383,73 +383,7 @@ impl FileExt {
     ///     FileExt::delete_file(symlink_path).unwrap();
     ///}
     ///```
-    #[cfg(target_os = "unix")]
-    pub fn create_symlink(symlink_path: &str, symlink_name: &str, symlink_points_to: &str) -> Result<(), String> {
-        //check if there is already a file where symlink is going to be created
-        let path_to_symlink_included = [symlink_path, symlink_name].join("");
-        let does_file_exist = FileExt::does_file_exist(&path_to_symlink_included);
-        if does_file_exist {
-            let message = format!("There is a file on a given path: {}", &path_to_symlink_included);
-            return Err(message)
-        }
-        let does_directory_exist = FileExt::does_directory_exist(&path_to_symlink_included);
-        if does_directory_exist {
-            let message = format!("There is a directory on a given path: {}", &path_to_symlink_included);
-            return Err(message)
-        }
-
-        //check if there is a file or directory for symlink to be created
-        let does_file_exist = FileExt::does_file_exist(symlink_points_to);
-        let does_directory_exist = FileExt::does_directory_exist(symlink_points_to);
-
-        if !does_file_exist && !does_directory_exist   {
-            let message = format!("There is no file or directory for symlink to be created: {}", symlink_points_to);
-            return Err(message)
-        }
-
-        let boxed_symlink = unix::fs::symlink(symlink_points_to, path_to_symlink_included);
-        if boxed_symlink.is_err()   {
-            let message = boxed_symlink.err().unwrap().to_string();
-            return Err(message)
-        }
-
-        Ok(())
-
-    }
-
-    /// Will create symlink on path `symlink_path` with the specified name `symlink_name`.
-    /// Symlink will point to specific file or directory `symlink_points_to`. Paths are absolute.
-    /// # Examples
-    /// ```
-    /// use file_ext::FileExt;
-    /// #[test]
-    ///fn symlink_creation() {
-    ///    let symlink_path = "test/index-link";
-    ///
-    ///    if FileExt::does_symlink_exist(symlink_path) {
-    ///        FileExt::delete_file(symlink_path).unwrap();
-    ///    }
-    ///
-    ///    let path_prefix = FileExt::get_static_filepath("/test/").unwrap();
-    ///    let points_to = [path_prefix.to_string(), "index.html".to_string()].join("");
-    ///
-    ///    let boxed_symlink = FileExt::create_symlink(
-    ///        path_prefix.as_str(),
-    ///        "index-link",
-    ///        points_to.as_str());
-    ///
-    ///    assert!(boxed_symlink.is_ok());
-    ///
-    ///    let symlink_created = FileExt::does_symlink_exist(symlink_path);
-    ///    assert!(symlink_created);
-    ///
-    ///    let actual_points_to = FileExt::symlink_points_to(symlink_path).unwrap();
-    ///    assert_eq!(points_to, actual_points_to);
-    ///
-    ///    FileExt::delete_file(symlink_path).unwrap();
-    ///}
-    ///```
-    #[cfg(target_os = "macos")]
+    #[cfg(target_family = "unix")]
     pub fn create_symlink(symlink_path: &str, symlink_name: &str, symlink_points_to: &str) -> Result<(), String> {
         //check if there is already a file where symlink is going to be created
         let path_to_symlink_included = [symlink_path, symlink_name].join("");
@@ -483,6 +417,7 @@ impl FileExt {
 
     }
 
+
     /// Will create symlink on path `symlink_path` with the specified name `symlink_name`.
     /// Symlink will point to specific file or directory `symlink_points_to`. Paths are absolute.
     /// # Examples
@@ -515,7 +450,7 @@ impl FileExt {
     ///        FileExt::delete_file(symlink_path).unwrap();
     ///}
     ///```
-    #[cfg(target_os = "windows")]
+    #[cfg(target_family = "windows")]
     pub fn create_symlink(symlink_path: &str, symlink_name: &str, symlink_points_to: &str) -> Result<(), String> {
         //check if there is already a file where symlink is going to be created
         let path_to_symlink_included = [symlink_path, symlink_name].join("");
@@ -540,23 +475,23 @@ impl FileExt {
         }
 
         if does_file_exist {
-            let boxed_symlink = unix::fs::symlink_file(symlink_points_to, path_to_symlink_included);
+            let boxed_symlink = std::os::windows::fs::symlink_file(symlink_points_to, path_to_symlink_included);
             if boxed_symlink.is_err()   {
                 let message = boxed_symlink.err().unwrap().to_string();
                 return Err(message)
             }
 
-            Ok(())
+            return  Ok(());
         }
 
         if does_directory_exist {
-            let boxed_symlink = unix::fs::symlink_dir(symlink_points_to, path_to_symlink_included);
+            let boxed_symlink = std::os::windows::fs::symlink_dir(symlink_points_to, path_to_symlink_included);
             if boxed_symlink.is_err()   {
                 let message = boxed_symlink.err().unwrap().to_string();
                 return Err(message)
             }
 
-            Ok(())
+            return Ok(());
         }
 
         let message = "Something went wrong".to_string();
