@@ -108,10 +108,10 @@ fn modification_timestamp() {
 
 #[test]
 fn symlink_creation() {
-    let symlink_path = "test/index-link";
+    let symlink_path = ["test", "index-link"].join(FileExt::get_path_separator().as_str());
 
-    if FileExt::does_symlink_exist(symlink_path) {
-        FileExt::delete_file(symlink_path).unwrap();
+    if FileExt::does_symlink_exist(symlink_path.as_str()) {
+        FileExt::delete_file(symlink_path.as_str()).unwrap();
     }
 
     let path_prefix = FileExt::get_static_filepath("/test/").unwrap();
@@ -125,11 +125,11 @@ fn symlink_creation() {
 
     assert!(boxed_symlink.is_ok());
 
-    let symlink_created = FileExt::does_symlink_exist(symlink_path);
+    let symlink_created = FileExt::does_symlink_exist(symlink_path.as_str());
     assert!(symlink_created);
 
-    let actual_points_to = FileExt::symlink_points_to(symlink_path).unwrap();
+    let actual_points_to = FileExt::symlink_points_to(symlink_path.as_str()).unwrap();
     assert_eq!(points_to, actual_points_to);
 
-    FileExt::delete_file(symlink_path).unwrap();
+    FileExt::delete_file(symlink_path.as_str()).unwrap();
 }
