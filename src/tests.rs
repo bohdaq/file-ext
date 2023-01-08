@@ -119,9 +119,30 @@ fn read_or_create_and_write() {
 
 #[test]
 fn modification_timestamp() {
-    let expected_timestamp : u128 = 1672145538390040940;
-    let modified_timestamp = FileExt::file_modified_utc("test/index.html").unwrap();
-    assert_eq!(expected_timestamp, modified_timestamp);
+
+    let content = "data".as_bytes();
+    let path = "modification_timestamp-test.content";
+
+    let doesnt_exist = !FileExt::does_file_exist(path);
+    assert!(doesnt_exist);
+
+    FileExt::read_or_create_and_write(path, content).unwrap();
+
+    let does_exist = FileExt::does_file_exist(path);
+    assert!(does_exist);
+
+
+    let modified_timestamp = FileExt::file_modified_utc(path).unwrap();
+
+    FileExt::write_file(path, "\nnewline and some data".as_bytes()).unwrap();
+
+    let after_update_modified_timestamp = FileExt::file_modified_utc(path).unwrap();
+    assert!(after_update_modified_timestamp > modified_timestamp);
+
+
+    FileExt::delete_file(path).unwrap();
+    let doesnt_exist = !FileExt::does_file_exist(path);
+    assert!(doesnt_exist);
 }
 
 #[test]
