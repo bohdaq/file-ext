@@ -142,7 +142,7 @@ fn symlink_creation() {
 
 #[test]
 fn link_points_to() {
-    let symlink_path = ["test", "index_rewrite"].join(FileExt::get_path_separator().as_str());
+    let symlink_path = ["test", "index_rewrite2"].join(FileExt::get_path_separator().as_str());
 
     if FileExt::does_symlink_exist(symlink_path.as_str()) {
         FileExt::delete_file(symlink_path.as_str()).unwrap();
@@ -163,7 +163,7 @@ fn link_points_to() {
 
     let boxed_symlink = FileExt::create_symlink(
         path_prefix.as_str(),
-        "index_rewrite",
+        "index_rewrite2",
         points_to.as_str());
 
 
