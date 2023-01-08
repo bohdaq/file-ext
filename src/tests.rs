@@ -38,13 +38,6 @@ fn partial_read() {
 }
 
 #[test]
-fn link_points_to() {
-    let path = "test/index_rewrite";
-    let points_to = FileExt::symlink_points_to(path).unwrap();
-    assert_eq!("index.html", points_to);
-}
-
-#[test]
 fn does_not_exist() {
     let path = "test/non_existing_file";
     let exists = FileExt::does_file_exist(path);
@@ -53,9 +46,14 @@ fn does_not_exist() {
 
 #[test]
 fn file_exists() {
-    let path = "test/index_rewrite";
-    let exists = FileExt::does_file_exist(path);
+    let path = ["test", "index_rewrite"].join(FileExt::get_path_separator().as_str());
+    create_rewrite_index_symlink();
+
+    let exists = FileExt::does_file_exist(path.as_str());
     assert!(exists);
+
+    FileExt::delete_file(path.as_str()).unwrap();
+
 }
 
 #[test]
@@ -134,4 +132,57 @@ fn symlink_creation() {
     assert_eq!(points_to, actual_points_to);
 
     FileExt::delete_file(symlink_path.as_str()).unwrap();
+}
+
+#[test]
+fn link_points_to() {
+    let symlink_path = ["test", "index_rewrite"].join(FileExt::get_path_separator().as_str());
+
+    if FileExt::does_symlink_exist(symlink_path.as_str()) {
+        FileExt::delete_file(symlink_path.as_str()).unwrap();
+    }
+
+    let path = [SYMBOL.empty_string, "test", SYMBOL.empty_string].join(FileExt::get_path_separator().as_str());
+    let path_prefix = FileExt::get_static_filepath(path.as_str()).unwrap();
+    let points_to = [path_prefix.to_string(), "index.html".to_string()].join("");
+
+    let boxed_symlink = FileExt::create_symlink(
+        path_prefix.as_str(),
+        "index_rewrite",
+        points_to.as_str());
+
+
+    assert!(boxed_symlink.is_ok());
+
+    let symlink_created = FileExt::does_symlink_exist(symlink_path.as_str());
+    assert!(symlink_created);
+
+    let actual_points_to = FileExt::symlink_points_to(symlink_path.as_str()).unwrap();
+    assert_eq!(points_to, actual_points_to);
+
+    FileExt::delete_file(symlink_path.as_str()).unwrap();
+
+}
+
+fn create_rewrite_index_symlink() {
+    let symlink_path = ["test", "index_rewrite"].join(FileExt::get_path_separator().as_str());
+
+    if FileExt::does_symlink_exist(symlink_path.as_str()) {
+        FileExt::delete_file(symlink_path.as_str()).unwrap();
+    }
+
+    let path = [SYMBOL.empty_string, "test", SYMBOL.empty_string].join(FileExt::get_path_separator().as_str());
+    let path_prefix = FileExt::get_static_filepath(path.as_str()).unwrap();
+    let points_to = [path_prefix.to_string(), "index.html".to_string()].join("");
+
+    let boxed_symlink = FileExt::create_symlink(
+        path_prefix.as_str(),
+        "index_rewrite",
+        points_to.as_str());
+
+
+    assert!(boxed_symlink.is_ok());
+
+    let symlink_created = FileExt::does_symlink_exist(symlink_path.as_str());
+    assert!(symlink_created);
 }
