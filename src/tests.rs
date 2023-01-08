@@ -1,4 +1,5 @@
 use crate::FileExt;
+use crate::symbol::{Symbol, SYMBOL};
 
 #[test]
 fn symlink_check() {
@@ -114,7 +115,8 @@ fn symlink_creation() {
         FileExt::delete_file(symlink_path.as_str()).unwrap();
     }
 
-    let path_prefix = FileExt::get_static_filepath("/test/").unwrap();
+    let path = [SYMBOL.empty_string, "test", SYMBOL.empty_string].join(FileExt::get_path_separator().as_str());
+    let path_prefix = FileExt::get_static_filepath(path.as_str()).unwrap();
     let points_to = [path_prefix.to_string(), "index.html".to_string()].join("");
 
     let boxed_symlink = FileExt::create_symlink(
