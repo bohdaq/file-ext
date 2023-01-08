@@ -3,9 +3,13 @@ use crate::symbol::{Symbol, SYMBOL};
 
 #[test]
 fn symlink_check() {
-    let path = "test/index_rewrite";
-    let is_symlink = FileExt::is_symlink(path).unwrap();
+    let path = ["test", "index_rewrite"].join(FileExt::get_path_separator().as_str());
+    create_rewrite_index_symlink();
+
+    let is_symlink = FileExt::is_symlink(path.as_str()).unwrap();
     assert!(is_symlink);
+
+    FileExt::delete_file(path.as_str()).unwrap();
 }
 
 #[test]
