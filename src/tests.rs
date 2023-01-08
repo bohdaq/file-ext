@@ -1,3 +1,4 @@
+use std::{thread, time};
 use crate::FileExt;
 use crate::symbol::{SYMBOL};
 
@@ -123,16 +124,16 @@ fn modification_timestamp() {
     let content = "data".as_bytes();
     let path = "modification_timestamp-test.content";
 
-    let doesnt_exist = !FileExt::does_file_exist(path);
-    assert!(doesnt_exist);
-
-    FileExt::read_or_create_and_write(path, content).unwrap();
+    FileExt::create_file(path).unwrap();
+    FileExt::write_file(path, content).unwrap();
 
     let does_exist = FileExt::does_file_exist(path);
     assert!(does_exist);
 
-
     let modified_timestamp = FileExt::file_modified_utc(path).unwrap();
+
+    let one_second = time::Duration::from_secs(1);
+    thread::sleep(one_second);
 
     FileExt::write_file(path, "\nnewline and some data".as_bytes()).unwrap();
 
