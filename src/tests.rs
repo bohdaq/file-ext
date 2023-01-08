@@ -1,20 +1,15 @@
 use crate::FileExt;
-use crate::symbol::{Symbol, SYMBOL};
-
-fn type_of<T>(_: &T) -> String{
-    std::any::type_name::<T>().to_string()
-}
+use crate::symbol::{SYMBOL};
 
 #[test]
 fn write() {
-    let name = type_of(&write);
-    let filename = [name, "log".to_string()].join(".");
-    FileExt::create_file(filename.as_str()).unwrap();
+    let filename = "write-test.content";
+    FileExt::create_file(filename).unwrap();
 
     let expected_content = "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <title>Title</title>\n</head>\n<body>\n\n</body>\n</html>";
-    FileExt::write_file(filename.as_str(), expected_content.as_bytes()).unwrap();
+    FileExt::write_file(filename, expected_content.as_bytes()).unwrap();
 
-    let actual = FileExt::read_file(filename.as_str()).unwrap();
+    let actual = FileExt::read_file(filename).unwrap();
     assert_eq!(actual, expected_content.as_bytes());
 
 }
