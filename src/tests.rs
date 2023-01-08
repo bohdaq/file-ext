@@ -81,7 +81,7 @@ fn file_creation_deletion() {
 }
 
 #[test]
-fn read_or_write() {
+fn read_or_create_and_write() {
     let content = "data".as_bytes();
     let path = "/tmp/test.txt";
 
