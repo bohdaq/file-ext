@@ -583,7 +583,7 @@ impl FileExt {
     }
 
     #[cfg(target_family = "unix")]
-    fn get_current_user() -> Result<String, String> {
+    pub fn get_current_user() -> Result<String, String> {
         let boxed_whoami = Command::new("whoami")
             .output();
 
@@ -604,7 +604,7 @@ impl FileExt {
     }
 
     #[cfg(target_family = "windows")]
-    fn get_current_user() -> Result<String, String> {
+    pub fn get_current_user() -> Result<String, String> {
         let boxed_whoami = Command::new("whoami")
             .output();
 
@@ -627,13 +627,13 @@ impl FileExt {
             return Err(message);
         }
 
-        let (domain, user) = boxed_domain_user.unwrap();
+        let (_domain, user) = boxed_domain_user.unwrap();
 
         Ok(user.to_string())
     }
 
     #[cfg(target_family = "windows")]
-    fn get_current_user_domain() -> Result<String, String> {
+    pub fn get_current_user_domain() -> Result<String, String> {
         let boxed_whoami = Command::new("whoami")
             .output();
 
@@ -656,7 +656,7 @@ impl FileExt {
             return Err(message);
         }
 
-        let (domain, user) = boxed_domain_user.unwrap();
+        let (domain, _user) = boxed_domain_user.unwrap();
 
         Ok(domain.to_string())
     }
