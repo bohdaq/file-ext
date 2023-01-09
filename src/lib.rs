@@ -2,6 +2,7 @@ use std::{env, fs};
 use std::fs::{File, OpenOptions};
 use std::io::{BufReader, Read, Seek, SeekFrom, Write};
 use std::path::Path;
+use std::process::Command;
 use crate::date_time_ext::DateTimeExt;
 use crate::symbol::SYMBOL;
 
@@ -579,6 +580,48 @@ impl FileExt {
         }
         let points_to = boxed_points_to.unwrap();
         Ok(points_to.to_string())
+    }
+
+    #[cfg(target_family = "unix")]
+    fn get_current_user() -> Result<String, String> {
+        let boxed_whoami = Command::new("whoami")
+            .output();
+
+        if boxed_whoami.is_err() {
+            let message = boxed_whoami.err().unwrap().to_string();
+            return Err(message);
+        }
+
+        let boxed_current_user = String::from_utf8(boxed_whoami.unwrap().stdout);
+        if boxed_current_user.is_err() {
+            let message = boxed_current_user.err().unwrap().to_string();
+            return Err(message);
+        }
+
+        let current_user = boxed_current_user.unwrap();
+
+        Ok(current_user)
+    }
+
+    #[cfg(target_family = "windows")]
+    fn get_current_user() -> Result<String, String> {
+        let boxed_whoami = Command::new("whoami")
+            .output();
+
+        if boxed_whoami.is_err() {
+            let message = boxed_whoami.err().unwrap().to_string();
+            return Err(message);
+        }
+
+        let boxed_current_user = String::from_utf8(boxed_whoami.unwrap().stdout);
+        if boxed_current_user.is_err() {
+            let message = boxed_current_user.err().unwrap().to_string();
+            return Err(message);
+        }
+
+        let current_user = boxed_current_user.unwrap();
+
+        Ok(current_user)
     }
 }
 

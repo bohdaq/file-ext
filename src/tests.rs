@@ -236,3 +236,14 @@ fn create_rewrite_index_symlink() {
     let symlink_created = FileExt::does_symlink_exist(symlink_path.as_str());
     assert!(symlink_created);
 }
+
+#[test]
+fn current_user() {
+    let boxed_user = FileExt::get_current_user();
+    assert!(boxed_user.is_ok());
+
+    let path = "current-user.log";
+
+    FileExt::create_file(path).unwrap();
+    FileExt::write_file(path, boxed_user.unwrap().as_bytes()).unwrap();
+}
