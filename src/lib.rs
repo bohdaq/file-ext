@@ -582,6 +582,20 @@ impl FileExt {
         Ok(points_to.to_string())
     }
 
+    /// Returns name of the user running the process
+    /// # Examples
+    ///
+    /// ```
+    ///  use file_ext::FileExt;
+    ///  #[test]
+    ///  #[cfg(target_family = "unix")]
+    ///  fn current_user() {
+    ///      let boxed_user = FileExt::get_current_user();
+    ///      assert!(boxed_user.is_ok());
+    ///
+    ///      let user = boxed_user.unwrap();
+    ///  }
+    /// ```
     #[cfg(target_family = "unix")]
     pub fn get_current_user() -> Result<String, String> {
         let boxed_whoami = Command::new("whoami")
@@ -604,6 +618,20 @@ impl FileExt {
         Ok(user)
     }
 
+    /// Returns name of the user running the process
+    /// # Examples
+    ///
+    /// ```
+    ///  use file_ext::FileExt;
+    ///  #[test]
+    ///  #[cfg(target_family = "windows")]
+    ///  fn current_user() {
+    ///      let boxed_user = FileExt::get_current_user();
+    ///      assert!(boxed_user.is_ok());
+    ///
+    ///      let user = boxed_user.unwrap();
+    ///  }
+    /// ```
     #[cfg(target_family = "windows")]
     pub fn get_current_user() -> Result<String, String> {
         let boxed_whoami = Command::new("whoami")
@@ -635,6 +663,20 @@ impl FileExt {
         Ok(user.to_string())
     }
 
+    /// Returns domain of the user running the process
+    /// # Examples
+    ///
+    /// ```
+    ///  use file_ext::FileExt;
+    ///  #[test]
+    ///  #[cfg(target_family = "windows")]
+    ///  fn current_user() {
+    ///      let boxed_user_domain = FileExt::get_current_user_domain();
+    ///      assert!(boxed_user_domain.is_ok());
+    ///
+    ///      let domain = boxed_user_domain.unwrap();
+    ///  }
+    /// ```
     #[cfg(target_family = "windows")]
     pub fn get_current_user_domain() -> Result<String, String> {
         let boxed_whoami = Command::new("whoami")
