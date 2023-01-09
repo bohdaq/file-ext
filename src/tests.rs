@@ -259,3 +259,11 @@ fn current_user_domain() {
     FileExt::create_file(path).unwrap();
     FileExt::write_file(path, boxed_user_domain.unwrap().as_bytes()).unwrap();
 }
+
+#[test]
+#[cfg(target_family = "windows")]
+fn temp_folder() {
+    let temp_folder_path = FileExt::get_temp_folder_path().unwrap();
+    assert!(temp_folder_path.starts_with("C:\\Users\\"));
+    assert!(temp_folder_path.ends_with("\\AppData\\Local\\Temp"));
+}

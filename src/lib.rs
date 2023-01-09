@@ -599,8 +599,9 @@ impl FileExt {
         }
 
         let current_user = boxed_current_user.unwrap();
+        let user = str::replace(current_user.as_str(), "\n", "");
 
-        Ok(current_user)
+        Ok(user)
     }
 
     #[cfg(target_family = "windows")]
@@ -658,7 +659,22 @@ impl FileExt {
 
         let (domain, _user) = boxed_domain_user.unwrap();
 
+        let domain = str::replace(domain.as_str(), "\n", "");
+
         Ok(domain.to_string())
+    }
+
+    #[cfg(target_family = "windows")]
+    fn get_temp_folder_path() -> Result<String, String>{
+        let boxed_username = FileExt::get_current_user();
+        if boxed_username.is_err() {
+            let message = boxed_username.err().unwrap().to_string();
+            return Err(message)
+        }
+
+        let username = boxed_username.unwrap();
+        let path = ["C:", "Users", username.as_str(), "AppData", "Local", "Temp"].join(FileExt::get_path_separator().as_str());
+        Ok(path)
     }
 }
 
