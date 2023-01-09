@@ -706,6 +706,19 @@ impl FileExt {
         Ok(domain.to_string())
     }
 
+    /// Returns path to the temporary folder
+    /// # Examples
+    ///
+    /// ```
+    ///  use file_ext::FileExt;
+    ///  #[test]
+    ///  #[cfg(target_family = "windows")]
+    ///  fn temp_folder() {
+    ///      let temp_folder_path = FileExt::get_temp_folder_path().unwrap();
+    ///      assert!(temp_folder_path.starts_with("C:\\Users\\"));
+    ///      assert!(temp_folder_path.ends_with("\\AppData\\Local\\Temp"));
+    ///  }
+    /// ```
     #[cfg(target_family = "windows")]
     pub fn get_temp_folder_path() -> Result<String, String>{
         let boxed_username = FileExt::get_current_user();
@@ -719,6 +732,18 @@ impl FileExt {
         Ok(path)
     }
 
+    /// Returns path to the temporary folder
+    /// # Examples
+    ///
+    /// ```
+    ///  use file_ext::FileExt;
+    ///  #[test]
+    ///  #[cfg(target_family = "unix")]
+    ///  fn temp_folder() {
+    ///      let temp_folder_path = FileExt::get_temp_folder_path().unwrap();
+    ///      assert_eq!(temp_folder_path, "/tmp")
+    ///  }
+    /// ```
     #[cfg(target_family = "unix")]
     pub fn get_temp_folder_path() -> Result<String, String>{
         Ok("/tmp".to_string())
