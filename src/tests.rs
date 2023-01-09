@@ -97,24 +97,26 @@ fn file_creation_deletion() {
 #[test]
 fn read_or_create_and_write() {
     let content = "data".as_bytes();
-    let path = "/tmp/test.txt";
+    let tmp_folder = FileExt::get_temp_folder_path().unwrap();
 
-    let doesnt_exist = !FileExt::does_file_exist(path);
+    let path = [tmp_folder, "test.txt".to_string()].join(FileExt::get_path_separator().as_str());
+
+    let doesnt_exist = !FileExt::does_file_exist(path.as_str());
     assert!(doesnt_exist);
 
-    FileExt::read_or_create_and_write(path, content).unwrap();
+    FileExt::read_or_create_and_write(path.as_str(), content).unwrap();
 
-    let does_exist = FileExt::does_file_exist(path);
+    let does_exist = FileExt::does_file_exist(path.as_str());
     assert!(does_exist);
 
     let new_content = "updated data".as_bytes();
-    FileExt::read_or_create_and_write(path, new_content).unwrap();
+    FileExt::read_or_create_and_write(path.as_str(), new_content).unwrap();
 
-    let file_content = FileExt::read_file(path).unwrap();
+    let file_content = FileExt::read_file(path.as_str()).unwrap();
     assert_eq!(content, file_content);
 
-    FileExt::delete_file(path).unwrap();
-    let doesnt_exist = !FileExt::does_file_exist(path);
+    FileExt::delete_file(path.as_str()).unwrap();
+    let doesnt_exist = !FileExt::does_file_exist(path.as_str());
     assert!(doesnt_exist);
 }
 

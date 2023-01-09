@@ -678,5 +678,10 @@ impl FileExt {
         let path = ["C:", "Users", username.as_str(), "AppData", "Local", "Temp"].join(FileExt::get_path_separator().as_str());
         Ok(path)
     }
+
+    #[cfg(target_family = "unix")]
+    fn get_temp_folder_path() -> Result<String, String>{
+        Ok("/tmp".to_string())
+    }
 }
 
