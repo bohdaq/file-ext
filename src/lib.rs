@@ -621,7 +621,15 @@ impl FileExt {
 
         let current_user = boxed_current_user.unwrap();
 
-        Ok(current_user)
+        let boxed_domain_user = current_user.split_once("\\");
+        if boxed_domain_user.is_none() {
+            let message = format!("unable to extract user: {}", current_user);
+            return Err(message);
+        }
+
+        let (domain, user) = boxed_domain_user.unwrap();
+
+        Ok(user)
     }
 }
 
