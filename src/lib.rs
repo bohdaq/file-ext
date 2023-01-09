@@ -661,13 +661,11 @@ impl FileExt {
 
         let (domain, _user) = boxed_domain_user.unwrap();
 
-        let domain = str::replace(domain, "\n", "");
-
         Ok(domain.to_string())
     }
 
     #[cfg(target_family = "windows")]
-    fn get_temp_folder_path() -> Result<String, String>{
+    pub fn get_temp_folder_path() -> Result<String, String>{
         let boxed_username = FileExt::get_current_user();
         if boxed_username.is_err() {
             let message = boxed_username.err().unwrap().to_string();
@@ -680,7 +678,7 @@ impl FileExt {
     }
 
     #[cfg(target_family = "unix")]
-    fn get_temp_folder_path() -> Result<String, String>{
+    pub fn get_temp_folder_path() -> Result<String, String>{
         Ok("/tmp".to_string())
     }
 }
