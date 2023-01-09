@@ -269,3 +269,10 @@ fn temp_folder() {
     assert!(temp_folder_path.starts_with("C:\\Users\\"));
     assert!(temp_folder_path.ends_with("\\AppData\\Local\\Temp"));
 }
+
+#[test]
+#[cfg(target_family = "unix")]
+fn temp_folder() {
+    let temp_folder_path = FileExt::get_temp_folder_path().unwrap();
+    assert_eq!(temp_folder_path, "/tmp")
+}
