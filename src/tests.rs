@@ -247,3 +247,15 @@ fn current_user() {
     FileExt::create_file(path).unwrap();
     FileExt::write_file(path, boxed_user.unwrap().as_bytes()).unwrap();
 }
+
+#[test]
+#[cfg(target_family = "windows")]
+fn current_user_domain() {
+    let boxed_user_domain = FileExt::get_current_user_domain();
+    assert!(boxed_user_domain.is_ok());
+
+    let path = "current-user-domain.log";
+
+    FileExt::create_file(path).unwrap();
+    FileExt::write_file(path, boxed_user_domain.unwrap().as_bytes()).unwrap();
+}
