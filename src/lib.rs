@@ -630,6 +630,8 @@ impl FileExt {
 
         let (_domain, user) = boxed_domain_user.unwrap();
 
+        let user = str::replace(user, "\n", "");
+
         Ok(user.to_string())
     }
 
