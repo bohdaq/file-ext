@@ -629,7 +629,7 @@ impl FileExt {
 
         let (domain, user) = boxed_domain_user.unwrap();
 
-        Ok(user)
+        Ok(user.to_string())
     }
 }
 
