@@ -104,8 +104,9 @@ impl FileExt {
     /// # Examples
     ///
     /// ```
+    ///  use std::{thread, time};
     ///  use file_ext::FileExt;
-    /// #[test]
+    ///  #[test]
     ///  fn modification_timestamp() {
     ///
     ///      let content = "data".as_bytes();
