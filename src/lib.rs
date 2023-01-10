@@ -220,29 +220,32 @@ impl FileExt {
     /// # Examples
     ///
     /// ```
-    /// use file_ext::FileExt;
-    /// #[test]
-    /// fn read_or_write() {
-    ///     let content = "data".as_bytes();
-    ///     let path = "/tmp/test.txt";
+    ///  use file_ext::FileExt;
+    ///  #[test]
+    ///  fn read_or_create_and_write() {
+    ///      let content = "data".as_bytes();
+    ///      let tmp_folder = FileExt::get_temp_folder_path().unwrap();
     ///
-    ///     let doesnt_exist = !FileExt::does_file_exist(path);
-    ///     assert!(doesnt_exist);
+    ///      let path = [tmp_folder, "test.txt".to_string()].join(FileExt::get_path_separator().as_str());
     ///
-    ///     FileExt::read_or_create_and_write(path, content).unwrap();
+    ///      let doesnt_exist = !FileExt::does_file_exist(path.as_str());
+    ///      assert!(doesnt_exist);
     ///
-    ///     let does_exist = FileExt::does_file_exist(path);
-    ///     assert!(does_exist);
+    ///      FileExt::read_or_create_and_write(path.as_str(), content).unwrap();
     ///
-    ///     let new_content = "updated data".as_bytes();
-    ///     let content_from_file = FileExt::read_or_create_and_write(path, new_content).unwrap();
+    ///      let does_exist = FileExt::does_file_exist(path.as_str());
+    ///      assert!(does_exist);
     ///
-    ///     assert_eq!(content, content_from_file);
+    ///      let new_content = "updated data".as_bytes();
+    ///      FileExt::read_or_create_and_write(path.as_str(), new_content).unwrap();
     ///
-    ///     FileExt::delete_file(path).unwrap();
-    ///     let doesnt_exist = !FileExt::does_file_exist(path);
-    ///     assert!(doesnt_exist);
-    /// }
+    ///      let file_content = FileExt::read_file(path.as_str()).unwrap();
+    ///      assert_eq!(content, file_content);
+    ///
+    ///      FileExt::delete_file(path.as_str()).unwrap();
+    ///      let doesnt_exist = !FileExt::does_file_exist(path.as_str());
+    ///      assert!(doesnt_exist);
+    ///  }
     /// ```
     pub fn read_or_create_and_write(path: &str, content: &[u8]) -> Result<Vec<u8>, String> {
         let does_passphrase_exist = Self::does_file_exist(path);
