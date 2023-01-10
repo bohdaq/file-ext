@@ -276,3 +276,9 @@ fn temp_folder() {
     let temp_folder_path = FileExt::get_temp_folder_path().unwrap();
     assert_eq!(temp_folder_path, "/tmp")
 }
+
+#[test]
+fn absolute_path_to_working_directory() {
+    let boxed_path = FileExt::get_static_filepath(FileExt::get_path_separator().as_str());
+    assert!(boxed_path.is_ok());
+}

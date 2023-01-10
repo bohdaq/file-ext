@@ -193,7 +193,18 @@ impl FileExt {
     }
 
 
-    /// Will return absolute file path
+    /// Will return absolute file path to the working directory
+    /// # Examples
+    ///
+    /// ```
+    /// use file_ext::FileExt;
+    /// #[test]
+    /// fn absolute_path_to_working_directory() {
+    ///     let boxed_path = FileExt::get_static_filepath(FileExt::get_path_separator().as_str());
+    ///     assert!(boxed_path.is_ok());
+    ///     let path = boxed_path.unwrap();
+    /// }
+    /// ```
     pub fn get_static_filepath(path: &str) -> Result<String, String> {
         let boxed_dir = env::current_dir();
         if boxed_dir.is_err() {
