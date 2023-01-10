@@ -66,17 +66,19 @@ impl FileExt {
     /// # Examples
     ///
     /// ```
-    /// use file_ext::FileExt;
-    /// #[test]
-    /// fn file_content() {
-    ///     let path = "test/index.html";
-    ///     let file_raw_bytes = FileExt::read_file(path).unwrap();
-    ///     let content = String::from_utf8(file_raw_bytes).unwrap();
+    ///  use file_ext::FileExt;
+    ///  #[test]
+    ///  fn file_content() {
+    ///      let path = "test/index.html";
+    ///      let file_raw_bytes = FileExt::read_file(path).unwrap();
+    ///      let content = String::from_utf8(file_raw_bytes).unwrap();
+    ///  
+    ///      let content_escaped_newline_carriage_return = str::replace(content.as_str(), "\r\n", "\n");
     ///
-    ///     let expected_content = "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <title>Title</title>\n</head>\n<body>\n\n</body>\n</html>";
+    ///      let expected_content = "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <title>Title</title>\n</head>\n<body>\n\n</body>\n</html>";
     ///
-    ///     assert_eq!(expected_content, content);
-    /// }
+    ///      assert_eq!(expected_content, content_escaped_newline_carriage_return);
+    ///  }
     /// ```
     pub fn read_file(filepath: &str) -> Result<Vec<u8>, String> {
 
