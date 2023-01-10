@@ -354,6 +354,22 @@ impl FileExt {
     }
 
     /// Will write given byte array to a file on the path
+    /// # Examples
+    /// ```
+    ///  use file_ext::FileExt;
+    /// #[test]
+    ///  fn write() {
+    ///      let filename = "write-test.content";
+    ///      FileExt::create_file(filename).unwrap();
+    ///
+    ///      let expected_content = "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <title>Title</title>\n</head>\n<body>\n\n</body>\n</html>";
+    ///      FileExt::write_file(filename, expected_content.as_bytes()).unwrap();
+    ///
+    ///      let actual = FileExt::read_file(filename).unwrap();
+    ///      assert_eq!(actual, expected_content.as_bytes());
+    ///
+    ///  }
+    /// ```
     pub fn write_file(path: &str, file_content: &[u8]) -> Result<(), String> {
         let mut file = OpenOptions::new()
             .read(false)
