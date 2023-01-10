@@ -314,16 +314,39 @@ impl FileExt {
         file_exists
     }
 
-    /// Returns boolean indicating directory existence on the path
+    /// Returns boolean indicating symlink existence on the path
     /// # Examples
     ///
     /// ```
     /// use file_ext::FileExt;
     /// #[test]
     /// fn symlink_exists() {
-    ///     let path = "test/index_rewrite";
-    ///     let exists = FileExt::does_symlink_exist(path);
-    ///     assert!(exists);
+    ///   let symlink_path = ["test", "index-link2"].join(FileExt::get_path_separator().as_str());
+    ///
+    ///   if FileExt::does_symlink_exist(symlink_path.as_str()) {
+    ///     FileExt::delete_file(symlink_path.as_str()).unwrap();
+    ///   }
+    ///
+    ///   let path = [SYMBOL.empty_string, "test", SYMBOL.empty_string].join(FileExt::get_path_separator().as_str());
+    ///   let path_prefix = FileExt::get_static_filepath(path.as_str()).unwrap();
+    ///   let points_to = [path_prefix.to_string(), "index.html".to_string()].join("");
+    ///
+    ///   let boxed_symlink = FileExt::create_symlink(
+    ///     path_prefix.as_str(),
+    ///     "index-link2",
+    ///     points_to.as_str()
+    ///   );
+    ///
+    ///
+    ///   assert!(boxed_symlink.is_ok());
+    ///
+    ///   let symlink_created = FileExt::does_symlink_exist(symlink_path.as_str());
+    ///   assert!(symlink_created);
+    ///
+    ///   let actual_points_to = FileExt::symlink_points_to(symlink_path.as_str()).unwrap();
+    ///   assert_eq!(points_to, actual_points_to);
+    ///
+    ///   FileExt::delete_file(symlink_path.as_str()).unwrap();
     /// }
     /// ```
     pub fn does_symlink_exist(path: &str) -> bool {
