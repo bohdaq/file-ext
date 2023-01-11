@@ -1,10 +1,10 @@
-use std::{env, fs};
-use std::fs::{File, OpenOptions};
-use std::io::{Seek, SeekFrom, Write};
+use std::{fs};
+use std::fs::{File};
 use std::path::Path;
 use std::process::Command;
 use crate::date_time_ext::DateTimeExt;
 use crate::file_ext_impl::FileExtImpl;
+use crate::path_ext_impl::PathExtImpl;
 use crate::symbol::SYMBOL;
 
 #[cfg(test)]
@@ -12,6 +12,7 @@ mod tests;
 mod date_time_ext;
 mod symbol;
 mod file_ext_impl;
+mod path_ext_impl;
 
 pub struct FileExt;
 
@@ -94,7 +95,6 @@ impl FileExt {
     ///  }
     /// ```
     pub fn file_modified_utc(filepath: &str) -> Result<u128, String> {
-
         let boxed_open = File::open(filepath);
         if boxed_open.is_err() {
             let error_msg = boxed_open.err().unwrap();
@@ -133,7 +133,7 @@ impl FileExt {
     /// }
     /// ```
     pub fn get_path_separator() -> String {
-        SYMBOL.slash.to_string()
+        PathExtImpl::get_path_separator()
     }
 
     #[cfg(target_family = "windows")]
@@ -143,13 +143,11 @@ impl FileExt {
     /// use file_ext::FileExt;
     /// #[test]
     /// fn unix_path_delimiter() {
-    ///     let expected = "\\".to_string();
+    ///     let expected = SYMBOL.reverse_slash.to_string();
     ///     let actual = FileExt::get_path_separator();
     /// }
     /// ```
-    pub fn get_path_separator() -> String {
-        "\\".to_string()
-    }
+    pub fn get_path_separator() -> String { PathExtImpl::get_path_separator() }
 
 
     /// Will return absolute file path to the working directory
@@ -165,24 +163,14 @@ impl FileExt {
     /// }
     /// ```
     pub fn get_static_filepath(path: &str) -> Result<String, String> {
-        let boxed_dir = env::current_dir();
-        if boxed_dir.is_err() {
-            let error = boxed_dir.err().unwrap();
-            eprintln!("{}", error);
-            return Err(error.to_string());
-        }
-        let dir = boxed_dir.unwrap();
-
-
-        let boxed_working_directory = dir.as_path().to_str();
-        if boxed_working_directory.is_none() {
-            let error = "working directory is not set";
-            eprintln!("{}", error);
-            return Err(error.to_string());
+        let boxed_working_directory = PathExtImpl::absolute_path_to_working_directory();
+        if boxed_working_directory.is_err() {
+            let message = boxed_working_directory.err().unwrap();
+            return Err(message)
         }
 
         let working_directory = boxed_working_directory.unwrap();
-        let absolute_path = [working_directory, path].join(SYMBOL.empty_string);
+        let absolute_path = [working_directory, path.to_string()].join(SYMBOL.empty_string);
         Ok(absolute_path)
     }
 
@@ -218,28 +206,7 @@ impl FileExt {
     ///  }
     /// ```
     pub fn read_or_create_and_write(path: &str, content: &[u8]) -> Result<Vec<u8>, String> {
-        let does_passphrase_exist = Self::does_file_exist(path);
-        return if does_passphrase_exist {
-            let boxed_read = Self::read_file(path);
-            if boxed_read.is_err() {
-                return Err(boxed_read.err().unwrap());
-            }
-            let passphrase = boxed_read.unwrap();
-            Ok(passphrase)
-        } else {
-            let boxed_create = Self::create_file(path);
-            if boxed_create.is_err() {
-                let message = boxed_create.err().unwrap();
-                return Err(message)
-            }
-
-            let boxed_write = Self::write_file(path, content);
-            if boxed_write.is_err() {
-                let message = boxed_write.err().unwrap();
-                return Err(message)
-            }
-            Ok(Vec::from(content))
-        }
+        FileExtImpl::read_or_create_and_write(path, content)
     }
 
     /// Will create a file on the path
@@ -266,15 +233,7 @@ impl FileExt {
     /// }
     /// ```
     pub fn create_file(path: &str) -> Result<(), String>  {
-        let boxed_file = File::create(path);
-
-        if boxed_file.is_err() {
-            let message = format!("unable to create file: {}", boxed_file.err().unwrap());
-            return Err(message)
-        }
-
-        boxed_file.unwrap();
-        Ok(())
+        FileExtImpl::create_file(path)
     }
 
     /// Returns boolean indicating file existence on the path
@@ -290,8 +249,7 @@ impl FileExt {
     /// }
     /// ```
     pub fn does_file_exist(path: &str) -> bool {
-        let file_exists = Path::new(path).is_file();
-        file_exists
+        FileExtImpl::does_file_exist(path)
     }
 
     /// Returns boolean indicating directory existence on the path
@@ -368,22 +326,7 @@ impl FileExt {
     ///  }
     /// ```
     pub fn write_file(path: &str, file_content: &[u8]) -> Result<(), String> {
-        let mut file = OpenOptions::new()
-            .read(false)
-            .write(true)
-            .create(false)
-            .truncate(false)
-            .open(path)
-            .unwrap();
-
-        file.seek(SeekFrom::End(0)).unwrap();
-
-        let boxed_write = file.write_all(file_content);
-        if boxed_write.is_err() {
-            let message = format!("unable to write to file: {}", boxed_write.err().unwrap());
-            return Err(message)
-        }
-        Ok(())
+        FileExtImpl::write_file(path, file_content)
     }
 
     /// Will delete file on a given path
