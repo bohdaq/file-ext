@@ -3,6 +3,7 @@ use std::fs::{File};
 use std::path::Path;
 use std::process::Command;
 use crate::date_time_ext::DateTimeExt;
+use crate::directory_ext_impl::DirectoryExtImpl;
 use crate::file_ext_impl::FileExtImpl;
 use crate::path_ext_impl::PathExtImpl;
 use crate::symbol::SYMBOL;
@@ -13,6 +14,7 @@ mod date_time_ext;
 mod symbol;
 mod file_ext_impl;
 mod path_ext_impl;
+mod directory_ext_impl;
 
 pub struct FileExt;
 
@@ -265,8 +267,7 @@ impl FileExt {
     /// }
     /// ```
     pub fn does_directory_exist(path: &str) -> bool {
-        let file_exists = Path::new(path).is_file();
-        file_exists
+        DirectoryExtImpl::does_directory_exist(path)
     }
 
     /// Returns boolean indicating symlink existence on the path
