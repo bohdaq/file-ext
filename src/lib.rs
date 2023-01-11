@@ -1,4 +1,3 @@
-use std::{fs};
 use std::fs::{File};
 use std::process::Command;
 use crate::date_time_ext::DateTimeExt;
@@ -446,14 +445,7 @@ impl FileExt {
     /// }
     /// ```
     pub fn is_symlink(path: &str) -> Result<bool, String> {
-        let boxed_symlink_metadata = fs::symlink_metadata(path);
-        if boxed_symlink_metadata.is_err() {
-            let msg = boxed_symlink_metadata.err().unwrap().to_string();
-            return Err(msg)
-        }
-
-        let symlink_metadata = boxed_symlink_metadata.unwrap();
-        Ok(symlink_metadata.file_type().is_symlink())
+        SymlinkExtImpl::is_symlink(path)
     }
 
     /// Returns path to a file, symlink points to
@@ -469,19 +461,7 @@ impl FileExt {
     /// }
     /// ```
     pub fn symlink_points_to(path: &str) -> Result<String, String> {
-        let boxed_path_buff = fs::read_link(path);
-        if boxed_path_buff.is_err() {
-            let msg = boxed_path_buff.err().unwrap().to_string();
-            return Err(msg)
-        }
-        let path_buff = boxed_path_buff.unwrap();
-        let boxed_points_to = path_buff.as_path().to_str();
-        if boxed_points_to.is_none() {
-            let msg = "unable to read link as path".to_string();
-            return Err(msg)
-        }
-        let points_to = boxed_points_to.unwrap();
-        Ok(points_to.to_string())
+        SymlinkExtImpl::symlink_points_to(path)
     }
 
     /// Returns name of the user running the process

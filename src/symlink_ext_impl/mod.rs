@@ -1,3 +1,4 @@
+use std::fs;
 use std::path::Path;
 use crate::directory_ext_impl::DirectoryExtImpl;
 use crate::file_ext_impl::FileExtImpl;
@@ -90,5 +91,32 @@ impl SymlinkExtImpl {
         let message = "Something went wrong".to_string();
         Err(message)
 
+    }
+
+    pub fn is_symlink(path: &str) -> Result<bool, String> {
+        let boxed_symlink_metadata = fs::symlink_metadata(path);
+        if boxed_symlink_metadata.is_err() {
+            let msg = boxed_symlink_metadata.err().unwrap().to_string();
+            return Err(msg)
+        }
+
+        let symlink_metadata = boxed_symlink_metadata.unwrap();
+        Ok(symlink_metadata.file_type().is_symlink())
+    }
+
+    pub fn symlink_points_to(path: &str) -> Result<String, String> {
+        let boxed_path_buff = fs::read_link(path);
+        if boxed_path_buff.is_err() {
+            let msg = boxed_path_buff.err().unwrap().to_string();
+            return Err(msg)
+        }
+        let path_buff = boxed_path_buff.unwrap();
+        let boxed_points_to = path_buff.as_path().to_str();
+        if boxed_points_to.is_none() {
+            let msg = "unable to read link as path".to_string();
+            return Err(msg)
+        }
+        let points_to = boxed_points_to.unwrap();
+        Ok(points_to.to_string())
     }
 }
