@@ -1,3 +1,4 @@
+use std::fs;
 use std::fs::{File, OpenOptions};
 use std::io::{BufReader, Read, Seek, SeekFrom, Write};
 use std::path::Path;
@@ -115,5 +116,15 @@ impl FileExtImpl {
     pub fn does_file_exist(path: &str) -> bool {
         let file_exists = Path::new(path).is_file();
         file_exists
+    }
+
+    pub fn delete_file(path: &str) -> Result<(), String> {
+        let boxed_remove = fs::remove_file(path);
+        if boxed_remove.is_err() {
+            let msg = boxed_remove.err().unwrap().to_string();
+            return Err(msg)
+        }
+
+        Ok(())
     }
 }

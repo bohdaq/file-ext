@@ -128,7 +128,7 @@ impl FileExt {
     /// use file_ext::FileExt;
     /// #[test]
     /// fn unix_path_delimiter() {
-    ///     let expected = "/".to_string();
+    ///     let expected = SYMBOL.slash.to_string();
     ///     let actual = FileExt::get_path_separator();
     /// }
     /// ```
@@ -353,13 +353,7 @@ impl FileExt {
     /// }
     /// ```
     pub fn delete_file(path: &str) -> Result<(), String> {
-        let boxed_remove = fs::remove_file(path);
-        if boxed_remove.is_err() {
-            let msg = boxed_remove.err().unwrap().to_string();
-            return Err(msg)
-        }
-
-        Ok(())
+        FileExtImpl::delete_file(path)
     }
 
     /// Will create symlink on path `symlink_path` with the specified name `symlink_name`.
