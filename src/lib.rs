@@ -694,15 +694,7 @@ impl FileExt {
     /// ```
     #[cfg(target_family = "windows")]
     pub fn get_temp_folder_path() -> Result<String, String>{
-        let boxed_username = FileExt::get_current_user();
-        if boxed_username.is_err() {
-            let message = boxed_username.err().unwrap().to_string();
-            return Err(message)
-        }
-
-        let username = boxed_username.unwrap();
-        let path = ["C:", "Users", username.as_str(), "AppData", "Local", "Temp"].join(FileExt::get_path_separator().as_str());
-        Ok(path)
+        PathExtImpl::get_temp_folder_path()
     }
 
     /// Returns path to the temporary folder
@@ -719,7 +711,7 @@ impl FileExt {
     /// ```
     #[cfg(target_family = "unix")]
     pub fn get_temp_folder_path() -> Result<String, String>{
-        Ok("/tmp".to_string())
+        PathExtImpl::get_temp_folder_path()
     }
 }
 
