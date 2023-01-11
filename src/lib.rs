@@ -271,6 +271,52 @@ impl FileExt {
         DirectoryExtImpl::does_directory_exist(path)
     }
 
+
+    /// Will create a new directory on specified path
+    /// # Examples
+    ///
+    /// ```
+    ///  use file_ext::FileExt;
+    ///  #[test]
+    ///  fn new_directory_create_delete() {
+    ///      let path = "new_directory";
+    ///
+    ///      let boxed_create = FileExt::create_directory(path);
+    ///      assert!(boxed_create.is_ok());
+    ///
+    ///      assert!(FileExt::does_directory_exist(path));
+    ///
+    ///      let boxed_delete = FileExt::delete_directory(path);
+    ///      assert!(boxed_delete.is_ok());
+    ///  }
+    /// ```
+    pub fn create_directory(path: &str) -> Result<(), String> {
+        DirectoryExtImpl::create_directory(path)
+    }
+
+    /// Will delete directory and all of the content on specified path (won't follow symlinks)
+    /// # Examples
+    ///
+    /// ```
+    ///  use file_ext::FileExt;
+    ///  #[test]
+    ///  fn new_directory_create_delete() {
+    ///      let path = "new_directory";
+    ///
+    ///      let boxed_create = FileExt::create_directory(path);
+    ///      assert!(boxed_create.is_ok());
+    ///
+    ///      assert!(FileExt::does_directory_exist(path));
+    ///
+    ///      let boxed_delete = FileExt::delete_directory(path);
+    ///      assert!(boxed_delete.is_ok());
+    ///  }
+    /// ```
+    pub fn delete_directory(path: &str) -> Result<(), String> {
+        DirectoryExtImpl::delete_directory(path)
+    }
+
+
     /// Returns boolean indicating symlink existence on the path
     /// # Examples
     ///
