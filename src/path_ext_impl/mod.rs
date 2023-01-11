@@ -28,7 +28,7 @@ impl PathExtImpl {
         }
 
         let username = boxed_username.unwrap();
-        let path = ["C:", "Users", username.as_str(), "AppData", "Local", "Temp"].join(FileExt::get_path_separator().as_str());
+        let path = ["C:", "Users", username.as_str(), "AppData", "Local", "Temp"].join(PathExtImpl::get_path_separator().as_str());
         Ok(path)
     }
 
