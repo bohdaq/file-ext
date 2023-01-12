@@ -3,6 +3,9 @@ use std::path::Path;
 use crate::FileExt;
 use crate::path_ext_impl::PathExtImpl;
 
+#[cfg(test)]
+mod tests;
+
 pub struct DirectoryExtImpl;
 
 impl DirectoryExtImpl {
@@ -12,7 +15,6 @@ impl DirectoryExtImpl {
     }
 
     pub fn create_directory(path: &str) -> Result<(), String> {
-        FileExt::create_file("create_directory.log").unwrap();
         DirectoryExtImpl::recursively_create_directories("", path)
     }
 
