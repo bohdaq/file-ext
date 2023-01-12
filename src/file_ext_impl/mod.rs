@@ -1,3 +1,6 @@
+#[cfg(test)]
+mod tests;
+
 use std::fs;
 use std::fs::{File, OpenOptions};
 use std::io::{BufReader, Read, Seek, SeekFrom, Write};
