@@ -1,8 +1,6 @@
 use std::{thread, time};
 use crate::FileExt;
 
-
-
 #[test]
 fn modification_timestamp() {
 
@@ -32,20 +30,6 @@ fn modification_timestamp() {
 }
 
 
-#[test]
-#[cfg(target_family = "windows")]
-fn temp_folder() {
-    let temp_folder_path = FileExt::get_temp_folder_path().unwrap();
-    assert!(temp_folder_path.starts_with("C:\\Users\\"));
-    assert!(temp_folder_path.ends_with("\\AppData\\Local\\Temp"));
-}
-
-#[test]
-#[cfg(target_family = "unix")]
-fn temp_folder() {
-    let temp_folder_path = FileExt::get_temp_folder_path().unwrap();
-    assert_eq!(temp_folder_path, "/tmp")
-}
 
 #[test]
 fn absolute_path_to_working_directory() {

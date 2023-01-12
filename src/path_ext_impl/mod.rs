@@ -2,6 +2,9 @@ use std::env;
 use crate::symbol::SYMBOL;
 use crate::user_ext_impl::UserExtImpl;
 
+#[cfg(test)]
+mod tests;
+
 pub struct PathExtImpl;
 
 impl PathExtImpl {
