@@ -193,13 +193,6 @@ fn link_points_to() {
     let symlink_dir = [SYMBOL.empty_string, "test", SYMBOL.empty_string].join(FileExt::get_path_separator().as_str());
     let path_prefix = FileExt::get_static_filepath(symlink_dir.as_str()).unwrap();
 
-    //let path = "out.log";
-    //FileExt::create_file(path).unwrap();
-    //FileExt::write_file(path, format!("\n\nsymlink_dir: {}", symlink_dir).as_bytes()).unwrap();
-    //FileExt::write_file(path, format!("\npath_prefix: {}", path_prefix).as_bytes()).unwrap();
-    //FileExt::write_file(path, format!("\npoints_to: {}", points_to).as_bytes()).unwrap();
-
-
     let boxed_symlink = FileExt::create_symlink(
         path_prefix.as_str(),
         "index_rewrite2",
