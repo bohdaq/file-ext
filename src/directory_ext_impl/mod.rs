@@ -38,7 +38,7 @@ impl DirectoryExtImpl {
         if boxed_split.is_none() {
             let mut folder_path = remaining_path.to_string();
             if processed_path.chars().count() != 0 {
-                folder_path = [processed_path, remaining_path].join(FileExt::get_path_separator().as_str());
+                folder_path = [processed_path, remaining_path].join(PathExtImpl::get_path_separator().as_str());
             }
 
             FileExt::write_file(name, format!("\nfolder path: {}", folder_path).as_bytes()).unwrap();
@@ -56,7 +56,7 @@ impl DirectoryExtImpl {
 
         let mut  folder_path = folder.to_string();
         if processed_path.chars().count() != 0 {
-            folder_path = [processed_path, folder].join(FileExt::get_path_separator().as_str());
+            folder_path = [processed_path, folder].join(PathExtImpl::get_path_separator().as_str());
         }
 
         FileExt::write_file(name, format!("\nfolder path: {}", folder_path).as_bytes()).unwrap();
@@ -69,7 +69,7 @@ impl DirectoryExtImpl {
         }
         let mut _processed_path = folder.to_string();
         if processed_path.chars().count() != 0 {
-            _processed_path = [processed_path, folder].join(FileExt::get_path_separator().as_str());
+            _processed_path = [processed_path, folder].join(PathExtImpl::get_path_separator().as_str());
         }
         DirectoryExtImpl::recursive_call(_processed_path.as_str(), remaining_path, name)
     }
