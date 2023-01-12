@@ -31,7 +31,7 @@ fn file_exists() {
     let path = ["test", "index_rewrite"].join(FileExt::get_path_separator().as_str());
     create_rewrite_index_symlink();
 
-    let exists = FileExt::does_file_exist(path.as_str());
+    let exists = FileExt::does_symlink_exist(path.as_str());
     assert!(exists);
 
     FileExt::delete_file(path.as_str()).unwrap();
