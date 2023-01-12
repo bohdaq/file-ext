@@ -13,7 +13,7 @@ impl DirectoryExtImpl {
 
     pub fn create_directory(path: &str) -> Result<(), String> {
         FileExt::create_file("create_directory.log").unwrap();
-        DirectoryExtImpl::recursive_call("", path)
+        DirectoryExtImpl::recursively_create_directories("", path)
     }
 
     pub fn delete_directory(path: &str) -> Result<(), String> {
@@ -25,7 +25,7 @@ impl DirectoryExtImpl {
         Ok(())
     }
 
-    pub(crate) fn recursive_call(processed_path: &str, remaining_path: &str) -> Result<(), String> {
+    pub(crate) fn recursively_create_directories(processed_path: &str, remaining_path: &str) -> Result<(), String> {
         let boxed_split = remaining_path.split_once(PathExtImpl::get_path_separator().as_str());
         if boxed_split.is_none() {
             let mut folder_path = remaining_path.to_string();
@@ -59,7 +59,7 @@ impl DirectoryExtImpl {
         if processed_path.chars().count() != 0 {
             _processed_path = [processed_path, folder].join(PathExtImpl::get_path_separator().as_str());
         }
-        DirectoryExtImpl::recursive_call(_processed_path.as_str(), remaining_path)
+        DirectoryExtImpl::recursively_create_directories(_processed_path.as_str(), remaining_path)
     }
 }
 
