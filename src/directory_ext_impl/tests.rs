@@ -6,12 +6,12 @@ use crate::path_ext_impl::PathExtImpl;
 fn new_directory_create_delete() {
     let path = "newdirectory";
 
-    let boxed_create = FileExt::create_directory(path);
+    let boxed_create = DirectoryExtImpl::create_directory(path);
     assert!(boxed_create.is_ok());
 
     assert!(FileExt::does_directory_exist(path));
 
-    let boxed_delete = FileExt::delete_directory(path);
+    let boxed_delete = DirectoryExtImpl::delete_directory(path);
     assert!(boxed_delete.is_ok());
 }
 
@@ -19,16 +19,16 @@ fn new_directory_create_delete() {
 fn new_directory_recursively_create_delete() {
     let path = ["directory", "subdirectory"].join(PathExtImpl::get_path_separator().as_str());
 
-    if FileExt::does_directory_exist("directory") {
+    if DirectoryExtImpl::does_directory_exist("directory") {
         FileExt::delete_directory("directory").unwrap();
     }
 
     let boxed_create = DirectoryExtImpl::create_directory(path.as_str());
     assert!(boxed_create.is_ok());
 
-    assert!(FileExt::does_directory_exist(path.as_str()));
+    assert!(DirectoryExtImpl::does_directory_exist(path.as_str()));
 
-    let boxed_delete = FileExt::delete_directory("directory");
+    let boxed_delete = DirectoryExtImpl::delete_directory("directory");
     assert!(boxed_delete.is_ok());
 
 }
@@ -44,9 +44,9 @@ fn new_directory_create_recursively_additional_subdirectory() {
     let boxed_create = DirectoryExtImpl::create_directory(path.as_str());
     assert!(boxed_create.is_ok());
 
-    assert!(FileExt::does_directory_exist(path.as_str()));
+    assert!(DirectoryExtImpl::does_directory_exist(path.as_str()));
 
-    let boxed_delete = FileExt::delete_directory("recursive_directory_creation");
+    let boxed_delete = DirectoryExtImpl::delete_directory("recursive_directory_creation");
     assert!(boxed_delete.is_ok());
 }
 
@@ -54,15 +54,15 @@ fn new_directory_create_recursively_additional_subdirectory() {
 fn new_directory_create_non_recursively() {
     let path = "dir".to_string();
 
-    if FileExt::does_directory_exist(path.as_str()) {
-        FileExt::delete_directory(path.as_str()).unwrap();
+    if DirectoryExtImpl::does_directory_exist(path.as_str()) {
+        DirectoryExtImpl::delete_directory(path.as_str()).unwrap();
     }
 
     let boxed_create = DirectoryExtImpl::create_directory(path.as_str());
     assert!(boxed_create.is_ok());
 
-    assert!(FileExt::does_directory_exist(path.as_str()));
+    assert!(DirectoryExtImpl::does_directory_exist(path.as_str()));
 
-    let boxed_delete = FileExt::delete_directory(path.as_str());
+    let boxed_delete = DirectoryExtImpl::delete_directory(path.as_str());
     assert!(boxed_delete.is_ok());
 }
