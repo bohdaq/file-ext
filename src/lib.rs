@@ -160,7 +160,7 @@ impl FileExt {
     /// use file_ext::FileExt;
     /// #[test]
     /// fn absolute_path_to_working_directory() {
-    ///     let boxed_path = FileExt::get_static_filepath(FileExt::get_path_separator().as_str());
+    ///     let boxed_path = FileExt::get_static_filepath("");
     ///     assert!(boxed_path.is_ok());
     ///     let path = boxed_path.unwrap();
     /// }
