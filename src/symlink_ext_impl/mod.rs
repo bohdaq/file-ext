@@ -3,6 +3,9 @@ use std::path::Path;
 use crate::directory_ext_impl::DirectoryExtImpl;
 use crate::file_ext_impl::FileExtImpl;
 
+#[cfg(test)]
+mod tests;
+
 pub struct SymlinkExtImpl;
 
 impl SymlinkExtImpl {
