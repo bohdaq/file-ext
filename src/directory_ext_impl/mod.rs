@@ -25,7 +25,7 @@ impl DirectoryExtImpl {
         Ok(())
     }
 
-    pub(crate) fn recursively_create_directories(processed_path: &str, remaining_path: &str) -> Result<(), String> {
+    fn recursively_create_directories(processed_path: &str, remaining_path: &str) -> Result<(), String> {
         let boxed_split = remaining_path.split_once(PathExtImpl::get_path_separator().as_str());
         if boxed_split.is_none() {
             let mut folder_path = remaining_path.to_string();
