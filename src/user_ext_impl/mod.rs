@@ -1,8 +1,9 @@
 use std::process::Command;
 
-pub struct UserExtImpl {
+#[cfg(test)]
+mod tests;
 
-}
+pub struct UserExtImpl {}
 
 impl UserExtImpl {
     #[cfg(target_family = "unix")]
