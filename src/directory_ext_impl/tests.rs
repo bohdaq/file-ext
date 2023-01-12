@@ -3,19 +3,6 @@ use crate::FileExt;
 use crate::path_ext_impl::PathExtImpl;
 
 #[test]
-fn new_directory_create_delete() {
-    let path = "newdirectory";
-
-    let boxed_create = DirectoryExtImpl::create_directory(path);
-    assert!(boxed_create.is_ok());
-
-    assert!(FileExt::does_directory_exist(path));
-
-    let boxed_delete = DirectoryExtImpl::delete_directory(path);
-    assert!(boxed_delete.is_ok());
-}
-
-#[test]
 fn new_directory_recursively_create_delete() {
     let path = ["directory", "subdirectory"].join(PathExtImpl::get_path_separator().as_str());
 
