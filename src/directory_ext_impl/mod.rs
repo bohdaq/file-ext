@@ -44,9 +44,9 @@ impl DirectoryExtImpl {
             FileExt::write_file(name, format!("\nfolder path: {}", folder_path).as_bytes()).unwrap();
             FileExt::write_file(name, format!("\nremaining path: {}", remaining_path).as_bytes()).unwrap();
 
-            let boxed_create_folder = FileExt::create_directory(folder_path.as_str());
+            let boxed_create_folder = fs::create_dir(folder_path.as_str());
             if boxed_create_folder.is_err() {
-                let message = boxed_create_folder.err().unwrap();
+                let message = boxed_create_folder.err().unwrap().to_string();
                 return Err(message)
             }
 
@@ -62,9 +62,9 @@ impl DirectoryExtImpl {
         FileExt::write_file(name, format!("\nfolder path: {}", folder_path).as_bytes()).unwrap();
         FileExt::write_file(name, format!("\nremaining path: {}", remaining_path).as_bytes()).unwrap();
 
-        let boxed_create_folder = FileExt::create_directory(folder_path.as_str());
+        let boxed_create_folder = fs::create_dir(folder_path.as_str());
         if boxed_create_folder.is_err() {
-            let message = boxed_create_folder.err().unwrap();
+            let message = boxed_create_folder.err().unwrap().to_string();
             return Err(message)
         }
         let mut _processed_path = folder.to_string();
