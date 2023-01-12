@@ -284,7 +284,7 @@ fn absolute_path_to_working_directory() {
     assert!(boxed_path.is_ok());
 }
 
-//#[test]
+#[test]
 fn new_directory_create_delete() {
     let path = "new_directory";
 
@@ -297,12 +297,12 @@ fn new_directory_create_delete() {
     assert!(boxed_delete.is_ok());
 }
 
-//#[test]
+#[test]
 fn new_directory_create_recursively_delete() {
     let path = ["directory", "subdirectory"].join(PathExtImpl::get_path_separator().as_str());
 
-    if FileExt::does_directory_exist(path.as_str()) {
-        FileExt::delete_directory(path.as_str()).unwrap();
+    if FileExt::does_directory_exist("directory") {
+        FileExt::delete_directory("directory").unwrap();
     }
 
     let name = "new_directory_create_recursively_delete.log";
@@ -311,18 +311,20 @@ fn new_directory_create_recursively_delete() {
     let boxed_create = recursive_call("", path.as_str(),name);
     assert!(boxed_create.is_ok());
 
-    // assert!(FileExt::does_directory_exist(path.as_str()));
+    assert!(FileExt::does_directory_exist(path.as_str()));
 
-    // let boxed_delete = FileExt::delete_directory(path.as_str());
-    // assert!(boxed_delete.is_ok());
+    let boxed_delete = FileExt::delete_directory("directory");
+    assert!(boxed_delete.is_ok());
+
+    FileExt::delete_file(name).unwrap();
 }
 
-//#[test]
+#[test]
 fn new_directory_create_recursively() {
     let path = ["recursive_directory_creation", "subdirectory", "subsubdirectory"].join(PathExtImpl::get_path_separator().as_str());
 
-    if FileExt::does_directory_exist(path.as_str()) {
-        FileExt::delete_directory(path.as_str()).unwrap();
+    if FileExt::does_directory_exist("recursive_directory_creation") {
+        FileExt::delete_directory("recursive_directory_creation").unwrap();
     }
 
     let name = "new_directory_create_recursively.log";
@@ -331,13 +333,14 @@ fn new_directory_create_recursively() {
     let boxed_create = recursive_call("", path.as_str(), name);
     assert!(boxed_create.is_ok());
 
-    // assert!(FileExt::does_directory_exist(path.as_str()));
+    assert!(FileExt::does_directory_exist(path.as_str()));
 
-    // let boxed_delete = FileExt::delete_directory(path.as_str());
-    // assert!(boxed_delete.is_ok());
+    let boxed_delete = FileExt::delete_directory("recursive_directory_creation");
+    assert!(boxed_delete.is_ok());
+    FileExt::delete_file(name).unwrap();
 }
 
-//#[test]
+#[test]
 fn new_directory_create_non_recursively() {
     let path = "dir".to_string();
 
@@ -351,10 +354,11 @@ fn new_directory_create_non_recursively() {
     let boxed_create = recursive_call("", path.as_str(), name);
     assert!(boxed_create.is_ok());
 
-    // assert!(FileExt::does_directory_exist(path.as_str()));
+    assert!(FileExt::does_directory_exist(path.as_str()));
 
-    // let boxed_delete = FileExt::delete_directory(path.as_str());
-    // assert!(boxed_delete.is_ok());
+    let boxed_delete = FileExt::delete_directory(path.as_str());
+    assert!(boxed_delete.is_ok());
+    FileExt::delete_file(name).unwrap();
 }
 
 fn recursive_call(processed_path: &str, remaining_path: &str, log_filename: &str) -> Result<(), String> {
