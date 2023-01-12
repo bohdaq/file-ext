@@ -1,7 +1,5 @@
 use std::{thread, time};
-use crate::directory_ext_impl::DirectoryExtImpl;
 use crate::FileExt;
-use crate::path_ext_impl::PathExtImpl;
 use crate::symbol::{SYMBOL};
 
 #[test]
@@ -14,6 +12,8 @@ fn write() {
 
     let actual = FileExt::read_file(filename).unwrap();
     assert_eq!(actual, expected_content.as_bytes());
+
+    FileExt::delete_file(filename).unwrap();
 
 }
 
@@ -243,6 +243,8 @@ fn current_user() {
 
     FileExt::create_file(path).unwrap();
     FileExt::write_file(path, boxed_user.unwrap().as_bytes()).unwrap();
+
+    FileExt::delete_file(path).unwrap();
 }
 
 #[test]

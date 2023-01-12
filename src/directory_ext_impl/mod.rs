@@ -1,6 +1,5 @@
 use std::fs;
 use std::path::Path;
-use crate::FileExt;
 use crate::path_ext_impl::PathExtImpl;
 
 #[cfg(test)]
