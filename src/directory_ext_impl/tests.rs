@@ -23,9 +23,6 @@ fn new_directory_recursively_create_delete() {
         FileExt::delete_directory("directory").unwrap();
     }
 
-    let name = "new_directory_create_recursively_delete.log";
-    FileExt::create_file(name).unwrap();
-
     let boxed_create = DirectoryExtImpl::create_directory(path.as_str());
     assert!(boxed_create.is_ok());
 
@@ -34,7 +31,6 @@ fn new_directory_recursively_create_delete() {
     let boxed_delete = FileExt::delete_directory("directory");
     assert!(boxed_delete.is_ok());
 
-    FileExt::delete_file(name).unwrap();
 }
 
 #[test]
@@ -45,9 +41,6 @@ fn new_directory_create_recursively_additional_subdirectory() {
         FileExt::delete_directory("recursive_directory_creation").unwrap();
     }
 
-    let name = "new_directory_create_recursively.log";
-    FileExt::create_file(name).unwrap();
-
     let boxed_create = DirectoryExtImpl::create_directory(path.as_str());
     assert!(boxed_create.is_ok());
 
@@ -55,7 +48,6 @@ fn new_directory_create_recursively_additional_subdirectory() {
 
     let boxed_delete = FileExt::delete_directory("recursive_directory_creation");
     assert!(boxed_delete.is_ok());
-    FileExt::delete_file(name).unwrap();
 }
 
 #[test]
@@ -66,9 +58,6 @@ fn new_directory_create_non_recursively() {
         FileExt::delete_directory(path.as_str()).unwrap();
     }
 
-    let name = "new_directory_create_non_recursively.log";
-    FileExt::create_file(name).unwrap();
-
     let boxed_create = DirectoryExtImpl::create_directory(path.as_str());
     assert!(boxed_create.is_ok());
 
@@ -76,5 +65,4 @@ fn new_directory_create_non_recursively() {
 
     let boxed_delete = FileExt::delete_directory(path.as_str());
     assert!(boxed_delete.is_ok());
-    FileExt::delete_file(name).unwrap();
 }
