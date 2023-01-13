@@ -60,7 +60,7 @@ There is Rust Web Server [Discord](https://discord.gg/zaErjtr5Dm) where you can 
 Follow the [Rust code of conduct](https://www.rust-lang.org/policies/code-of-conduct).
 
 ## Donations
-If you appreciate my work and want to support it, feel free to do it via [PayPal](https://www.paypal.com/donate/?hosted_button_id=7J69SYZWSP6HJ).
+Send me tips via [PayPal](https://www.paypal.com/donate/?hosted_button_id=7J69SYZWSP6HJ).
 
 ## Links
 1. [Rust Web Server](https://github.com/bohdaq/rust-web-server)
