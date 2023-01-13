@@ -53,7 +53,7 @@ If you want to test `file-ext`.
 
 
 ## Community
-Use GitHub discussions, issues and pull requests.
+Use GitHub [discussions](https://github.com/bohdaq/file-ext/discussions), [issues](https://github.com/bohdaq/file-ext/issues) and [pull requests](https://github.com/bohdaq/file-ext/pulls).
 
 There is Rust Web Server [Discord](https://discord.gg/zaErjtr5Dm) where you can ask questions and share ideas.
 
