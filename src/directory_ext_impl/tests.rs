@@ -91,3 +91,16 @@ fn delete_nonexistent_directory() {
     assert_eq!(expected_error, boxed_delete.err().unwrap())
 }
 
+#[test]
+fn delete_directory_not_allowed_chars() {
+    let path = "nonexistent_directory;&|'\"";
+
+    assert!(!DirectoryExtImpl::does_directory_exist(path));
+
+    let boxed_delete = DirectoryExtImpl::delete_directory(path);
+    assert!(boxed_delete.is_err());
+
+    let expected_error = format!("Path contains not allowed characters: whitespace, single quote, quotation mark, ampersand, pipe, semicolon. Path: {}", path);
+    assert_eq!(expected_error, boxed_delete.err().unwrap())
+}
+

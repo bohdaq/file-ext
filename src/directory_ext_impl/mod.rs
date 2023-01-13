@@ -74,7 +74,7 @@ impl DirectoryExtImpl {
             path.contains(SYMBOL.ampersand) ||
             path.contains(SYMBOL.pipe) ||
             path.contains(SYMBOL.semicolon) {
-            return Err("path contains not allowed characters: whitespace, single quote, quotation mark, ampersand, pipe, semicolon".to_string())
+            return Err(format!("Path contains not allowed characters: whitespace, single quote, quotation mark, ampersand, pipe, semicolon. Path: {}",path))
         }
 
         if !DirectoryExtImpl::does_directory_exist(path.as_str()) {
