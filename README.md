@@ -15,7 +15,7 @@ Hi, `file-ext` is a collection of utility functions to work with files. It is te
     2. Does directory exist
     3. Delete directory
 3. Path
-    1. Absolute path to working directory
+    1. Absolute path to [working directory](https://en.wikipedia.org/wiki/Working_directory)
     2. Get OS dependent path separator ('/' on Unix, '\\' on Windows)
     3. Get path to OS temporary folder ('/tmp' on Unix, 'C:\\Users\\**_username_**\\AppData\\Local\\Temp' on Windows
 4. Symlink
