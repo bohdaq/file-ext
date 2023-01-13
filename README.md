@@ -3,22 +3,36 @@
 Hi, `file-ext` is a collection of utility functions to work with files
 
 ## Features
-1. Read file
-2. Create file
-3. Read file partially
-4. File modification timestamp
-5. Read or create and write to file
-6. Does file exist
-7. Write to file
+1. File
+    1. Read
+    1. Read partially
+    1. Does file exist
+    1. Create
+    1. Read file, if it doesn't exist create and write to file
+2. Directory
+    1. Create
+    2. Does directory exist
+    3. Delete directory
+3. Path
+    1. Absolute path to working directory
+    2. Get OS dependent path separator ('/' on Unix, '\\' on Windows)
+    3. Get path to OS temporary folder ('/tmp' on Unix, 'C:\\Users\\**_username_**\\AppData\\Local\\Temp' on Windows
+4. Symlink
+    1. Does symlink exist
+    2. Get path symlink points to 
+    3. Create symlink. Works for files and directories on Unix and Windows
+5. User
+    1. Get name of the user who is running the process
+    2. Get domain user belongs to (available only on Windows) 
 
 ## Configuration
 No additional configuration
 
 ## Demo
-Work in progress
+Take a look at [mod.rs](https://github.com/bohdaq/file-ext/blob/main/src/lib.rs)
 
 ## Documentation
-Work in progress
+Take a look at [mod.rs](https://github.com/bohdaq/file-ext/blob/main/src/lib.rs)
 
 ## Crate
 [Link to crate release](https://crates.io/crates/file-ext).
