@@ -53,3 +53,27 @@ fn new_directory_create_non_recursively() {
     let boxed_delete = DirectoryExtImpl::delete_directory(path.as_str());
     assert!(boxed_delete.is_ok());
 }
+
+#[test]
+fn new_directory_create_recursively_additional_subdirectory_removal() {
+    let path = ["recursive_directory", "subdirectory", "subsubdirectory"].join(PathExtImpl::get_path_separator().as_str());
+
+    if FileExt::does_directory_exist("recursive_directory") {
+        FileExt::delete_directory("recursive_directory").unwrap();
+    }
+
+    let boxed_create = DirectoryExtImpl::create_directory(path.as_str());
+    assert!(boxed_create.is_ok());
+
+    assert!(DirectoryExtImpl::does_directory_exist(path.as_str()));
+
+    let boxed_delete = DirectoryExtImpl::delete_directory(path.as_str());
+    assert!(boxed_delete.is_ok());
+
+    assert!(!DirectoryExtImpl::does_directory_exist(path.as_str()));
+
+    let boxed_delete = DirectoryExtImpl::delete_directory("recursive_directory");
+    assert!(boxed_delete.is_ok());
+
+    assert!(!DirectoryExtImpl::does_directory_exist("recursive_directory"));
+}
