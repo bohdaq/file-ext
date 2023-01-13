@@ -27,9 +27,9 @@ Hi, `file-ext` is a collection of utility functions to work with files. It is te
     2. Get [domain](https://en.wikipedia.org/wiki/Windows_domain) user belongs to (available only on Windows) 
 
 ## Configuration
-No additional configuration
+No additional configuration.
 
-Minimum rust version is 1.66, as I'm testing on this specific version. However, if needed you may try older Rust version with the _--ignore-rust-version_ flag.
+Minimum rust version is 1.66, as I'm testing on this specific version. However, if needed, you may try older Rust version with the _--ignore-rust-version_ flag.
 
 ## Demo
 Take a look at [mod.rs](https://github.com/bohdaq/file-ext/blob/main/src/lib.rs)
