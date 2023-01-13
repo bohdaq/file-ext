@@ -17,11 +17,11 @@ Hi, `file-ext` is a collection of utility functions to work with files. It is te
 3. Path
     1. Absolute path to [working directory](https://en.wikipedia.org/wiki/Working_directory)
     2. Get OS dependent path separator ('/' on Unix, '\\' on Windows)
-    3. Get path to OS temporary folder ('/tmp' on Unix, 'C:\\Users\\**_username_**\\AppData\\Local\\Temp' on Windows
+    3. Get path to OS temporary folder ('/tmp' on Linux and macOS, 'C:\\Users\\**_username_**\\AppData\\Local\\Temp' on Windows
 4. Symlink
     1. Does symlink exist
     2. Get path symlink points to 
-    3. Create symlink. Works for files and directories on Unix and Windows
+    3. Create symlink
 5. User
     1. Get the name of the user who is running the process
     2. Get [domain](https://en.wikipedia.org/wiki/Windows_domain) user belongs to (available only on Windows) 
