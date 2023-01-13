@@ -23,6 +23,51 @@ impl DirectoryExtImpl {
         DirectoryExtImpl::remove_directory_recursively_bypass_warnings(path)
     }
 
+    #[cfg(target_family = "windows")]
+    fn remove_directory_recursively_bypass_warnings(path: &str) -> Result<(), String> {
+        let path = path.replace(|x : char | x.is_ascii_control(), SYMBOL.empty_string).trim().to_string();
+
+        if path.contains(SYMBOL.whitespace) ||
+            path.contains(SYMBOL.single_quote) ||
+            path.contains(SYMBOL.quotation_mark) ||
+            path.contains(SYMBOL.ampersand) ||
+            path.contains(SYMBOL.pipe) ||
+            path.contains(SYMBOL.semicolon) {
+            return Err("path contains not allowed characters: whitespace, single quote, quotation mark, ampersand, pipe, semicolon".to_string())
+        }
+
+        if !DirectoryExtImpl::does_directory_exist(path.as_str()) {
+            let message = "There is no directory at the given path".to_string();
+            return Err(message)
+        }
+
+        let boxed_rm_rf = Command::new("rd")
+            .args(["/s", "/q", path.as_str()])
+            .output();
+
+        if boxed_rm_rf.is_err() {
+            let message = boxed_rm_rf.err().unwrap().to_string();
+            return Err(message)
+        }
+
+        let output = boxed_rm_rf.unwrap();
+
+        let success = output.status.success();
+        if !success {
+            let stdout = String::from_utf8(output.stdout).unwrap();
+            let stderr = String::from_utf8(output.stderr).unwrap();
+            let log = [stdout, stderr].join(SYMBOL.new_line_carriage_return);
+
+            //let path = [path.as_str(), "-out.log"].join(SYMBOL.empty_string);
+            //FileExt::create_file(path.as_str()).unwrap();
+            //FileExt::write_file(path.as_str(), log.as_bytes()).unwrap();
+
+            return Err(log);
+        }
+
+        Ok(())
+    }
+
     #[cfg(target_family = "unix")]
     fn remove_directory_recursively_bypass_warnings(path: &str) -> Result<(), String> {
         let path = path.replace(|x : char | x.is_ascii_control(), SYMBOL.empty_string).trim().to_string();
