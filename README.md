@@ -22,8 +22,8 @@ Hi, `file-ext` is a collection of utility functions to work with files
     2. Get path symlink points to 
     3. Create symlink. Works for files and directories on Unix and Windows
 5. User
-    1. Get name of the user who is running the process
-    2. Get domain user belongs to (available only on Windows) 
+    1. Get the name of the user who is running the process
+    2. Get [domain](https://en.wikipedia.org/wiki/Windows_domain) user belongs to (available only on Windows) 
 
 ## Configuration
 No additional configuration
