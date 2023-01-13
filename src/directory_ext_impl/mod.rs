@@ -42,16 +42,16 @@ impl DirectoryExtImpl {
             return Err(format!("Path contains not allowed characters: whitespace, single quote, quotation mark, ampersand, pipe, semicolon. Path: {}",path))
         }
 
+        if !DirectoryExtImpl::does_directory_exist(path.as_str()) {
+            let message = format!("There is no directory at the given path: {}", path);
+            return Err(message)
+        }
+
         DirectoryExtImpl::remove_directory_recursively_bypass_warnings(path.as_str())
     }
 
     #[cfg(target_family = "windows")]
     fn remove_directory_recursively_bypass_warnings(path: &str) -> Result<(), String> {
-
-        if !DirectoryExtImpl::does_directory_exist(path) {
-            let message = "There is no directory at the given path".to_string();
-            return Err(message)
-        }
 
         let boxed_rm_rf = Command::new("cmd")
             .args(["/c", "rd" ,"/s", "/q", path])
@@ -78,11 +78,6 @@ impl DirectoryExtImpl {
 
     #[cfg(target_family = "unix")]
     fn remove_directory_recursively_bypass_warnings(path: &str) -> Result<(), String> {
-
-        if !DirectoryExtImpl::does_directory_exist(path) {
-            let message = format!("There is no directory at the given path: {}", path);
-            return Err(message)
-        }
 
         let boxed_rm_rf = Command::new("rm")
             .args(["-Rf", path])
