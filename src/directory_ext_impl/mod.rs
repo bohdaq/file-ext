@@ -41,8 +41,8 @@ impl DirectoryExtImpl {
             return Err(message)
         }
 
-        let boxed_rm_rf = Command::new("rd")
-            .args(["/s", "/q", path.as_str()])
+        let boxed_rm_rf = Command::new("cmd")
+            .args(["/c", "rd" ,"/s", "/q", path.as_str()])
             .output();
 
         if boxed_rm_rf.is_err() {
@@ -57,10 +57,6 @@ impl DirectoryExtImpl {
             let stdout = String::from_utf8(output.stdout).unwrap();
             let stderr = String::from_utf8(output.stderr).unwrap();
             let log = [stdout, stderr].join(SYMBOL.new_line_carriage_return);
-
-            //let path = [path.as_str(), "-out.log"].join(SYMBOL.empty_string);
-            //FileExt::create_file(path.as_str()).unwrap();
-            //FileExt::write_file(path.as_str(), log.as_bytes()).unwrap();
 
             return Err(log);
         }
