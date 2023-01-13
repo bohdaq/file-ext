@@ -31,11 +31,6 @@ impl DirectoryExtImpl {
     }
 
     pub fn delete_directory(path: &str) -> Result<(), String> {
-        DirectoryExtImpl::remove_directory_recursively_bypass_warnings(path)
-    }
-
-    #[cfg(target_family = "windows")]
-    fn remove_directory_recursively_bypass_warnings(path: &str) -> Result<(), String> {
         let path = path.replace(|x : char | x.is_ascii_control(), SYMBOL.empty_string).trim().to_string();
 
         if path.contains(SYMBOL.whitespace) ||
@@ -44,16 +39,22 @@ impl DirectoryExtImpl {
             path.contains(SYMBOL.ampersand) ||
             path.contains(SYMBOL.pipe) ||
             path.contains(SYMBOL.semicolon) {
-            return Err("path contains not allowed characters: whitespace, single quote, quotation mark, ampersand, pipe, semicolon".to_string())
+            return Err(format!("Path contains not allowed characters: whitespace, single quote, quotation mark, ampersand, pipe, semicolon. Path: {}",path))
         }
 
-        if !DirectoryExtImpl::does_directory_exist(path.as_str()) {
+        DirectoryExtImpl::remove_directory_recursively_bypass_warnings(path.as_str())
+    }
+
+    #[cfg(target_family = "windows")]
+    fn remove_directory_recursively_bypass_warnings(path: &str) -> Result<(), String> {
+
+        if !DirectoryExtImpl::does_directory_exist(path) {
             let message = "There is no directory at the given path".to_string();
             return Err(message)
         }
 
         let boxed_rm_rf = Command::new("cmd")
-            .args(["/c", "rd" ,"/s", "/q", path.as_str()])
+            .args(["/c", "rd" ,"/s", "/q", path])
             .output();
 
         if boxed_rm_rf.is_err() {
@@ -77,24 +78,14 @@ impl DirectoryExtImpl {
 
     #[cfg(target_family = "unix")]
     fn remove_directory_recursively_bypass_warnings(path: &str) -> Result<(), String> {
-        let path = path.replace(|x : char | x.is_ascii_control(), SYMBOL.empty_string).trim().to_string();
 
-        if path.contains(SYMBOL.whitespace) ||
-            path.contains(SYMBOL.single_quote) ||
-            path.contains(SYMBOL.quotation_mark) ||
-            path.contains(SYMBOL.ampersand) ||
-            path.contains(SYMBOL.pipe) ||
-            path.contains(SYMBOL.semicolon) {
-            return Err(format!("Path contains not allowed characters: whitespace, single quote, quotation mark, ampersand, pipe, semicolon. Path: {}",path))
-        }
-
-        if !DirectoryExtImpl::does_directory_exist(path.as_str()) {
-            let message = format!("There is no directory at the given path: {}", path.as_str());
+        if !DirectoryExtImpl::does_directory_exist(path) {
+            let message = format!("There is no directory at the given path: {}", path);
             return Err(message)
         }
 
         let boxed_rm_rf = Command::new("rm")
-            .args(["-Rf", path.as_str()])
+            .args(["-Rf", path])
             .output();
 
         if boxed_rm_rf.is_err() {
