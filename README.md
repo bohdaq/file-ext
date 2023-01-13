@@ -1,6 +1,6 @@
 # Welcome to file-ext!
 
-Hi, `file-ext` is a collection of utility functions to work with files. It is tested and works on Unix and Windows.
+Hi, `file-ext` is a collection of utility functions to work with files. It is tested and works on Linux, macOS and Windows.
 
 ## Features
 1. File
