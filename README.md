@@ -9,6 +9,7 @@ Hi, `file-ext` is a collection of utility functions to work with files. It is te
     1. Does file exist
     1. Create
     1. Read file, if it doesn't exist create and write to file
+    1. Write to file
 2. Directory
     1. Create
     2. Does directory exist
