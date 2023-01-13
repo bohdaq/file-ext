@@ -16,7 +16,18 @@ impl DirectoryExtImpl {
     }
 
     pub fn create_directory(path: &str) -> Result<(), String> {
-        DirectoryExtImpl::recursively_create_directories("", path)
+        let path = path.replace(|x : char | x.is_ascii_control(), SYMBOL.empty_string).trim().to_string();
+
+        if path.contains(SYMBOL.whitespace) ||
+            path.contains(SYMBOL.single_quote) ||
+            path.contains(SYMBOL.quotation_mark) ||
+            path.contains(SYMBOL.ampersand) ||
+            path.contains(SYMBOL.pipe) ||
+            path.contains(SYMBOL.semicolon) {
+            return Err(format!("Path contains not allowed characters: whitespace, single quote, quotation mark, ampersand, pipe, semicolon. Path: {}",path))
+        }
+
+        DirectoryExtImpl::recursively_create_directories("", path.as_str())
     }
 
     pub fn delete_directory(path: &str) -> Result<(), String> {
