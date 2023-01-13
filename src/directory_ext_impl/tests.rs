@@ -77,3 +77,17 @@ fn new_directory_create_recursively_additional_subdirectory_removal() {
 
     assert!(!DirectoryExtImpl::does_directory_exist("recursive_directory"));
 }
+
+#[test]
+fn delete_nonexistent_directory() {
+    let path = "nonexistent_directory";
+
+    assert!(!DirectoryExtImpl::does_directory_exist(path));
+
+    let boxed_delete = DirectoryExtImpl::delete_directory(path);
+    assert!(boxed_delete.is_err());
+
+    let expected_error = format!("There is no directory at the given path: {}", path);
+    assert_eq!(expected_error, boxed_delete.err().unwrap())
+}
+

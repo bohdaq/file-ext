@@ -78,7 +78,7 @@ impl DirectoryExtImpl {
         }
 
         if !DirectoryExtImpl::does_directory_exist(path.as_str()) {
-            let message = "There is no directory at the given path".to_string();
+            let message = format!("There is no directory at the given path: {}", path.as_str());
             return Err(message)
         }
 
@@ -98,10 +98,6 @@ impl DirectoryExtImpl {
             let stdout = String::from_utf8(output.stdout).unwrap();
             let stderr = String::from_utf8(output.stderr).unwrap();
             let log = [stdout, stderr].join(SYMBOL.new_line_carriage_return);
-
-            //let path = [path.as_str(), "-out.log"].join(SYMBOL.empty_string);
-            //FileExt::create_file(path.as_str()).unwrap();
-            //FileExt::write_file(path.as_str(), log.as_bytes()).unwrap();
 
             return Err(log);
         }
