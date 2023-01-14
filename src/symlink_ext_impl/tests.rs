@@ -117,3 +117,21 @@ fn create_rewrite_index_symlink() {
     let symlink_created = SymlinkExtImpl::does_symlink_exist(symlink_path.as_str());
     assert!(symlink_created);
 }
+
+#[test]
+fn resolve_symlink_path() {
+    let base_dir = "/home/someuser/folder/subfolder/subsubfolder";
+    let symlink_points_to = "../../subfolder2/subsubfolder2";
+
+    FileExt::create_file("resolve.out").unwrap();
+
+    let expected_path = "/home/someuser/folder/subfolder2/subsubfolder2";
+    let actual_path = resolve_path(base_dir, symlink_points_to).unwrap();
+}
+
+fn resolve_path(base_dir: &str, symlink_points_to: &str) -> Result<String, String> {
+    //TODO
+    let resolved_path = "123".to_string();
+
+    Ok(resolved_path)
+}
