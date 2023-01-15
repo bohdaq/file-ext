@@ -44,12 +44,13 @@ fn symlink_creation() {
         FileExtImpl::delete_file(symlink_path.as_str()).unwrap();
     }
 
-    let path = [SYMBOL.empty_string, "test", SYMBOL.empty_string].join(PathExtImpl::get_path_separator().as_str());
-    let path_prefix = FileExt::get_static_filepath(path.as_str()).unwrap();
-    let points_to = [path_prefix.to_string(), "index.html".to_string()].join("");
+    let path = [FileExt::get_static_filepath("").unwrap(), "test".to_string()].join(PathExtImpl::get_path_separator().as_str());
+    let points_to = [path.to_string(), "index.html".to_string()].join(PathExtImpl::get_path_separator().as_str());
+
+    // FileExt::create_file("out.log").unwrap();
 
     let boxed_symlink = SymlinkExtImpl::create_symlink(
-        path_prefix.as_str(),
+        path.as_str(),
         "index-link",
         points_to.as_str());
 

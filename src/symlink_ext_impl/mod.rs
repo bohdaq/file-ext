@@ -40,8 +40,8 @@ impl SymlinkExtImpl {
             return Err(message)
         }
 
-        FileExt::write_file("out.log", "\n".as_bytes()).unwrap();
-        FileExt::write_file("out.log", FileExt::get_static_filepath("").unwrap().as_bytes()).unwrap();
+        // FileExt::write_file("out.log", "\n".as_bytes()).unwrap();
+        // FileExt::write_file("out.log", FileExt::get_static_filepath("").unwrap().as_bytes()).unwrap();
 
 
         let mut absolute_path_symlink_points_to = symlink_points_to.to_string();
@@ -51,8 +51,8 @@ impl SymlinkExtImpl {
         }
 
 
-        FileExt::write_file("out.log", "\nabsolute_path_symlink_points_to:".as_bytes()).unwrap();
-        FileExt::write_file("out.log", absolute_path_symlink_points_to.as_bytes()).unwrap();
+        // FileExt::write_file("out.log", "\nabsolute_path_symlink_points_to:".as_bytes()).unwrap();
+        // FileExt::write_file("out.log", absolute_path_symlink_points_to.as_bytes()).unwrap();
 
         //check if there is a file or directory for symlink to be created
         let does_file_exist = FileExtImpl::does_file_exist(absolute_path_symlink_points_to.as_str());
