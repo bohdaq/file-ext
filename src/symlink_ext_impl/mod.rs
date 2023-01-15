@@ -76,7 +76,7 @@ impl SymlinkExtImpl {
     #[cfg(target_family = "windows")]
     pub fn create_symlink(symlink_path: &str, symlink_name: &str, symlink_points_to: &str) -> Result<(), String> {
         //check if there is already a file where symlink is going to be created
-        let path_to_symlink_included = [symlink_path, symlink_name].join("");
+        let path_to_symlink_included = [symlink_path, symlink_name].join(PathExtImpl::get_path_separator().as_str());
         let does_file_exist = FileExtImpl::does_file_exist(&path_to_symlink_included);
         if does_file_exist {
             let message = format!("There is a file on a given path: {}", &path_to_symlink_included);
