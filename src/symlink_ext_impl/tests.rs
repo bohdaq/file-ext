@@ -1,3 +1,4 @@
+use crate::directory_ext_impl::DirectoryExtImpl;
 use crate::file_ext_impl::FileExtImpl;
 use crate::FileExt;
 use crate::path_ext_impl::PathExtImpl;
@@ -24,13 +25,17 @@ fn not_symlink_check() {
 
 #[test]
 fn file_exists() {
-    let path = ["test", "index_rewrite"].join(PathExtImpl::get_path_separator().as_str());
+    let working_directory = FileExt::get_static_filepath("").unwrap();
+    let absolute_path = [working_directory, "test".to_string(), "index_rewrite".to_string()].join(PathExtImpl::get_path_separator().as_str());
     create_rewrite_index_symlink();
 
-    let exists = SymlinkExtImpl::does_symlink_exist(path.as_str());
+    FileExtImpl::delete_file(absolute_path.as_str()).unwrap_or_default();
+
+
+
+    let exists = SymlinkExtImpl::does_symlink_exist(absolute_path.as_str());
     assert!(exists);
 
-    FileExtImpl::delete_file(path.as_str()).unwrap();
 
 }
 
@@ -65,17 +70,28 @@ fn symlink_creation() {
 
 #[test]
 fn link_points_to() {
+    FileExt::create_file("out.log").unwrap();
+
     let symlink_path = ["test", "index_rewrite2"].join(PathExtImpl::get_path_separator().as_str());
 
     if SymlinkExtImpl::does_symlink_exist(symlink_path.as_str()) {
         FileExtImpl::delete_file(symlink_path.as_str()).unwrap();
     }
 
-    let path = [SYMBOL.empty_string, "test",  "index.html"].join(FileExt::get_path_separator().as_str());
-    let points_to = FileExt::get_static_filepath(path.as_str()).unwrap();
+    let points_to =
+        [
+            FileExt::get_static_filepath("").unwrap(),
+            "test".to_string(),
+            "index.html".to_string()
+        ].join(PathExtImpl::get_path_separator().as_str());
 
-    let symlink_dir = [SYMBOL.empty_string, "test", SYMBOL.empty_string].join(FileExt::get_path_separator().as_str());
-    let path_prefix = FileExt::get_static_filepath(symlink_dir.as_str()).unwrap();
+
+    let symlink_dir = "test";
+    let path_prefix =
+        [
+            FileExt::get_static_filepath("").unwrap(),
+            symlink_dir.to_string()
+        ].join(PathExtImpl::get_path_separator().as_str());
 
     let boxed_symlink = SymlinkExtImpl::create_symlink(
         path_prefix.as_str(),
@@ -102,8 +118,9 @@ fn create_rewrite_index_symlink() {
         FileExtImpl::delete_file(symlink_path.as_str()).unwrap();
     }
 
-    let path = [SYMBOL.empty_string, "test", SYMBOL.empty_string].join(PathExtImpl::get_path_separator().as_str());
-    let path_prefix = FileExt::get_static_filepath(path.as_str()).unwrap();
+    let path = "test";
+    let absolute_path = FileExt::get_static_filepath("").unwrap();
+    let path_prefix = [absolute_path, path.to_string()].join(PathExtImpl::get_path_separator().as_str());
     let points_to = [path_prefix.to_string(), "index.html".to_string()].join("");
 
     let boxed_symlink = SymlinkExtImpl::create_symlink(
@@ -186,4 +203,31 @@ fn resolve_symlink_path_not_valid() {
     let expected_error = "not valid path for the symlink";
     let actual_error = boxed_resolve.err().unwrap();
     assert_eq!(expected_error, actual_error);
+}
+
+#[test]
+fn actual_symlinks_test() {
+    FileExt::create_file("out.log").unwrap();
+
+    let test_dir = "symlink_resolve";
+    if DirectoryExtImpl::does_directory_exist(test_dir) {
+        DirectoryExtImpl::delete_directory(test_dir).unwrap();
+    }
+
+    DirectoryExtImpl::create_directory(test_dir).unwrap();
+
+    let points_to = "test/index.html";
+    SymlinkExtImpl::create_symlink(test_dir, "index-rewrite", points_to).unwrap();
+
+    let symlink_path = "symlink_resolve/index-rewrite";
+    let exists = SymlinkExtImpl::does_symlink_exist(symlink_path);
+    assert!(exists);
+
+    let actual_points_to = SymlinkExtImpl::symlink_points_to(symlink_path).unwrap();
+
+    let working_directory = FileExt::get_static_filepath("").unwrap();
+    let absolute_path_symlink_points_to = [working_directory, points_to.to_string()].join(PathExtImpl::get_path_separator().as_str());
+
+    assert_eq!(absolute_path_symlink_points_to, actual_points_to);
+
 }

@@ -2,6 +2,7 @@ use std::fs;
 use std::path::Path;
 use crate::directory_ext_impl::DirectoryExtImpl;
 use crate::file_ext_impl::FileExtImpl;
+use crate::FileExt;
 use crate::path_ext_impl::PathExtImpl;
 use crate::symbol::SYMBOL;
 
@@ -17,8 +18,17 @@ impl SymlinkExtImpl {
 
     #[cfg(target_family = "unix")]
     pub fn create_symlink(symlink_path: &str, symlink_name: &str, symlink_points_to: &str) -> Result<(), String> {
+        FileExt::write_file("out.log", "\nsymlink_path:".as_bytes()).unwrap();
+        FileExt::write_file("out.log", symlink_path.as_bytes()).unwrap();
+
+        FileExt::write_file("out.log", "\nsymlink_name:".as_bytes()).unwrap();
+        FileExt::write_file("out.log", symlink_name.as_bytes()).unwrap();
+
+        FileExt::write_file("out.log", "\nsymlink_points_to:".as_bytes()).unwrap();
+        FileExt::write_file("out.log", symlink_points_to.as_bytes()).unwrap();
+
         //check if there is already a file where symlink is going to be created
-        let path_to_symlink_included = [symlink_path, symlink_name].join("");
+        let path_to_symlink_included = [symlink_path, symlink_name].join(PathExtImpl::get_path_separator().as_str());
         let does_file_exist = FileExtImpl::does_file_exist(&path_to_symlink_included);
         if does_file_exist {
             let message = format!("There is a file on a given path: {}", &path_to_symlink_included);
@@ -30,16 +40,30 @@ impl SymlinkExtImpl {
             return Err(message)
         }
 
+        FileExt::write_file("out.log", "\n".as_bytes()).unwrap();
+        FileExt::write_file("out.log", FileExt::get_static_filepath("").unwrap().as_bytes()).unwrap();
+
+
+        let mut absolute_path_symlink_points_to = symlink_points_to.to_string();
+        if !symlink_points_to.starts_with(SYMBOL.slash) {
+            let working_directory = FileExt::get_static_filepath("").unwrap();
+            absolute_path_symlink_points_to = [working_directory, symlink_points_to.to_string()].join(PathExtImpl::get_path_separator().as_str());
+        }
+
+
+        FileExt::write_file("out.log", "\nabsolute_path_symlink_points_to:".as_bytes()).unwrap();
+        FileExt::write_file("out.log", absolute_path_symlink_points_to.as_bytes()).unwrap();
+
         //check if there is a file or directory for symlink to be created
-        let does_file_exist = FileExtImpl::does_file_exist(symlink_points_to);
-        let does_directory_exist = DirectoryExtImpl::does_directory_exist(symlink_points_to);
+        let does_file_exist = FileExtImpl::does_file_exist(absolute_path_symlink_points_to.as_str());
+        let does_directory_exist = DirectoryExtImpl::does_directory_exist(absolute_path_symlink_points_to.as_str());
 
         if !does_file_exist && !does_directory_exist   {
-            let message = format!("There is no file or directory for symlink to be created: {}", symlink_points_to);
+            let message = format!("There is no file or directory for symlink to be created: {}", absolute_path_symlink_points_to.as_str());
             return Err(message)
         }
 
-        let boxed_symlink = std::os::unix::fs::symlink(symlink_points_to, path_to_symlink_included);
+        let boxed_symlink = std::os::unix::fs::symlink(absolute_path_symlink_points_to.as_str(), path_to_symlink_included);
         if boxed_symlink.is_err()   {
             let message = boxed_symlink.err().unwrap().to_string();
             return Err(message)
