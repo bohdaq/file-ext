@@ -2,12 +2,11 @@ use crate::directory_ext_impl::DirectoryExtImpl;
 use crate::file_ext_impl::FileExtImpl;
 use crate::FileExt;
 use crate::path_ext_impl::PathExtImpl;
-use crate::symbol::SYMBOL;
 use crate::symlink_ext_impl::SymlinkExtImpl;
 
 #[test]
 fn symlink_check() {
-    let path = ["test", "index_rewrite"].join(PathExtImpl::get_path_separator().as_str());
+    let path = PathExtImpl::build_path(&["test", "index_rewrite"]);
     create_rewrite_index_symlink();
 
     let is_symlink = SymlinkExtImpl::is_symlink(path.as_str()).unwrap();
@@ -18,15 +17,15 @@ fn symlink_check() {
 
 #[test]
 fn not_symlink_check() {
-    let path = "test/index.html";
-    let is_symlink = SymlinkExtImpl::is_symlink(path).unwrap();
+    let path = PathExtImpl::build_path(&["test", "index.html"]);
+    let is_symlink = SymlinkExtImpl::is_symlink(path.as_str()).unwrap();
     assert!(!is_symlink);
 }
 
 #[test]
 fn file_exists() {
     let working_directory = FileExt::get_static_filepath("").unwrap();
-    let absolute_path = [working_directory, "test".to_string(), "index_rewrite".to_string()].join(PathExtImpl::get_path_separator().as_str());
+    let absolute_path = PathExtImpl::build_path(&[working_directory.as_str(), "test", "index_rewrite"]);
     create_rewrite_index_symlink();
 
     let exists = SymlinkExtImpl::does_symlink_exist(absolute_path.as_str());
