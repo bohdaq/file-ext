@@ -189,7 +189,7 @@ fn resolve_symlink_path_root() {
 #[test]
 fn resolve_symlink_path_not_valid() {
     let base_dir = [PathExtImpl::root(), "home".to_string(), "someuser".to_string()].join(PathExtImpl::get_path_separator().as_str());
-    let symlink_points_to = ["..", "..", "..", "tmp", "folder"].join(PathExtImpl::get_path_separator().as_str());
+    let symlink_points_to = ["..", "..", "..", "..", "tmp", "folder"].join(PathExtImpl::get_path_separator().as_str());
 
     let boxed_resolve = SymlinkExtImpl::resolve_symlink_path(base_dir.as_str(), symlink_points_to.as_str());
     let is_err = boxed_resolve.is_err();
