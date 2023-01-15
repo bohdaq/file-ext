@@ -218,10 +218,13 @@ fn actual_symlinks_test() {
     assert!(exists);
 
     let actual_points_to = SymlinkExtImpl::symlink_points_to(symlink_path).unwrap();
+    let resolved_points_to = SymlinkExtImpl::resolve_symlink_path(test_dir, actual_points_to.as_str()).unwrap();
 
     let working_directory = FileExt::get_static_filepath("").unwrap();
     let absolute_path_symlink_points_to = [working_directory, points_to.to_string()].join(PathExtImpl::get_path_separator().as_str());
 
-    assert_eq!(absolute_path_symlink_points_to, actual_points_to);
+    assert_eq!(absolute_path_symlink_points_to, resolved_points_to);
 
+
+    DirectoryExtImpl::delete_directory(test_dir).unwrap();
 }
