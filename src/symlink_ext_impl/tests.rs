@@ -173,6 +173,21 @@ fn resolve_symlink_path_root() {
     assert_eq!(expected_path, actual_path);
 }
 
+#[test]
+fn resolve_symlink_path_not_valid() {
+    let base_dir = "/home/someuser";
+    let symlink_points_to = "../../../tmp/folder";
+
+    let boxed_resolve = resolve_path(base_dir, symlink_points_to);
+    let is_err = boxed_resolve.is_err();
+
+    assert!(is_err);
+
+    let expected_error = "not valid path for the symlink";
+    let actual_error = boxed_resolve.err().unwrap();
+    assert_eq!(expected_error, actual_error);
+}
+
 fn resolve_path(base_dir: &str, symlink_points_to: &str) -> Result<String, String> {
     if symlink_points_to.starts_with(SYMBOL.slash) {
         return Ok(symlink_points_to.to_string())
@@ -186,6 +201,11 @@ fn resolve_path(base_dir: &str, symlink_points_to: &str) -> Result<String, Strin
 
     let (part, symlink_after_split) = boxed_split.unwrap();
     if part == ".." {
+        if base_dir.chars().count() == 0 {
+            let message = "not valid path for the symlink";
+            return Err(message.to_string())
+        }
+
         let reversed_base_dir = base_dir.chars().rev().collect::<String>();
         let boxed_one_level_up_split = reversed_base_dir.split_once(SYMBOL.slash);
         if boxed_one_level_up_split.is_some() {
