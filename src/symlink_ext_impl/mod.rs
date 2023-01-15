@@ -150,7 +150,7 @@ impl SymlinkExtImpl {
     }
 
     pub fn resolve_symlink_path(symlink_directory: &str, symlink_points_to: &str) -> Result<String, String> {
-        if symlink_points_to.starts_with(SYMBOL.slash) {
+        if symlink_points_to.starts_with(PathExtImpl::get_path_separator().as_str()) {
             return Ok(symlink_points_to.to_string())
         }
 
@@ -168,7 +168,7 @@ impl SymlinkExtImpl {
             }
 
             let reversed_base_dir = symlink_directory.chars().rev().collect::<String>();
-            let boxed_one_level_up_split = reversed_base_dir.split_once(SYMBOL.slash);
+            let boxed_one_level_up_split = reversed_base_dir.split_once(PathExtImpl::get_path_separator().as_str());
             if boxed_one_level_up_split.is_some() {
                 let (_cut_folder, remaining_base_dir) = boxed_one_level_up_split.unwrap();
                 let _symlink_directory = remaining_base_dir.chars().rev().collect::<String>();
