@@ -123,9 +123,24 @@ fn resolve_symlink_path() {
     let base_dir = "/home/someuser/folder/subfolder/subsubfolder";
     let symlink_points_to = "../../subfolder2/subsubfolder2";
 
-    FileExt::create_file("resolve.out").unwrap();
+   // FileExt::create_file("resolve.out").unwrap();
 
     let expected_path = "/home/someuser/folder/subfolder2/subsubfolder2";
+    let actual_path = resolve_path(base_dir, symlink_points_to).unwrap();
+
+    assert_eq!(expected_path, actual_path);
+   // FileExt::delete_file("resolve.out").unwrap();
+
+}
+
+#[test]
+fn resolve_symlink_path_subdirectory() {
+    let base_dir = "/home/someuser/folder/subfolder/subsubfolder";
+    let symlink_points_to = "subsubsubfolder/subsubsubsubfolder";
+
+    FileExt::create_file("resolve.out").unwrap();
+
+    let expected_path = "/home/someuser/folder/subfolder/subsubfolder/subsubsubfolder/subsubsubsubfolder";
     let actual_path = resolve_path(base_dir, symlink_points_to).unwrap();
 
     assert_eq!(expected_path, actual_path);
@@ -134,7 +149,7 @@ fn resolve_symlink_path() {
 }
 
 fn resolve_path(base_dir: &str, symlink_points_to: &str) -> Result<String, String> {
-    FileExt::write_file("resolve.out", format!("\n\n base dir:{}\n symlink_points_to: {}\n", base_dir, symlink_points_to).as_bytes()).unwrap();
+    // FileExt::write_file("resolve.out", format!("\n\n base dir:{}\n symlink_points_to: {}\n", base_dir, symlink_points_to).as_bytes()).unwrap();
 
     if symlink_points_to.starts_with(SYMBOL.slash) {
         return Ok(symlink_points_to.to_string())

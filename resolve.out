@@ -1,0 +1,8 @@
+
+
+ base dir:/home/someuser/folder/subfolder/subsubfolder
+ symlink_points_to: subsubsubfolder/subsubsubsubfolder
+
+
+ base dir:/home/someuser/folder/subfolder/subsubfolder/subsubsubfolder
+ symlink_points_to: subsubsubsubfolder
