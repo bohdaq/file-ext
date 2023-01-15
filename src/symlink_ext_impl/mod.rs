@@ -18,14 +18,14 @@ impl SymlinkExtImpl {
 
     #[cfg(target_family = "unix")]
     pub fn create_symlink(symlink_path: &str, symlink_name: &str, symlink_points_to: &str) -> Result<(), String> {
-        FileExt::write_file("out.log", "\nsymlink_path:".as_bytes()).unwrap();
-        FileExt::write_file("out.log", symlink_path.as_bytes()).unwrap();
-
-        FileExt::write_file("out.log", "\nsymlink_name:".as_bytes()).unwrap();
-        FileExt::write_file("out.log", symlink_name.as_bytes()).unwrap();
-
-        FileExt::write_file("out.log", "\nsymlink_points_to:".as_bytes()).unwrap();
-        FileExt::write_file("out.log", symlink_points_to.as_bytes()).unwrap();
+        // FileExt::write_file("out.log", "\nsymlink_path:".as_bytes()).unwrap();
+        // FileExt::write_file("out.log", symlink_path.as_bytes()).unwrap();
+        //
+        // FileExt::write_file("out.log", "\nsymlink_name:".as_bytes()).unwrap();
+        // FileExt::write_file("out.log", symlink_name.as_bytes()).unwrap();
+        //
+        // FileExt::write_file("out.log", "\nsymlink_points_to:".as_bytes()).unwrap();
+        // FileExt::write_file("out.log", symlink_points_to.as_bytes()).unwrap();
 
         //check if there is already a file where symlink is going to be created
         let path_to_symlink_included = [symlink_path, symlink_name].join(PathExtImpl::get_path_separator().as_str());

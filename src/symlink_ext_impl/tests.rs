@@ -25,12 +25,6 @@ fn not_symlink_check() {
 
 #[test]
 fn file_exists() {
-    if FileExt::does_file_exist("out.log") {
-        FileExt::delete_file("out.log").unwrap();
-    }
-
-    FileExt::create_file("out.log").unwrap();
-
     let working_directory = FileExt::get_static_filepath("").unwrap();
     let absolute_path = [working_directory, "test".to_string(), "index_rewrite".to_string()].join(PathExtImpl::get_path_separator().as_str());
     create_rewrite_index_symlink();
@@ -73,8 +67,6 @@ fn symlink_creation() {
 
 #[test]
 fn link_points_to() {
-    FileExt::create_file("out.log").unwrap();
-
     let symlink_path = ["test", "index_rewrite2"].join(PathExtImpl::get_path_separator().as_str());
 
     if SymlinkExtImpl::does_symlink_exist(symlink_path.as_str()) {
@@ -210,7 +202,6 @@ fn resolve_symlink_path_not_valid() {
 
 #[test]
 fn actual_symlinks_test() {
-    FileExt::create_file("out.log").unwrap();
 
     let test_dir = "symlink_resolve";
     if DirectoryExtImpl::does_directory_exist(test_dir) {
