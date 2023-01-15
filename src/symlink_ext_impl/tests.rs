@@ -141,6 +141,17 @@ fn resolve_symlink_back_and_forth() {
 }
 
 #[test]
+fn resolve_symlink_back_and_forth_starts_from_subdir() {
+    let base_dir = "/home/someuser/folder/subfolder";
+    let symlink_points_to = "subsubfolder/../../subfolder2/subsubfolder2/../../subfolder/subsubfolder";
+
+    let expected_path = "/home/someuser/folder/subfolder/subsubfolder";
+    let actual_path = resolve_path(base_dir, symlink_points_to).unwrap();
+
+    assert_eq!(expected_path, actual_path);
+}
+
+#[test]
 fn resolve_symlink_path_subdirectory() {
     let base_dir = "/home/someuser/folder/subfolder/subsubfolder";
     let symlink_points_to = "subsubsubfolder/subsubsubsubfolder";
