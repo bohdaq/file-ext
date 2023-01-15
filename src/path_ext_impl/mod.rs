@@ -13,6 +13,16 @@ impl PathExtImpl {
         SYMBOL.slash.to_string()
     }
 
+    #[cfg(target_family = "unix")]
+    pub fn root() -> String {
+        SYMBOL.empty_string.to_string()
+    }
+
+    #[cfg(target_family = "windows")]
+    pub fn root() -> String {
+        "C:".to_string()
+    }
+
     #[cfg(target_family = "windows")]
     pub fn get_path_separator() -> String {
         SYMBOL.reverse_slash.to_string()
