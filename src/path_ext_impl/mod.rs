@@ -18,6 +18,10 @@ impl PathExtImpl {
         SYMBOL.empty_string.to_string()
     }
 
+    pub fn folder_up() -> String {
+        "..".to_string()
+    }
+
     pub fn build_path(list: &[&str]) -> String {
         list.join(PathExtImpl::get_path_separator().as_str())
     }

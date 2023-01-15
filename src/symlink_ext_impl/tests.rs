@@ -146,10 +146,19 @@ fn resolve_symlink_path() {
     let base_dir = PathExtImpl::build_path(&path_node_list);
 
 
-    let symlink_points_to = "../../subfolder2/subsubfolder2";
+    let folder_up = PathExtImpl::folder_up();
+    let symlink_points_to_node_list =
+        [
+            folder_up.as_str(),
+            folder_up.as_str(),
+            "subfolder2",
+            "subsubfolder2",
+        ];
+    let symlink_points_to = PathExtImpl::build_path(&symlink_points_to_node_list);
+
 
     let expected_path = "/home/someuser/folder/subfolder2/subsubfolder2";
-    let actual_path = SymlinkExtImpl::resolve_symlink_path(base_dir.as_str(), symlink_points_to).unwrap();
+    let actual_path = SymlinkExtImpl::resolve_symlink_path(base_dir.as_str(), symlink_points_to.as_str()).unwrap();
 
     assert_eq!(expected_path, actual_path);
 }
