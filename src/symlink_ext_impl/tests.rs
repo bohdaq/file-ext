@@ -211,14 +211,14 @@ fn actual_symlinks_test() {
 
     DirectoryExtImpl::create_directory(test_dir).unwrap();
 
-    let points_to = "test/index.html";
-    SymlinkExtImpl::create_symlink(test_dir, "index-rewrite", points_to).unwrap();
+    let points_to = ["test", "index.html"].join(PathExtImpl::get_path_separator().as_str());
+    SymlinkExtImpl::create_symlink(test_dir, "index-rewrite", points_to.as_str()).unwrap();
 
-    let symlink_path = "symlink_resolve/index-rewrite";
-    let exists = SymlinkExtImpl::does_symlink_exist(symlink_path);
+    let symlink_path = ["symlink_resolve", "index-rewrite"].join(PathExtImpl::get_path_separator().as_str());
+    let exists = SymlinkExtImpl::does_symlink_exist(symlink_path.as_str());
     assert!(exists);
 
-    let actual_points_to = SymlinkExtImpl::symlink_points_to(symlink_path).unwrap();
+    let actual_points_to = SymlinkExtImpl::symlink_points_to(symlink_path.as_str()).unwrap();
     let resolved_points_to = SymlinkExtImpl::resolve_symlink_path(test_dir, actual_points_to.as_str()).unwrap();
 
     let working_directory = FileExt::get_static_filepath("").unwrap();
