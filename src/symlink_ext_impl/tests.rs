@@ -132,11 +132,24 @@ fn create_rewrite_index_symlink() {
 
 #[test]
 fn resolve_symlink_path() {
-    let base_dir = "/home/someuser/folder/subfolder/subsubfolder";
+    let root = PathExtImpl::root();
+
+    let path_node_list =
+        [
+            root.as_str(),
+            "home",
+            "someuser",
+            "folder",
+            "subfolder",
+            "subsubfolder",
+        ];
+    let base_dir = PathExtImpl::build_path(&path_node_list);
+
+
     let symlink_points_to = "../../subfolder2/subsubfolder2";
 
     let expected_path = "/home/someuser/folder/subfolder2/subsubfolder2";
-    let actual_path = SymlinkExtImpl::resolve_symlink_path(base_dir, symlink_points_to).unwrap();
+    let actual_path = SymlinkExtImpl::resolve_symlink_path(base_dir.as_str(), symlink_points_to).unwrap();
 
     assert_eq!(expected_path, actual_path);
 }
