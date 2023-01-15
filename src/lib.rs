@@ -356,6 +356,27 @@ impl FileExt {
         SymlinkExtImpl::does_symlink_exist(path)
     }
 
+    /// Returns absolute path, symlink points to.
+    /// Takes 2 parameters: path to the directory, where symlink is located and where symlink points to
+    /// # Examples
+    ///
+    /// ```
+    /// use file_ext::FileExt;
+    /// #[test]
+    /// fn resolve_symlink_path() {
+    ///    let base_dir = "/home/someuser/folder/subfolder/subsubfolder";
+    ///    let symlink_points_to = "../../subfolder2/subsubfolder2";
+    ///
+    ///    let expected_path = "/home/someuser/folder/subfolder2/subsubfolder2";
+    ///    let actual_path = FileExt::resolve_symlink_path(base_dir, symlink_points_to).unwrap();
+    ///
+    ///    assert_eq!(expected_path, actual_path);
+    /// }
+    /// ```
+    pub fn resolve_symlink_path(symlink_directory: &str, symlink_points_to: &str) -> Result<String, String> {
+        SymlinkExtImpl::resolve_symlink_path(symlink_directory, symlink_points_to)
+    }
+
     /// Will write given byte array to a file on the path
     /// # Examples
     /// ```

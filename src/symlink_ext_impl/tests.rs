@@ -124,7 +124,7 @@ fn resolve_symlink_path() {
     let symlink_points_to = "../../subfolder2/subsubfolder2";
 
     let expected_path = "/home/someuser/folder/subfolder2/subsubfolder2";
-    let actual_path = resolve_path(base_dir, symlink_points_to).unwrap();
+    let actual_path = SymlinkExtImpl::resolve_symlink_path(base_dir, symlink_points_to).unwrap();
 
     assert_eq!(expected_path, actual_path);
 }
@@ -135,7 +135,7 @@ fn resolve_symlink_back_and_forth() {
     let symlink_points_to = "../../subfolder2/subsubfolder2/../../subfolder/subsubfolder";
 
     let expected_path = "/home/someuser/folder/subfolder/subsubfolder";
-    let actual_path = resolve_path(base_dir, symlink_points_to).unwrap();
+    let actual_path = SymlinkExtImpl::resolve_symlink_path(base_dir, symlink_points_to).unwrap();
 
     assert_eq!(expected_path, actual_path);
 }
@@ -146,7 +146,7 @@ fn resolve_symlink_back_and_forth_starts_from_subdir() {
     let symlink_points_to = "subsubfolder/../../subfolder2/subsubfolder2/../../subfolder/subsubfolder";
 
     let expected_path = "/home/someuser/folder/subfolder/subsubfolder";
-    let actual_path = resolve_path(base_dir, symlink_points_to).unwrap();
+    let actual_path = SymlinkExtImpl::resolve_symlink_path(base_dir, symlink_points_to).unwrap();
 
     assert_eq!(expected_path, actual_path);
 }
@@ -157,7 +157,7 @@ fn resolve_symlink_path_subdirectory() {
     let symlink_points_to = "subsubsubfolder/subsubsubsubfolder";
 
     let expected_path = "/home/someuser/folder/subfolder/subsubfolder/subsubsubfolder/subsubsubsubfolder";
-    let actual_path = resolve_path(base_dir, symlink_points_to).unwrap();
+    let actual_path = SymlinkExtImpl::resolve_symlink_path(base_dir, symlink_points_to).unwrap();
 
     assert_eq!(expected_path, actual_path);
 }
@@ -168,7 +168,7 @@ fn resolve_symlink_path_root() {
     let symlink_points_to = "/tmp/folder";
 
     let expected_path = "/tmp/folder";
-    let actual_path = resolve_path(base_dir, symlink_points_to).unwrap();
+    let actual_path = SymlinkExtImpl::resolve_symlink_path(base_dir, symlink_points_to).unwrap();
 
     assert_eq!(expected_path, actual_path);
 }
@@ -178,7 +178,7 @@ fn resolve_symlink_path_not_valid() {
     let base_dir = "/home/someuser";
     let symlink_points_to = "../../../tmp/folder";
 
-    let boxed_resolve = resolve_path(base_dir, symlink_points_to);
+    let boxed_resolve = SymlinkExtImpl::resolve_symlink_path(base_dir, symlink_points_to);
     let is_err = boxed_resolve.is_err();
 
     assert!(is_err);
@@ -186,39 +186,4 @@ fn resolve_symlink_path_not_valid() {
     let expected_error = "not valid path for the symlink";
     let actual_error = boxed_resolve.err().unwrap();
     assert_eq!(expected_error, actual_error);
-}
-
-fn resolve_path(base_dir: &str, symlink_points_to: &str) -> Result<String, String> {
-    if symlink_points_to.starts_with(SYMBOL.slash) {
-        return Ok(symlink_points_to.to_string())
-    }
-
-    let boxed_split = symlink_points_to.split_once(FileExt::get_path_separator().as_str());
-    if boxed_split.is_none() {
-        let path = [base_dir, symlink_points_to].join(FileExt::get_path_separator().as_str());
-        return Ok(path)
-    }
-
-    let (part, symlink_after_split) = boxed_split.unwrap();
-    if part == ".." {
-        if base_dir.chars().count() == 0 {
-            let message = "not valid path for the symlink";
-            return Err(message.to_string())
-        }
-
-        let reversed_base_dir = base_dir.chars().rev().collect::<String>();
-        let boxed_one_level_up_split = reversed_base_dir.split_once(SYMBOL.slash);
-        if boxed_one_level_up_split.is_some() {
-            let (_cut_folder, remaining_base_dir) = boxed_one_level_up_split.unwrap();
-            let _base_dir = remaining_base_dir.chars().rev().collect::<String>();
-            return  resolve_path(_base_dir.as_str(), symlink_after_split);
-        }
-
-
-    } else {
-        let _base_dir = [base_dir, part].join(FileExt::get_path_separator().as_str());
-        return resolve_path(_base_dir.as_str(), symlink_after_split);
-    }
-
-    Ok(symlink_points_to.to_string())
 }

@@ -2,6 +2,8 @@ use std::fs;
 use std::path::Path;
 use crate::directory_ext_impl::DirectoryExtImpl;
 use crate::file_ext_impl::FileExtImpl;
+use crate::path_ext_impl::PathExtImpl;
+use crate::symbol::SYMBOL;
 
 #[cfg(test)]
 mod tests;
@@ -121,5 +123,40 @@ impl SymlinkExtImpl {
         }
         let points_to = boxed_points_to.unwrap();
         Ok(points_to.to_string())
+    }
+
+    pub fn resolve_symlink_path(symlink_directory: &str, symlink_points_to: &str) -> Result<String, String> {
+        if symlink_points_to.starts_with(SYMBOL.slash) {
+            return Ok(symlink_points_to.to_string())
+        }
+
+        let boxed_split = symlink_points_to.split_once(PathExtImpl::get_path_separator().as_str());
+        if boxed_split.is_none() {
+            let path = [symlink_directory, symlink_points_to].join(PathExtImpl::get_path_separator().as_str());
+            return Ok(path)
+        }
+
+        let (part, symlink_after_split) = boxed_split.unwrap();
+        if part == ".." {
+            if symlink_directory.chars().count() == 0 {
+                let message = "not valid path for the symlink";
+                return Err(message.to_string())
+            }
+
+            let reversed_base_dir = symlink_directory.chars().rev().collect::<String>();
+            let boxed_one_level_up_split = reversed_base_dir.split_once(SYMBOL.slash);
+            if boxed_one_level_up_split.is_some() {
+                let (_cut_folder, remaining_base_dir) = boxed_one_level_up_split.unwrap();
+                let _symlink_directory = remaining_base_dir.chars().rev().collect::<String>();
+                return  SymlinkExtImpl::resolve_symlink_path(_symlink_directory.as_str(), symlink_after_split);
+            }
+
+
+        } else {
+            let _symlink_directory = [symlink_directory, part].join(PathExtImpl::get_path_separator().as_str());
+            return SymlinkExtImpl::resolve_symlink_path(_symlink_directory.as_str(), symlink_after_split);
+        }
+
+        Ok(symlink_points_to.to_string())
     }
 }
