@@ -131,7 +131,18 @@ fn resolve_symlink_path() {
 
 fn resolve_path(base_dir: &str, symlink_points_to: &str) -> Result<String, String> {
     //TODO
-    let resolved_path = "123".to_string();
+    let boxed_split = symlink_points_to.split_once(FileExt::get_path_separator().as_str());
+    if boxed_split.is_none() {
+        let path = [base_dir, symlink_points_to].join(FileExt::get_path_separator().as_str());
+        return Ok(path)
+    }
+
+    let (part, symlink_after_split) = boxed_split.unwrap();
+    if part == ".." {
+        //TODO go folder top on base_dir, invoke resolve_path
+    } else {
+        //TODO append part to base_dir, invoke resolve_path
+    }
 
     Ok(resolved_path)
 }
