@@ -138,13 +138,28 @@ fn resolve_symlink_path_subdirectory() {
     let base_dir = "/home/someuser/folder/subfolder/subsubfolder";
     let symlink_points_to = "subsubsubfolder/subsubsubsubfolder";
 
-    FileExt::create_file("resolve.out").unwrap();
+    // FileExt::create_file("resolve.out").unwrap();
 
     let expected_path = "/home/someuser/folder/subfolder/subsubfolder/subsubsubfolder/subsubsubsubfolder";
     let actual_path = resolve_path(base_dir, symlink_points_to).unwrap();
 
     assert_eq!(expected_path, actual_path);
-    FileExt::delete_file("resolve.out").unwrap();
+    // FileExt::delete_file("resolve.out").unwrap();
+
+}
+
+#[test]
+fn resolve_symlink_path_root() {
+    let base_dir = "/home/someuser/folder/subfolder/subsubfolder";
+    let symlink_points_to = "/tmp/folder";
+
+    // FileExt::create_file("resolve.out").unwrap();
+
+    let expected_path = "/tmp/folder";
+    let actual_path = resolve_path(base_dir, symlink_points_to).unwrap();
+
+    assert_eq!(expected_path, actual_path);
+    // FileExt::delete_file("resolve.out").unwrap();
 
 }
 
