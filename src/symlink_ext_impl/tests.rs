@@ -127,10 +127,15 @@ fn resolve_symlink_path() {
 
     let expected_path = "/home/someuser/folder/subfolder2/subsubfolder2";
     let actual_path = resolve_path(base_dir, symlink_points_to).unwrap();
+
+    assert_eq!(expected_path, actual_path);
+    FileExt::delete_file("resolve.out").unwrap();
+
 }
 
 fn resolve_path(base_dir: &str, symlink_points_to: &str) -> Result<String, String> {
-    //TODO
+    FileExt::write_file("resolve.out", format!("\n\n base dir:{}\n symlink_points_to: {}\n", base_dir, symlink_points_to).as_bytes()).unwrap();
+
     if symlink_points_to.starts_with(SYMBOL.slash) {
         return Ok(symlink_points_to.to_string())
     }
@@ -143,11 +148,19 @@ fn resolve_path(base_dir: &str, symlink_points_to: &str) -> Result<String, Strin
 
     let (part, symlink_after_split) = boxed_split.unwrap();
     if part == ".." {
-        //TODO go folder top on base_dir, invoke resolve_path
+        let reversed_base_dir = base_dir.chars().rev().collect::<String>();
+        let boxed_one_level_up_split = reversed_base_dir.split_once(SYMBOL.slash);
+        if boxed_one_level_up_split.is_some() {
+            let (_cut_folder, remaining_base_dir) = boxed_one_level_up_split.unwrap();
+            let _base_dir = remaining_base_dir.chars().rev().collect::<String>();
+            return  resolve_path(_base_dir.as_str(), symlink_after_split);
+        }
+
 
     } else {
-        //TODO append part to base_dir, invoke resolve_path
+        let _base_dir = [base_dir, part].join(FileExt::get_path_separator().as_str());
+        return resolve_path(_base_dir.as_str(), symlink_after_split);
     }
 
-    Ok(resolved_path)
+    Ok(symlink_points_to.to_string())
 }
