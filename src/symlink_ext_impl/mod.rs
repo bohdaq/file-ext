@@ -103,17 +103,32 @@ impl SymlinkExtImpl {
             return Err(message)
         }
 
+        let boxed_resolved_path = SymlinkExtImpl::resolve_symlink_path(symlink_path,symlink_points_to);
+        if boxed_resolved_path.is_err() {
+            let message = boxed_resolved_path.err().unwrap();
+            return Err(message)
+        }
+
+        let mut resolved_path = boxed_resolved_path.unwrap();
+
+        if resolved_path.chars().count() >= 2 {
+            let second_char = resolved_path.chars().take(2).last().unwrap();
+            if second_char == ':' {
+                return Ok(resolved_path.to_string())
+            }
+        }
+
         //check if there is a file or directory for symlink to be created
-        let does_file_exist = FileExtImpl::does_file_exist(symlink_points_to);
-        let does_directory_exist = DirectoryExtImpl::does_directory_exist(symlink_points_to);
+        let does_file_exist = FileExtImpl::does_file_exist(&resolved_path);
+        let does_directory_exist = DirectoryExtImpl::does_directory_exist(&resolved_path);
 
         if !does_file_exist && !does_directory_exist   {
-            let message = format!("There is no file or directory for symlink to be created: {}", symlink_points_to);
+            let message = format!("There is no file or directory for symlink to be created: {}", &resolved_path);
             return Err(message)
         }
 
         if does_file_exist {
-            let boxed_symlink = std::os::windows::fs::symlink_file(symlink_points_to, path_to_symlink_included);
+            let boxed_symlink = std::os::windows::fs::symlink_file(&resolved_path, path_to_symlink_included);
             if boxed_symlink.is_err()   {
                 let message = boxed_symlink.err().unwrap().to_string();
                 return Err(message)
@@ -123,7 +138,7 @@ impl SymlinkExtImpl {
         }
 
         if does_directory_exist {
-            let boxed_symlink = std::os::windows::fs::symlink_dir(symlink_points_to, path_to_symlink_included);
+            let boxed_symlink = std::os::windows::fs::symlink_dir(&resolved_path, path_to_symlink_included);
             if boxed_symlink.is_err()   {
                 let message = boxed_symlink.err().unwrap().to_string();
                 return Err(message)
