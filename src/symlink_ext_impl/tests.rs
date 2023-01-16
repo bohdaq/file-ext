@@ -234,6 +234,9 @@ fn resolve_symlink_path_not_valid() {
 
 #[test]
 fn actual_symlinks_test() {
+    // FileExt::create_file("out.log").unwrap();
+
+    let folder_up = PathExtImpl::folder_up();
 
     let test_dir = "symlink_resolve";
     if DirectoryExtImpl::does_directory_exist(test_dir) {
@@ -242,7 +245,7 @@ fn actual_symlinks_test() {
 
     DirectoryExtImpl::create_directory(test_dir).unwrap();
 
-    let points_to = ["test", "index.html"].join(PathExtImpl::get_path_separator().as_str());
+    let points_to = PathExtImpl::build_path(&[folder_up.as_str(),"test", "index.html"]);
     SymlinkExtImpl::create_symlink(test_dir, "index-rewrite", points_to.as_str()).unwrap();
 
     let symlink_path = ["symlink_resolve", "index-rewrite"].join(PathExtImpl::get_path_separator().as_str());
@@ -253,7 +256,7 @@ fn actual_symlinks_test() {
     let resolved_points_to = SymlinkExtImpl::resolve_symlink_path(test_dir, actual_points_to.as_str()).unwrap();
 
     let working_directory = FileExt::get_static_filepath("").unwrap();
-    let absolute_path_symlink_points_to = [working_directory, points_to.to_string()].join(PathExtImpl::get_path_separator().as_str());
+    let absolute_path_symlink_points_to = [working_directory, "test".to_string(), "index.html".to_string()].join(PathExtImpl::get_path_separator().as_str());
 
     assert_eq!(absolute_path_symlink_points_to, resolved_points_to);
 
