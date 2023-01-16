@@ -366,26 +366,45 @@ fn actual_symlinks_test() {
 
 #[test]
 fn actual_symlinks_test_same_folder() {
-    let test_dir = "symlink_resolve2";
-    if DirectoryExtImpl::does_directory_exist(test_dir) {
-        DirectoryExtImpl::delete_directory(test_dir).unwrap();
+    let symlink_dir = "symlink_resolve2";
+    if DirectoryExtImpl::does_directory_exist(symlink_dir) {
+        DirectoryExtImpl::delete_directory(symlink_dir).unwrap();
     }
 
-    DirectoryExtImpl::create_directory(test_dir).unwrap();
+    DirectoryExtImpl::create_directory(symlink_dir).unwrap();
 
 
-    FileExt::create_file("symlink_resolve2/index.html").unwrap();
-    FileExt::write_file("symlink_resolve2/index.html", "123".as_bytes()).unwrap();
+    let file_node_list_path = ["symlink_resolve2", "index.html"];
+    let file_path = PathExtImpl::build_path(&file_node_list_path);
+    FileExt::create_file(&file_path).unwrap();
+
+    let expected_file_content = "1234";
+    FileExt::write_file(&file_path, expected_file_content.as_bytes()).unwrap();
+    let file_exists = FileExt::does_file_exist(&file_path);
+    assert!(file_exists);
+
+    let file_content = FileExt::read_file(&file_path).unwrap();
+    assert_eq!(file_content, expected_file_content.as_bytes());
 
     let points_to = "index.html";
-    SymlinkExtImpl::create_symlink(test_dir, "index-rewrite", points_to).unwrap();
+    SymlinkExtImpl::create_symlink(
+        symlink_dir,
+        "index-rewrite",
+        points_to
+    ).unwrap();
 
-    let symlink_path = ["symlink_resolve2", "index-rewrite"].join(PathExtImpl::get_path_separator().as_str());
+
+    let symlink_node_list_path = ["symlink_resolve2", "index-rewrite"];
+    let symlink_path = PathExtImpl::build_path(&symlink_node_list_path);
+
     let exists = SymlinkExtImpl::does_symlink_exist(symlink_path.as_str());
     assert!(exists);
 
-    let actual_points_to = SymlinkExtImpl::symlink_points_to(symlink_path.as_str()).unwrap();
-    let resolved_points_to = SymlinkExtImpl::resolve_symlink_path(test_dir, actual_points_to.as_str()).unwrap();
+    let symlink_points_to = SymlinkExtImpl::symlink_points_to(symlink_path.as_str()).unwrap();
+    let resolved_points_to = SymlinkExtImpl::resolve_symlink_path(
+        symlink_dir,
+        symlink_points_to.as_str()
+    ).unwrap();
 
     let working_directory = FileExt::get_static_filepath("").unwrap();
     let absolute_path_symlink_points_to_node_path =
@@ -398,6 +417,5 @@ fn actual_symlinks_test_same_folder() {
 
     assert_eq!(absolute_path_symlink_points_to, resolved_points_to);
 
-
-    DirectoryExtImpl::delete_directory(test_dir).unwrap();
+    DirectoryExtImpl::delete_directory(symlink_dir).unwrap();
 }
