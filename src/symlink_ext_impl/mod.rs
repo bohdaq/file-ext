@@ -46,7 +46,13 @@ impl SymlinkExtImpl {
         // FileExt::write_file("out.log", symlink_points_to.as_bytes()).unwrap();
 
 
-        let mut absolute_path_symlink_points_to = SymlinkExtImpl::resolve_symlink_path(symlink_path,symlink_points_to).unwrap();
+        let boxed_resolved_path = SymlinkExtImpl::resolve_symlink_path(symlink_path,symlink_points_to);
+        if boxed_resolved_path.is_err() {
+            let message = boxed_resolved_path.err().unwrap();
+            return Err(message)
+        }
+
+        let mut resolved_path_symlink_point_to = boxed_resolved_path.unwrap();
 
         // FileExt::write_file("out.log", "\n!!".as_bytes()).unwrap();
         // FileExt::write_file("out.log", absolute_path_symlink_points_to.as_bytes()).unwrap();
@@ -56,7 +62,7 @@ impl SymlinkExtImpl {
 
         if !symlink_points_to.starts_with(SYMBOL.slash) {
             let working_directory = FileExt::get_static_filepath("").unwrap();
-            absolute_path_symlink_points_to = [working_directory, absolute_path_symlink_points_to.to_string()].join(PathExtImpl::get_path_separator().as_str());
+            resolved_path_symlink_point_to = [working_directory, resolved_path_symlink_point_to.to_string()].join(PathExtImpl::get_path_separator().as_str());
         }
 
 
@@ -64,15 +70,15 @@ impl SymlinkExtImpl {
         // FileExt::write_file("out.log", absolute_path_symlink_points_to.as_bytes()).unwrap();
 
         //check if there is a file or directory for symlink to be created
-        let does_file_exist = FileExtImpl::does_file_exist(absolute_path_symlink_points_to.as_str());
-        let does_directory_exist = DirectoryExtImpl::does_directory_exist(absolute_path_symlink_points_to.as_str());
+        let does_file_exist = FileExtImpl::does_file_exist(resolved_path_symlink_point_to.as_str());
+        let does_directory_exist = DirectoryExtImpl::does_directory_exist(resolved_path_symlink_point_to.as_str());
 
         if !does_file_exist && !does_directory_exist   {
-            let message = format!("There is no file or directory for symlink to be created: {}", absolute_path_symlink_points_to.as_str());
+            let message = format!("There is no file or directory for symlink to be created: {}", resolved_path_symlink_point_to.as_str());
             return Err(message)
         }
 
-        let boxed_symlink = std::os::unix::fs::symlink(absolute_path_symlink_points_to.as_str(), path_to_symlink_included);
+        let boxed_symlink = std::os::unix::fs::symlink(resolved_path_symlink_point_to.as_str(), path_to_symlink_included);
         if boxed_symlink.is_err()   {
             let message = boxed_symlink.err().unwrap().to_string();
             return Err(message)
