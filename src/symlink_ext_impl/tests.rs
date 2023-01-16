@@ -216,10 +216,10 @@ fn resolve_symlink_path_root() {
             "subsubfolder",
         ];
     let base_dir= PathExtImpl::build_path(&base_dir_node_path);
-    let symlink_points_to = "/tmp/folder";
+    let symlink_points_to = PathExtImpl::get_temp_folder_path().unwrap();
 
-    let expected_path = "/tmp/folder";
-    let actual_path = SymlinkExtImpl::resolve_symlink_path(&base_dir, symlink_points_to).unwrap();
+    let expected_path = PathExtImpl::get_temp_folder_path().unwrap();
+    let actual_path = SymlinkExtImpl::resolve_symlink_path(&base_dir, &symlink_points_to).unwrap();
 
     assert_eq!(expected_path, actual_path);
 }
