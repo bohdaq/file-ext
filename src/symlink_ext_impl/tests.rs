@@ -197,8 +197,11 @@ fn resolve_symlink_back_and_forth_starts_from_subdir() {
 
 #[test]
 fn resolve_symlink_path_subdirectory() {
+    let root = PathExtImpl::root();
+
     let base_dir_node_path = [
-        "/home",
+        root.as_str(),
+        "home",
         "someuser",
         "folder",
         "subfolder",
