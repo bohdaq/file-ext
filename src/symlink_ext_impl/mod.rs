@@ -113,8 +113,9 @@ impl SymlinkExtImpl {
 
         if resolved_path.chars().count() >= 2 {
             let second_char = resolved_path.chars().take(2).last().unwrap();
-            if second_char == ':' {
-                return Ok(resolved_path.to_string())
+            if second_char != ':' {
+                let working_directory = FileExt::get_static_filepath("").unwrap();
+                resolved_path = PathExtImpl::build_path(&[&working_directory, &resolved_path]);
             }
         }
 
