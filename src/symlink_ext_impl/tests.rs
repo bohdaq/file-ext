@@ -213,9 +213,20 @@ fn resolve_symlink_path_subdirectory() {
         "subsubsubfolder",
         "subsubsubsubfolder",
     ];
-    let symlink_points_to = PathExtImpl::build_path(&symlink_points_to_node_path);;
+    let symlink_points_to = PathExtImpl::build_path(&symlink_points_to_node_path);
 
-    let expected_path = "/home/someuser/folder/subfolder/subsubfolder/subsubsubfolder/subsubsubsubfolder";
+    let expected_node_path = [
+        root.as_str(),
+        "home",
+        "someuser",
+        "folder",
+        "subfolder",
+        "subsubfolder",
+        "subsubsubfolder",
+        "subsubsubsubfolder",
+    ];
+    let expected_path = PathExtImpl::build_path(&expected_node_path);
+    
     let actual_path = SymlinkExtImpl::resolve_symlink_path(&base_dir, &symlink_points_to).unwrap();
 
     assert_eq!(expected_path, actual_path);
