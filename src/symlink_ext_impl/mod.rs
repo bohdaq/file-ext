@@ -171,6 +171,14 @@ impl SymlinkExtImpl {
         // FileExt::write_file("out.log", "\nresolve_symlink_path symlink_points_to:".as_bytes()).unwrap();
         // FileExt::write_file("out.log", symlink_points_to.as_bytes()).unwrap();
 
+        // windows specific check on a link
+        if symlink_points_to.chars().count() >= 2 {
+            let second_char = symlink_points_to.chars().take(2).last().unwrap();
+            if second_char == ':' {
+                return Ok(symlink_points_to.to_string())
+            }
+        }
+
         if symlink_points_to.starts_with(PathExtImpl::get_path_separator().as_str()) {
             return Ok(symlink_points_to.to_string())
         }
