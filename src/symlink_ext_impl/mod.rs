@@ -225,6 +225,5 @@ impl SymlinkExtImpl {
             return SymlinkExtImpl::resolve_symlink_path(_symlink_directory.as_str(), symlink_after_split);
         }
 
-        Ok(symlink_points_to.to_string())
     }
 }
