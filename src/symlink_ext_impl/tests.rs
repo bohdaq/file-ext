@@ -256,7 +256,13 @@ fn actual_symlinks_test() {
     let resolved_points_to = SymlinkExtImpl::resolve_symlink_path(test_dir, actual_points_to.as_str()).unwrap();
 
     let working_directory = FileExt::get_static_filepath("").unwrap();
-    let absolute_path_symlink_points_to = [working_directory, "test".to_string(), "index.html".to_string()].join(PathExtImpl::get_path_separator().as_str());
+    let absolute_path_symlink_points_to_node_path =
+        [
+            working_directory.as_str(),
+            "test",
+            "index.html"
+        ];
+    let absolute_path_symlink_points_to = PathExtImpl::build_path(&absolute_path_symlink_points_to_node_path);
 
     assert_eq!(absolute_path_symlink_points_to, resolved_points_to);
 
