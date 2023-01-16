@@ -175,11 +175,43 @@ fn resolve_symlink_path() {
 
 #[test]
 fn resolve_symlink_back_and_forth() {
-    let base_dir = "/home/someuser/folder/subfolder/subsubfolder";
-    let symlink_points_to = "../../subfolder2/subsubfolder2/../../subfolder/subsubfolder";
+    let root = PathExtImpl::root();
+    
+    let base_dir_node_path = [
+        root.as_str(),
+        "home",
+        "someuser",
+        "folder",
+        "subfolder",
+        "subsubfolder",
+    ];
+    let base_dir = PathExtImpl::build_path(&base_dir_node_path);
 
-    let expected_path = "/home/someuser/folder/subfolder/subsubfolder";
-    let actual_path = SymlinkExtImpl::resolve_symlink_path(base_dir, symlink_points_to).unwrap();
+    let symlink_points_to_node_path = [
+        "..",
+        "..",
+        "subfolder2",
+        "subsubfolder2",
+        "..",
+        "..",
+        "subfolder",
+        "subsubfolder",
+    ];
+    let symlink_points_to = PathExtImpl::build_path(&symlink_points_to_node_path);
+
+
+    let expected_node_path = [
+        root.as_str(),
+        "home",
+        "someuser",
+        "folder",
+        "subfolder",
+        "subsubfolder",
+    ];
+    let expected_path = PathExtImpl::build_path(&expected_node_path);
+
+
+    let actual_path = SymlinkExtImpl::resolve_symlink_path(&base_dir, &symlink_points_to).unwrap();
 
     assert_eq!(expected_path, actual_path);
 }
@@ -187,7 +219,6 @@ fn resolve_symlink_back_and_forth() {
 #[test]
 fn resolve_symlink_back_and_forth_starts_from_subdir() {
     let root = PathExtImpl::root();
-
 
     let base_dir_node_path = [
         root.as_str(),
