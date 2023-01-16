@@ -208,11 +208,18 @@ fn resolve_symlink_path_subdirectory() {
 
 #[test]
 fn resolve_symlink_path_root() {
-    let base_dir = "/home/someuser/folder/subfolder/subsubfolder";
+    let base_dir_node_path =
+        [
+            "someuser",
+            "folder",
+            "subfolder",
+            "subsubfolder",
+        ];
+    let base_dir= PathExtImpl::build_path(&base_dir_node_path);
     let symlink_points_to = "/tmp/folder";
 
     let expected_path = "/tmp/folder";
-    let actual_path = SymlinkExtImpl::resolve_symlink_path(base_dir, symlink_points_to).unwrap();
+    let actual_path = SymlinkExtImpl::resolve_symlink_path(&base_dir, symlink_points_to).unwrap();
 
     assert_eq!(expected_path, actual_path);
 }
