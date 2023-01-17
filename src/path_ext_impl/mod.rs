@@ -1,5 +1,7 @@
 use std::env;
 use crate::symbol::SYMBOL;
+
+#[cfg(target_family = "windows")]
 use crate::user_ext_impl::UserExtImpl;
 
 #[cfg(test)]

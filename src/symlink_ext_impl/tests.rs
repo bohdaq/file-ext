@@ -367,18 +367,20 @@ fn actual_symlinks_test() {
 #[test]
 fn actual_symlinks_test_same_folder() {
     let symlink_dir = "symlink_resolve2";
+    let symlink_name = "index-rewrite";
+    let points_to = "index.html";
+    let expected_file_content = "1234";
+
     if DirectoryExtImpl::does_directory_exist(symlink_dir) {
         DirectoryExtImpl::delete_directory(symlink_dir).unwrap();
     }
 
     DirectoryExtImpl::create_directory(symlink_dir).unwrap();
 
-
-    let file_node_list_path = ["symlink_resolve2", "index.html"];
+    let file_node_list_path = [symlink_dir, points_to];
     let file_path = PathExtImpl::build_path(&file_node_list_path);
     FileExt::create_file(&file_path).unwrap();
 
-    let expected_file_content = "1234";
     FileExt::write_file(&file_path, expected_file_content.as_bytes()).unwrap();
     let file_exists = FileExt::does_file_exist(&file_path);
     assert!(file_exists);
@@ -386,32 +388,31 @@ fn actual_symlinks_test_same_folder() {
     let file_content = FileExt::read_file(&file_path).unwrap();
     assert_eq!(file_content, expected_file_content.as_bytes());
 
-    let points_to = "index.html";
     SymlinkExtImpl::create_symlink(
         symlink_dir,
-        "index-rewrite",
+        symlink_name,
         points_to
     ).unwrap();
 
 
-    let symlink_node_list_path = ["symlink_resolve2", "index-rewrite"];
+    let symlink_node_list_path = [symlink_dir, symlink_name];
     let symlink_path = PathExtImpl::build_path(&symlink_node_list_path);
 
-    let exists = SymlinkExtImpl::does_symlink_exist(symlink_path.as_str());
+    let exists = SymlinkExtImpl::does_symlink_exist(&symlink_path);
     assert!(exists);
 
-    let symlink_points_to = SymlinkExtImpl::symlink_points_to(symlink_path.as_str()).unwrap();
+    let symlink_points_to = SymlinkExtImpl::symlink_points_to(&symlink_path).unwrap();
     let resolved_points_to = SymlinkExtImpl::resolve_symlink_path(
         symlink_dir,
-        symlink_points_to.as_str()
+        &symlink_points_to
     ).unwrap();
 
     let working_directory = FileExt::get_static_filepath("").unwrap();
     let absolute_path_symlink_points_to_node_path =
         [
             working_directory.as_str(),
-            "symlink_resolve2",
-            "index.html"
+            symlink_dir,
+            points_to
         ];
     let absolute_path_symlink_points_to = PathExtImpl::build_path(&absolute_path_symlink_points_to_node_path);
 
