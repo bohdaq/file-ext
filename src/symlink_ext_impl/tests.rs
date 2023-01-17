@@ -327,7 +327,7 @@ fn resolve_symlink_path_not_valid() {
 }
 
 #[test]
-fn actual_symlinks_test() {
+fn symlink_inside_subdirectory_test() {
     // FileExt::create_file("out.log").unwrap();
 
     let folder_up = PathExtImpl::folder_up();
@@ -416,7 +416,10 @@ fn actual_symlinks_test_same_folder() {
         ];
     let absolute_path_symlink_points_to = PathExtImpl::build_path(&absolute_path_symlink_points_to_node_path);
 
+    let actual_content = FileExt::read_file(&absolute_path_symlink_points_to).unwrap();
+
     assert_eq!(absolute_path_symlink_points_to, resolved_points_to);
+    assert_eq!(expected_file_content.as_bytes(), actual_content);
 
     DirectoryExtImpl::delete_directory(symlink_dir).unwrap();
 }
