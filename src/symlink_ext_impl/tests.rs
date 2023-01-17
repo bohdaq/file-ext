@@ -1,3 +1,4 @@
+use std::fs::File;
 use crate::directory_ext_impl::DirectoryExtImpl;
 use crate::file_ext_impl::FileExtImpl;
 use crate::FileExt;
@@ -176,7 +177,7 @@ fn resolve_symlink_path() {
 #[test]
 fn resolve_symlink_back_and_forth() {
     let root = PathExtImpl::root();
-    
+
     let base_dir_node_path = [
         root.as_str(),
         "home",
@@ -422,4 +423,133 @@ fn actual_symlinks_test_same_folder() {
     assert_eq!(expected_file_content.as_bytes(), actual_content);
 
     DirectoryExtImpl::delete_directory(symlink_dir).unwrap();
+}
+
+#[test]
+fn symlink_points_to_file_in_same_folder() {
+    let symlink_dir = "symlink_resolve2";
+    let symlink_name = "index-rewrite";
+    let points_to = "index.html";
+    let expected_file_content = "1234";
+
+    if DirectoryExtImpl::does_directory_exist(symlink_dir) {
+        DirectoryExtImpl::delete_directory(symlink_dir).unwrap();
+    }
+
+    DirectoryExtImpl::create_directory(symlink_dir).unwrap();
+
+    let file_node_list_path = [symlink_dir, points_to];
+    let file_path = PathExtImpl::build_path(&file_node_list_path);
+    FileExt::create_file(&file_path).unwrap();
+
+    FileExt::write_file(&file_path, expected_file_content.as_bytes()).unwrap();
+    let file_exists = FileExt::does_file_exist(&file_path);
+    assert!(file_exists);
+
+    let file_content = FileExt::read_file(&file_path).unwrap();
+    assert_eq!(file_content, expected_file_content.as_bytes());
+
+    SymlinkExtImpl::create_symlink(
+        symlink_dir,
+        symlink_name,
+        points_to
+    ).unwrap();
+
+
+    let symlink_node_list_path = [symlink_dir, symlink_name];
+    let symlink_path = PathExtImpl::build_path(&symlink_node_list_path);
+
+    let exists = SymlinkExtImpl::does_symlink_exist(&symlink_path);
+    assert!(exists);
+
+    let symlink_points_to = SymlinkExtImpl::symlink_points_to(&symlink_path).unwrap();
+    let resolved_points_to = SymlinkExtImpl::resolve_symlink_path(
+        symlink_dir,
+        &symlink_points_to
+    ).unwrap();
+
+    let working_directory = FileExt::get_static_filepath("").unwrap();
+    let absolute_path_symlink_points_to_node_path =
+        [
+            working_directory.as_str(),
+            symlink_dir,
+            points_to
+        ];
+    let absolute_path_symlink_points_to = PathExtImpl::build_path(&absolute_path_symlink_points_to_node_path);
+
+    let actual_content = FileExt::read_file(&absolute_path_symlink_points_to).unwrap();
+
+    assert_eq!(absolute_path_symlink_points_to, resolved_points_to);
+    assert_eq!(expected_file_content.as_bytes(), actual_content);
+
+    DirectoryExtImpl::delete_directory(symlink_dir).unwrap();
+}
+
+#[test]
+fn symlink_points_to_file_in_subdirectory() {
+    // FileExt::create_file("out.log").unwrap();
+    // FileExt::write_file("out.log", "1234".as_bytes()).unwrap();
+
+    let working_directory = FileExt::get_static_filepath("").unwrap();
+    let symlink_dir = working_directory.to_string();
+    let file_dir = "symlink_resolve3";
+    let symlink_name = "index-rewrite";
+    let points_to_filename = "index.html";
+    let points_to = PathExtImpl::build_path(&
+            [
+                working_directory.as_str(),
+                file_dir,
+                points_to_filename,
+            ]);
+    let expected_file_content = "1234";
+
+    if DirectoryExtImpl::does_directory_exist(file_dir) {
+        DirectoryExtImpl::delete_directory(file_dir).unwrap();
+    }
+
+    DirectoryExtImpl::create_directory(file_dir).unwrap();
+
+    let file_node_list_path = [file_dir, points_to_filename];
+    let file_path = PathExtImpl::build_path(&file_node_list_path);
+    FileExt::create_file(&file_path).unwrap();
+
+    FileExt::write_file(&file_path, expected_file_content.as_bytes()).unwrap();
+    let file_exists = FileExt::does_file_exist(&file_path);
+    assert!(file_exists);
+
+    let file_content = FileExt::read_file(&file_path).unwrap();
+    assert_eq!(file_content, expected_file_content.as_bytes());
+
+    // FileExt::write_file("out.log", format!("\nsymlink_dir: {}", symlink_dir).as_bytes()).unwrap();
+    // FileExt::write_file("out.log", format!("\nsymlink_name: {}", symlink_name).as_bytes()).unwrap();
+    // FileExt::write_file("out.log", format!("\npoints_to: {}", points_to).as_bytes()).unwrap();
+
+
+    SymlinkExtImpl::create_symlink(
+        &symlink_dir,
+        symlink_name,
+        &points_to
+    ).unwrap();
+
+
+    let symlink_node_list_path = [symlink_dir.as_str(), symlink_name];
+    let symlink_path = PathExtImpl::build_path(&symlink_node_list_path);
+
+    let exists = SymlinkExtImpl::does_symlink_exist(&symlink_path);
+    assert!(exists);
+
+    let symlink_points_to = SymlinkExtImpl::symlink_points_to(&symlink_path).unwrap();
+    let resolved_points_to = SymlinkExtImpl::resolve_symlink_path(
+        &symlink_dir,
+        &symlink_points_to
+    ).unwrap();
+
+
+    let actual_content = FileExt::read_file(&points_to).unwrap();
+
+    assert_eq!(points_to, resolved_points_to);
+    assert_eq!(expected_file_content.as_bytes(), actual_content);
+
+    FileExt::delete_directory(file_dir).unwrap();
+    FileExt::delete_file(&symlink_path).unwrap();
 }
