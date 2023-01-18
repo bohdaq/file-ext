@@ -532,6 +532,52 @@ impl FileExt {
         SymlinkExtImpl::symlink_points_to(path)
     }
 
+    /// Builds a path from a given node list
+    /// # Examples
+    ///
+    /// ```
+    /// use file_ext::FileExt;
+    /// #[test]
+    /// fn build_path() {
+    ///     let root = FileExt::root();
+    ///     let folder_up = FileExt::folder_up();
+    ///
+    ///     let node_list =
+    ///         [
+    ///             root.as_str(),
+    ///             "home",
+    ///             "someuser",
+    ///             "folder",
+    ///             "subfolder",
+    ///             "subsubfolder",
+    ///         ];
+    ///
+    ///     let another_node_list =
+    ///         [
+    ///             folder_up.as_str(),
+    ///             folder_up.as_str(),
+    ///             "subfolder2",
+    ///             "subsubfolder2",
+    ///         ];
+    ///     let path = PathExtImpl::build_path(&node_list);
+    ///     let another_path = PathExtImpl::build_path(&another_node_list);
+    ///
+    ///     assert_eq!("/home/someuser/folder/subfolder/subsubfolder", path);
+    ///     assert_eq!("../../subfolder2/subsubfolder2", another_path);
+    /// }
+    /// ```
+    pub fn build_path(list: &[&str]) -> String {
+        PathExtImpl::build_path(list)
+    }
+
+    pub fn root() -> String {
+        PathExtImpl::root()
+    }
+
+    pub fn folder_up() -> String {
+        PathExtImpl::folder_up()
+    }
+
     /// Returns name of the user running the process
     /// # Examples
     ///

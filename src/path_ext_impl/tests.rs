@@ -14,3 +14,32 @@ fn temp_folder() {
     let temp_folder_path = PathExtImpl::get_temp_folder_path().unwrap();
     assert_eq!(temp_folder_path, "/tmp")
 }
+
+#[test]
+fn build_path() {
+    let root = PathExtImpl::root();
+    let folder_up = PathExtImpl::folder_up();
+
+    let node_list =
+        [
+            root.as_str(),
+            "home",
+            "someuser",
+            "folder",
+            "subfolder",
+            "subsubfolder",
+        ];
+
+    let another_node_list =
+        [
+            folder_up.as_str(),
+            folder_up.as_str(),
+            "subfolder2",
+            "subsubfolder2",
+        ];
+    let path = PathExtImpl::build_path(&node_list);
+    let another_path = PathExtImpl::build_path(&another_node_list);
+
+    assert_eq!("/home/someuser/folder/subfolder/subsubfolder", path);
+    assert_eq!("../../subfolder2/subsubfolder2", another_path);
+}
