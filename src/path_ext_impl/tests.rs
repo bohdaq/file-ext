@@ -16,6 +16,7 @@ fn temp_folder() {
 }
 
 #[test]
+#[cfg(target_family = "unix")]
 fn build_path() {
     let root = PathExtImpl::root();
     let folder_up = PathExtImpl::folder_up();
@@ -42,4 +43,26 @@ fn build_path() {
 
     assert_eq!("/home/someuser/folder/subfolder/subsubfolder", path);
     assert_eq!("../../subfolder2/subsubfolder2", another_path);
+}
+
+
+#[test]
+#[cfg(target_family = "windows")]
+fn build_path() {
+    let root = FileExt::root();
+    let folder_up = FileExt::folder_up();
+
+    let node_list =
+        [
+            root.as_str(),
+            "Users",
+            "someuser",
+            "folder",
+            "subfolder",
+            "subsubfolder",
+        ];
+
+    let path = PathExtImpl::build_path(&node_list);
+
+    assert_eq!("C:\\Users\\someuser\\folder\\subfolder\\subsubfolder", path);
 }
