@@ -495,9 +495,6 @@ fn symlink_points_to_file_in_subdirectory() {
 
 #[test]
 fn symlink_points_to_symlink_which_points_to_file() {
-    // FileExt::create_file("out.log").unwrap();
-    // FileExt::write_file("out.log", "1234".as_bytes()).unwrap();
-
     let working_directory = FileExt::get_static_filepath("").unwrap();
     let file_dir = "symlink_resolve4";
     let symlink_name = "index-rewrite4";
@@ -535,17 +532,11 @@ fn symlink_points_to_symlink_which_points_to_file() {
     let file_content = FileExt::read_file(&file_path).unwrap();
     assert_eq!(file_content, expected_file_content.as_bytes());
 
-    // FileExt::write_file("out.log", format!("\nsymlink_dir: {}", symlink_dir).as_bytes()).unwrap();
-    // FileExt::write_file("out.log", format!("\nsymlink_name: {}", symlink_name).as_bytes()).unwrap();
-    // FileExt::write_file("out.log", format!("\npoints_to: {}", points_to).as_bytes()).unwrap();
-
-
     SymlinkExtImpl::create_symlink(
         &symlink_dir,
         symlink_name,
         &points_to
     ).unwrap();
-
 
     let symlink_node_list_path = [symlink_dir.as_str(), symlink_name];
     let symlink_path = PathExtImpl::build_path(&symlink_node_list_path);
@@ -564,7 +555,6 @@ fn symlink_points_to_symlink_which_points_to_file() {
     assert_eq!(points_to, resolved_points_to);
     assert_eq!(expected_file_content.as_bytes(), actual_content);
 
-    //TODO:: second link
     SymlinkExtImpl::create_symlink(
         &symlink_dir,
         symlink_second_name,
@@ -576,6 +566,18 @@ fn symlink_points_to_symlink_which_points_to_file() {
 
     let exists = SymlinkExtImpl::does_symlink_exist(&second_symlink_path);
     assert!(exists);
+
+    let second_symlink_points_to = SymlinkExtImpl::symlink_points_to(&second_symlink_path).unwrap();
+    let resolved_points_to_second_link = SymlinkExtImpl::resolve_symlink_path(
+        &symlink_dir,
+        &second_symlink_points_to
+    ).unwrap();
+
+
+    let actual_content = FileExt::read_file(&resolved_points_to_second_link).unwrap();
+
+    assert_eq!(points_to, resolved_points_to);
+    assert_eq!(expected_file_content.as_bytes(), actual_content);
 
 
     // cleaning
