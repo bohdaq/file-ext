@@ -49,8 +49,8 @@ fn build_path() {
 #[test]
 #[cfg(target_family = "windows")]
 fn build_path() {
-    let root = FileExt::root();
-    let folder_up = FileExt::folder_up();
+    let root = PathExtImpl::root();
+    let folder_up = PathExtImpl::folder_up();
 
     let node_list =
         [
