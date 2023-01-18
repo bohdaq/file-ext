@@ -4,6 +4,7 @@ use crate::directory_ext_impl::DirectoryExtImpl;
 use crate::file_ext_impl::FileExtImpl;
 use crate::FileExt;
 use crate::path_ext_impl::PathExtImpl;
+#[cfg(target_family = "unix")]
 use crate::symbol::SYMBOL;
 
 #[cfg(test)]
