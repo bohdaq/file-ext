@@ -175,13 +175,11 @@ impl SymlinkExtImpl {
         let boxed_split = symlink_points_to.split_once(PathExtImpl::get_path_separator().as_str());
         if boxed_split.is_none() {
             let path = [symlink_directory, symlink_points_to].join(PathExtImpl::get_path_separator().as_str());
-            // FileExt::write_file("out.log", "\n1".as_bytes()).unwrap();
             return Ok(path)
         }
 
         let (part, symlink_after_split) = boxed_split.unwrap();
-        if part == ".." {
-            // FileExt::write_file("out.log", "\n2".as_bytes()).unwrap();
+        return if part == ".." {
 
             if symlink_directory.chars().count() == 0 {
                 let message = "not valid path for the symlink";
@@ -191,24 +189,19 @@ impl SymlinkExtImpl {
             let reversed_base_dir = symlink_directory.chars().rev().collect::<String>();
             let boxed_one_level_up_split = reversed_base_dir.split_once(PathExtImpl::get_path_separator().as_str());
             if boxed_one_level_up_split.is_some() {
-                // FileExt::write_file("out.log", "\n3".as_bytes()).unwrap();
-
                 let (_cut_folder, remaining_base_dir) = boxed_one_level_up_split.unwrap();
                 let _symlink_directory = remaining_base_dir.chars().rev().collect::<String>();
-                return  SymlinkExtImpl::resolve_symlink_path(_symlink_directory.as_str(), symlink_after_split);
+                SymlinkExtImpl::resolve_symlink_path(_symlink_directory.as_str(), symlink_after_split)
             } else {
-                return  SymlinkExtImpl::resolve_symlink_path("", symlink_after_split);
+                SymlinkExtImpl::resolve_symlink_path("", symlink_after_split)
             }
-
-
         } else {
-
             let mut _symlink_directory = part.to_string();
             if symlink_directory.chars().count() != 0 {
                 _symlink_directory = [symlink_directory, part].join(PathExtImpl::get_path_separator().as_str());
             }
 
-            return SymlinkExtImpl::resolve_symlink_path(_symlink_directory.as_str(), symlink_after_split);
+            SymlinkExtImpl::resolve_symlink_path(_symlink_directory.as_str(), symlink_after_split)
         }
 
     }
