@@ -501,6 +501,7 @@ fn symlink_points_to_symlink_which_points_to_file() {
     let working_directory = FileExt::get_static_filepath("").unwrap();
     let file_dir = "symlink_resolve4";
     let symlink_name = "index-rewrite4";
+    let symlink_second_name = "index-rewrite42";
     let symlink_dir = working_directory.to_string();
     let points_to_filename = "index.html";
     let points_to = PathExtImpl::build_path(&
@@ -508,6 +509,12 @@ fn symlink_points_to_symlink_which_points_to_file() {
             working_directory.as_str(),
             file_dir,
             points_to_filename,
+        ]);
+
+    let points_to_second = PathExtImpl::build_path(&
+        [
+            working_directory.as_str(),
+            symlink_name,
         ]);
     let expected_file_content = "1234";
 
@@ -552,14 +559,27 @@ fn symlink_points_to_symlink_which_points_to_file() {
         &symlink_points_to
     ).unwrap();
 
-    //TODO:: second link
-
-
     let actual_content = FileExt::read_file(&points_to).unwrap();
 
     assert_eq!(points_to, resolved_points_to);
     assert_eq!(expected_file_content.as_bytes(), actual_content);
 
+    //TODO:: second link
+    SymlinkExtImpl::create_symlink(
+        &symlink_dir,
+        symlink_second_name,
+        &points_to_second
+    ).unwrap();
+
+    let symlink_node_list_path = [symlink_dir.as_str(), symlink_second_name];
+    let second_symlink_path = PathExtImpl::build_path(&symlink_node_list_path);
+
+    let exists = SymlinkExtImpl::does_symlink_exist(&second_symlink_path);
+    assert!(exists);
+
+
+    // cleaning
     FileExt::delete_directory(file_dir).unwrap();
     FileExt::delete_file(&symlink_path).unwrap();
+    FileExt::delete_file(&second_symlink_path).unwrap();
 }
