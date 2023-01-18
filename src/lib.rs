@@ -537,7 +537,9 @@ impl FileExt {
     ///
     /// ```
     /// use file_ext::FileExt;
+    ///
     /// #[test]
+    /// #[cfg(target_family = "unix")]
     /// fn build_path() {
     ///     let root = FileExt::root();
     ///     let folder_up = FileExt::folder_up();
@@ -565,15 +567,42 @@ impl FileExt {
     ///     assert_eq!("/home/someuser/folder/subfolder/subsubfolder", path);
     ///     assert_eq!("../../subfolder2/subsubfolder2", another_path);
     /// }
+    ///
+    ///
+    /// #[test]
+    /// #[cfg(target_family = "windows")]
+    /// fn build_path() {
+    ///     let root = FileExt::root();
+    ///     let folder_up = FileExt::folder_up();
+    ///
+    ///     let node_list =
+    ///         [
+    ///             root.as_str(),
+    ///             "Users",
+    ///             "someuser",
+    ///             "folder",
+    ///             "subfolder",
+    ///             "subsubfolder",
+    ///         ];
+    ///
+    ///     let path = PathExtImpl::build_path(&node_list);
+    ///
+    ///     assert_eq!("C:\\Users\\someuser\\folder\\subfolder\\subsubfolder", path);
+    /// }
     /// ```
     pub fn build_path(list: &[&str]) -> String {
         PathExtImpl::build_path(list)
     }
 
+    /// Root node of the system. It is meant to be used in `build_path` function.
+    /// On Linux and macOS `build_path` function will evaluate it to `/`,
+    /// on Windows it will be `C:`
     pub fn root() -> String {
         PathExtImpl::root()
     }
 
+
+    /// Folder up, or `..`. It is meant to be used in `build_path` function.
     pub fn folder_up() -> String {
         PathExtImpl::folder_up()
     }
