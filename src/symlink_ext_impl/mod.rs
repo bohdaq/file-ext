@@ -19,14 +19,6 @@ impl SymlinkExtImpl {
 
     #[cfg(target_family = "unix")]
     pub fn create_symlink(symlink_path: &str, symlink_name: &str, symlink_points_to: &str) -> Result<(), String> {
-        // FileExt::write_file("out.log", "\nsymlink_path:".as_bytes()).unwrap();
-        // FileExt::write_file("out.log", symlink_path.as_bytes()).unwrap();
-        //
-        // FileExt::write_file("out.log", "\nsymlink_name:".as_bytes()).unwrap();
-        // FileExt::write_file("out.log", symlink_name.as_bytes()).unwrap();
-        //
-        // FileExt::write_file("out.log", "\nsymlink_points_to:".as_bytes()).unwrap();
-        // FileExt::write_file("out.log", symlink_points_to.as_bytes()).unwrap();
 
         //check if there is already a file where symlink is going to be created
         let path_to_symlink_included = [symlink_path, symlink_name].join(PathExtImpl::get_path_separator().as_str());
@@ -41,12 +33,6 @@ impl SymlinkExtImpl {
             return Err(message)
         }
 
-        // FileExt::write_file("out.log", "\n".as_bytes()).unwrap();
-        // FileExt::write_file("out.log", symlink_path.as_bytes()).unwrap();
-        // FileExt::write_file("out.log", "\n".as_bytes()).unwrap();
-        // FileExt::write_file("out.log", symlink_points_to.as_bytes()).unwrap();
-
-
         let boxed_resolved_path = SymlinkExtImpl::resolve_symlink_path(symlink_path,symlink_points_to);
         if boxed_resolved_path.is_err() {
             let message = boxed_resolved_path.err().unwrap();
@@ -55,20 +41,11 @@ impl SymlinkExtImpl {
 
         let mut resolved_path_symlink_point_to = boxed_resolved_path.unwrap();
 
-        // FileExt::write_file("out.log", "\n!!".as_bytes()).unwrap();
-        // FileExt::write_file("out.log", absolute_path_symlink_points_to.as_bytes()).unwrap();
-        //
-        // FileExt::write_file("out.log", "\n!!".as_bytes()).unwrap();
-        // FileExt::write_file("out.log", absolute_path_symlink_points_to.as_bytes()).unwrap();
-
         if !symlink_points_to.starts_with(SYMBOL.slash) {
             let working_directory = FileExt::get_static_filepath("").unwrap();
             resolved_path_symlink_point_to = [working_directory, resolved_path_symlink_point_to.to_string()].join(PathExtImpl::get_path_separator().as_str());
         }
 
-
-        // FileExt::write_file("out.log", "\nabsolute_path_symlink_points_to:".as_bytes()).unwrap();
-        // FileExt::write_file("out.log", absolute_path_symlink_points_to.as_bytes()).unwrap();
 
         //check if there is a file or directory for symlink to be created
         let does_file_exist = FileExtImpl::does_file_exist(resolved_path_symlink_point_to.as_str());
@@ -182,11 +159,6 @@ impl SymlinkExtImpl {
     }
 
     pub fn resolve_symlink_path(symlink_directory: &str, symlink_points_to: &str) -> Result<String, String> {
-        // FileExt::write_file("out.log", "\n\nresolve_symlink_path symlink_directory:".as_bytes()).unwrap();
-        // FileExt::write_file("out.log", symlink_directory.as_bytes()).unwrap();
-
-        // FileExt::write_file("out.log", "\nresolve_symlink_path symlink_points_to:".as_bytes()).unwrap();
-        // FileExt::write_file("out.log", symlink_points_to.as_bytes()).unwrap();
 
         // windows specific check on a link
         if symlink_points_to.chars().count() >= 2 {
@@ -225,14 +197,11 @@ impl SymlinkExtImpl {
                 let _symlink_directory = remaining_base_dir.chars().rev().collect::<String>();
                 return  SymlinkExtImpl::resolve_symlink_path(_symlink_directory.as_str(), symlink_after_split);
             } else {
-                // FileExt::write_file("out.log", "\n4".as_bytes()).unwrap();
-
                 return  SymlinkExtImpl::resolve_symlink_path("", symlink_after_split);
             }
 
 
         } else {
-            // FileExt::write_file("out.log", "\n5".as_bytes()).unwrap();
 
             let mut _symlink_directory = part.to_string();
             if symlink_directory.chars().count() != 0 {
