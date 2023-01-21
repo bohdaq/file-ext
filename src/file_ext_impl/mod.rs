@@ -5,11 +5,17 @@ use std::fs;
 use std::fs::{File, OpenOptions};
 use std::io::{BufReader, Read, Seek, SeekFrom, Write};
 use std::path::Path;
+use crate::filter_string::FilterString;
 
 pub struct FileExtImpl;
 
 impl FileExtImpl {
     pub fn read_file(filepath: &str) -> Result<Vec<u8>, String> {
+        let boxed_check = FilterString::is_valid_input_string(filepath);
+        if boxed_check.is_err() {
+            let message = boxed_check.err().unwrap();
+            return Err(message)
+        }
 
         let mut file_content = Vec::new();
         let boxed_open = File::open(filepath);
@@ -30,6 +36,12 @@ impl FileExtImpl {
     }
 
     pub fn read_file_partially(filepath: &str, start: u64, end: u64) -> Result<Vec<u8>, String> {
+        let boxed_check = FilterString::is_valid_input_string(filepath);
+        if boxed_check.is_err() {
+            let message = boxed_check.err().unwrap();
+            return Err(message)
+        }
+
         let mut file_content = Vec::new();
 
         let buff_length = (end - start) + 1;
@@ -61,14 +73,20 @@ impl FileExtImpl {
     }
 
     pub fn read_or_create_and_write(path: &str, content: &[u8]) -> Result<Vec<u8>, String> {
-        let does_passphrase_exist = Self::does_file_exist(path);
-        return if does_passphrase_exist {
+        let boxed_check = FilterString::is_valid_input_string(path);
+        if boxed_check.is_err() {
+            let message = boxed_check.err().unwrap();
+            return Err(message)
+        }
+
+        let does_file_exist = Self::does_file_exist(path);
+        return if does_file_exist {
             let boxed_read = Self::read_file(path);
             if boxed_read.is_err() {
                 return Err(boxed_read.err().unwrap());
             }
-            let passphrase = boxed_read.unwrap();
-            Ok(passphrase)
+            let file_content = boxed_read.unwrap();
+            Ok(file_content)
         } else {
             let boxed_create = Self::create_file(path);
             if boxed_create.is_err() {
@@ -86,6 +104,12 @@ impl FileExtImpl {
     }
 
     pub fn write_file(path: &str, file_content: &[u8]) -> Result<(), String> {
+        let boxed_check = FilterString::is_valid_input_string(path);
+        if boxed_check.is_err() {
+            let message = boxed_check.err().unwrap();
+            return Err(message)
+        }
+
         let mut file = OpenOptions::new()
             .read(false)
             .write(true)
@@ -105,6 +129,12 @@ impl FileExtImpl {
     }
 
     pub fn create_file(path: &str) -> Result<(), String>  {
+        let boxed_check = FilterString::is_valid_input_string(path);
+        if boxed_check.is_err() {
+            let message = boxed_check.err().unwrap();
+            return Err(message)
+        }
+
         let boxed_file = File::create(path);
 
         if boxed_file.is_err() {
@@ -122,6 +152,12 @@ impl FileExtImpl {
     }
 
     pub fn delete_file(path: &str) -> Result<(), String> {
+        let boxed_check = FilterString::is_valid_input_string(path);
+        if boxed_check.is_err() {
+            let message = boxed_check.err().unwrap();
+            return Err(message)
+        }
+        
         let boxed_remove = fs::remove_file(path);
         if boxed_remove.is_err() {
             let msg = boxed_remove.err().unwrap().to_string();

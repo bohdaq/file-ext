@@ -1,6 +1,7 @@
 use std::fs;
 use std::path::Path;
 use std::process::Command;
+use crate::filter_string::FilterString;
 use crate::path_ext_impl::PathExtImpl;
 use crate::symbol::SYMBOL;
 
@@ -16,38 +17,28 @@ impl DirectoryExtImpl {
     }
 
     pub fn create_directory(path: &str) -> Result<(), String> {
-        let path = path.replace(|x : char | x.is_ascii_control(), SYMBOL.empty_string).trim().to_string();
-
-        if path.contains(SYMBOL.whitespace) ||
-            path.contains(SYMBOL.single_quote) ||
-            path.contains(SYMBOL.quotation_mark) ||
-            path.contains(SYMBOL.ampersand) ||
-            path.contains(SYMBOL.pipe) ||
-            path.contains(SYMBOL.semicolon) {
-            return Err(format!("Path contains not allowed characters: whitespace, single quote, quotation mark, ampersand, pipe, semicolon. Path: {}",path))
+        let boxed_check = FilterString::is_valid_input_string(path);
+        if boxed_check.is_err() {
+            let message = boxed_check.err().unwrap();
+            return Err(message)
         }
 
-        DirectoryExtImpl::recursively_create_directories("", path.as_str())
+        DirectoryExtImpl::recursively_create_directories("", path)
     }
 
     pub fn delete_directory(path: &str) -> Result<(), String> {
-        let path = path.replace(|x : char | x.is_ascii_control(), SYMBOL.empty_string).trim().to_string();
-
-        if path.contains(SYMBOL.whitespace) ||
-            path.contains(SYMBOL.single_quote) ||
-            path.contains(SYMBOL.quotation_mark) ||
-            path.contains(SYMBOL.ampersand) ||
-            path.contains(SYMBOL.pipe) ||
-            path.contains(SYMBOL.semicolon) {
-            return Err(format!("Path contains not allowed characters: whitespace, single quote, quotation mark, ampersand, pipe, semicolon. Path: {}",path))
+        let boxed_check = FilterString::is_valid_input_string(path);
+        if boxed_check.is_err() {
+            let message = boxed_check.err().unwrap();
+            return Err(message)
         }
 
-        if !DirectoryExtImpl::does_directory_exist(path.as_str()) {
+        if !DirectoryExtImpl::does_directory_exist(path) {
             let message = format!("There is no directory at the given path: {}", path);
             return Err(message)
         }
 
-        DirectoryExtImpl::remove_directory_recursively_bypass_warnings(path.as_str())
+        DirectoryExtImpl::remove_directory_recursively_bypass_warnings(path)
     }
 
     #[cfg(target_family = "windows")]

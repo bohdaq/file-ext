@@ -16,6 +16,7 @@ mod path_ext_impl;
 mod directory_ext_impl;
 mod symlink_ext_impl;
 mod user_ext_impl;
+mod filter_string;
 
 pub struct FileExt;
 
