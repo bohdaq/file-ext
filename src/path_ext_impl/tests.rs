@@ -65,3 +65,10 @@ fn build_path() {
 
     assert_eq!("C:\\Users\\someuser\\folder\\subfolder\\subsubfolder", path);
 }
+
+#[test]
+fn absolute_path_to_working_directory() {
+    let boxed_path = PathExtImpl::absolute_path_to_working_directory();
+    assert!(boxed_path.is_ok());
+    let path = boxed_path.unwrap();
+}

@@ -161,6 +161,23 @@ impl FileExt {
     /// use file_ext::FileExt;
     /// #[test]
     /// fn absolute_path_to_working_directory() {
+    ///     let boxed_path = FileExt::absolute_path_to_working_directory();
+    ///     assert!(boxed_path.is_ok());
+    ///     let path = boxed_path.unwrap();
+    /// }
+    /// ```
+    pub fn absolute_path_to_working_directory() -> Result<String, String> {
+        Self::get_static_filepath("")
+    }
+
+
+    /// Will return absolute file path to the working directory
+    /// # Examples
+    ///
+    /// ```
+    /// use file_ext::FileExt;
+    /// #[test]
+    /// fn absolute_path_to_working_directory() {
     ///     let boxed_path = FileExt::get_static_filepath("");
     ///     assert!(boxed_path.is_ok());
     ///     let path = boxed_path.unwrap();
