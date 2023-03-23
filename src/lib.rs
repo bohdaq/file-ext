@@ -187,7 +187,7 @@ impl FileExt {
     }
 
 
-    /// Will return absolute file path appended to the given string
+    /// Will return absolute working directory path appended to the given string
     /// # Examples
     ///
     /// ```
