@@ -153,8 +153,24 @@ impl FileExt {
     /// ```
     pub fn get_path_separator() -> String { PathExtImpl::get_path_separator() }
 
-
     /// Will return absolute file path to the working directory
+    /// # Examples
+    ///
+    /// ```
+    /// use file_ext::FileExt;
+    /// #[test]
+    /// fn absolute_path_to_working_directory() {
+    ///     let boxed_path = FileExt::working_directory();
+    ///     assert!(boxed_path.is_ok());
+    ///     let path = boxed_path.unwrap();
+    /// }
+    /// ```
+    pub fn working_directory() -> Result<String, String> {
+        PathExtImpl::working_directory()
+    }
+
+
+    /// Will return absolute file path to the working directory. Same as working_directory function. Kept here to preserve backward compatability.
     /// # Examples
     ///
     /// ```
@@ -167,11 +183,11 @@ impl FileExt {
     /// }
     /// ```
     pub fn absolute_path_to_working_directory() -> Result<String, String> {
-        Self::get_static_filepath("")
+        PathExtImpl::working_directory()
     }
 
 
-    /// Will return absolute file path to the working directory
+    /// Will return absolute file path appended to the given string
     /// # Examples
     ///
     /// ```

@@ -24,7 +24,7 @@ fn not_symlink_check() {
 
 #[test]
 fn file_exists() {
-    let working_directory = FileExt::get_static_filepath("").unwrap();
+    let working_directory = FileExt::working_directory().unwrap();
     let absolute_path = PathExtImpl::build_path(&[working_directory.as_str(), "test", "index_rewrite"]);
     create_rewrite_index_symlink();
 
@@ -43,7 +43,7 @@ fn symlink_creation() {
         FileExtImpl::delete_file(symlink_path.as_str()).unwrap();
     }
 
-    let path = [FileExt::get_static_filepath("").unwrap(), "test".to_string()].join(PathExtImpl::get_path_separator().as_str());
+    let path = [FileExt::working_directory().unwrap(), "test".to_string()].join(PathExtImpl::get_path_separator().as_str());
     let points_to = [path.to_string(), "index.html".to_string()].join(PathExtImpl::get_path_separator().as_str());
 
     // FileExt::create_file("out.log").unwrap();
@@ -75,7 +75,7 @@ fn link_points_to() {
 
     let points_to =
         [
-            FileExt::get_static_filepath("").unwrap(),
+            FileExt::working_directory().unwrap(),
             "test".to_string(),
             "index.html".to_string()
         ].join(PathExtImpl::get_path_separator().as_str());
@@ -84,7 +84,7 @@ fn link_points_to() {
     let symlink_dir = "test";
     let path_prefix =
         [
-            FileExt::get_static_filepath("").unwrap(),
+            FileExt::working_directory().unwrap(),
             symlink_dir.to_string()
         ].join(PathExtImpl::get_path_separator().as_str());
 
@@ -114,7 +114,7 @@ fn create_rewrite_index_symlink() {
     }
 
     let path = "test";
-    let absolute_path = FileExt::get_static_filepath("").unwrap();
+    let absolute_path = FileExt::working_directory().unwrap();
     let path_prefix = [absolute_path, path.to_string()].join(PathExtImpl::get_path_separator().as_str());
     let points_to = [path_prefix.to_string(), "index.html".to_string()].join(PathExtImpl::get_path_separator().as_str());
 
@@ -349,7 +349,7 @@ fn symlink_inside_subdirectory_and_points_to_file_in_outer_folder() {
     let actual_points_to = SymlinkExtImpl::symlink_points_to(symlink_path.as_str()).unwrap();
     let resolved_points_to = SymlinkExtImpl::resolve_symlink_path(test_dir, actual_points_to.as_str()).unwrap();
 
-    let working_directory = FileExt::get_static_filepath("").unwrap();
+    let working_directory = FileExt::working_directory().unwrap();
     let absolute_path_symlink_points_to_node_path =
         [
             working_directory.as_str(),
@@ -407,7 +407,7 @@ fn symlink_points_to_file_in_same_folder() {
         &symlink_points_to
     ).unwrap();
 
-    let working_directory = FileExt::get_static_filepath("").unwrap();
+    let working_directory = FileExt::working_directory().unwrap();
     let absolute_path_symlink_points_to_node_path =
         [
             working_directory.as_str(),
@@ -429,7 +429,7 @@ fn symlink_points_to_file_in_subdirectory() {
     // FileExt::create_file("out.log").unwrap();
     // FileExt::write_file("out.log", "1234".as_bytes()).unwrap();
 
-    let working_directory = FileExt::get_static_filepath("").unwrap();
+    let working_directory = FileExt::working_directory().unwrap();
     let symlink_dir = working_directory.to_string();
     let file_dir = "symlink_resolve3";
     let symlink_name = "index-rewrite";
@@ -495,7 +495,7 @@ fn symlink_points_to_file_in_subdirectory() {
 
 #[test]
 fn symlink_points_to_symlink_which_points_to_file() {
-    let working_directory = FileExt::get_static_filepath("").unwrap();
+    let working_directory = FileExt::working_directory().unwrap();
     let file_dir = "symlink_resolve4";
     let symlink_name = "index-rewrite4";
     let symlink_second_name = "index-rewrite42";

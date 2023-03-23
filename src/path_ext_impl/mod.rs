@@ -57,6 +57,10 @@ impl PathExtImpl {
     }
 
     pub fn absolute_path_to_working_directory() -> Result<String, String> {
+        PathExtImpl::working_directory()
+    }
+
+    pub fn working_directory() -> Result<String, String> {
         let boxed_dir = env::current_dir();
         if boxed_dir.is_err() {
             let error = boxed_dir.err().unwrap();
