@@ -754,6 +754,25 @@ impl FileExt {
         FileExtImpl::copy_file(from, to)
     }
 
+    /// Copies file
+    /// ```
+    /// use file_ext::FileExt;
+    /// #[test]
+    /// fn copy_file_with_progress_callback() {
+    ///     let pwd = FileExt::working_directory().unwrap();
+    ///     let progress = |start, end, total| println!("progress {} of {}", end, total);
+    ///     FileExt::copy_file_with_progress_callback(vec![pwd.as_str(), "LICENSE"], vec![pwd.as_str(), "LICENSE_copy"], progress).unwrap();
+    ///
+    ///     let path = FileExt::build_path(vec![pwd.as_str(), "LICENSE_copy"].as_slice());
+    ///     FileExt::delete_file(path.as_str()).unwrap();
+    /// }
+    /// ```
+    pub fn copy_file_with_progress_callback<F: Fn(u64, u64, u64)>
+                (from: Vec<&str>, to: Vec<&str>, progress_callback: F)
+                    -> Result<(), String> {
+        FileExtImpl::copy_file_with_progress_callback(from, to, progress_callback)
+    }
+
     /// Copies part of the file
     pub fn copy_part_of_file(from: Vec<&str>, to: Vec<&str>, start: u64, end: u64) -> Result<(), String> {
         FileExtImpl::copy_part_of_file(from, to, start, end)

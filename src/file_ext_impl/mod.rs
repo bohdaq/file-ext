@@ -257,6 +257,57 @@ impl FileExtImpl {
         Ok(())
     }
 
+    pub fn copy_file_with_progress_callback
+            <F: Fn(u64, u64, u64)>
+                (from: Vec<&str>, to: Vec<&str>, progress_callback: F)
+                    -> Result<(), String> {
+        let boxed_length = FileExtImpl::file_length(from.clone());
+        if boxed_length.is_err() {
+            let message = boxed_length.err().unwrap();
+            return Err(message);
+        }
+
+        let file_length = boxed_length.unwrap();
+        let _100kb = 102400;
+        let step = _100kb;
+        let mut start = 0;
+        let mut end = step;
+        if step >= file_length {
+            end = file_length - 1;
+        }
+
+        let mut continue_copying = true;
+        while continue_copying {
+            progress_callback(start, end, file_length);
+            let boxed_copy = FileExtImpl::copy_part_of_file(
+                from.clone(),
+                to.clone(),
+                start,
+                end
+            );
+
+            if boxed_copy.is_err() {
+                let message = boxed_copy.err().unwrap();
+                return Err(message);
+            }
+
+            boxed_copy.unwrap();
+
+            if end == file_length - 1 {
+                continue_copying = false;
+            } else {
+                start = end + 1;
+                end = end + step;
+                if start + step >= file_length {
+                    end = file_length - 1;
+                }
+            }
+
+        }
+
+        Ok(())
+    }
+
     pub fn file_length(path: Vec<&str>) -> Result<u64, String> {
         let filepath = FileExt::build_path(path.as_slice());
         let boxed_length = fs::metadata(filepath);
