@@ -1,4 +1,5 @@
 use crate::file_ext_impl::FileExtImpl;
+use crate::FileExt;
 use crate::path_ext_impl::PathExtImpl;
 
 #[test]
@@ -89,4 +90,14 @@ fn file_creation_deletion() {
 
     let exists = FileExtImpl::does_file_exist(path);
     assert!(!exists);
+}
+
+
+#[test]
+fn copy_file() {
+    let pwd = FileExt::working_directory().unwrap();
+    FileExt::copy_file(vec![pwd.as_str(), "LICENSE"], vec![pwd.as_str(), "LICENSE_copy"]).unwrap();
+
+    let path = FileExt::build_path(vec![pwd.as_str(), "LICENSE_copy"].as_slice());
+    FileExt::delete_file(path.as_str()).unwrap();
 }

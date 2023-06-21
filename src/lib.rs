@@ -732,5 +732,31 @@ impl FileExt {
     pub fn get_temp_folder_path() -> Result<String, String>{
         PathExtImpl::get_temp_folder_path()
     }
+
+    /// Returns file length in bytes
+    pub fn file_length(path: Vec<&str>) -> Result<u64, String> {
+        FileExtImpl::file_length(path)
+    }
+
+    /// Copies file
+    /// ```
+    /// use file_ext::FileExt;
+    /// #[test]
+    /// fn copy_file() {
+    ///     let pwd = FileExt::working_directory().unwrap();
+    ///     FileExt::copy_file(vec![pwd.as_str(), "LICENSE"], vec![pwd.as_str(), "LICENSE_copy"]).unwrap();
+    ///
+    ///     let path = FileExt::build_path(vec![pwd.as_str(), "LICENSE_copy"].as_slice());
+    ///     FileExt::delete_file(path.as_str()).unwrap();
+    /// }
+    /// ```
+    pub fn copy_file(from: Vec<&str>, to: Vec<&str>)-> Result<(), String> {
+        FileExtImpl::copy_file(from, to)
+    }
+
+    /// Copies part of the file
+    pub fn copy_part_of_file(from: Vec<&str>, to: Vec<&str>, start: u64, end: u64) -> Result<(), String> {
+        FileExtImpl::copy_part_of_file(from, to, start, end)
+    }
 }
 
