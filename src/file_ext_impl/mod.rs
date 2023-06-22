@@ -259,8 +259,13 @@ impl FileExtImpl {
 
     pub fn copy_file_with_progress_callback
             <F: Fn(u64, u64, u64)>
-                (from: Vec<&str>, to: Vec<&str>, progress_callback: F)
-                    -> Result<(), String> {
+                (
+                    from: Vec<&str>,
+                    to: Vec<&str>,
+                    block_size: Option<u64>,
+                    progress_callback: F
+                )
+        -> Result<(), String> {
         let boxed_length = FileExtImpl::file_length(from.clone());
         if boxed_length.is_err() {
             let message = boxed_length.err().unwrap();
@@ -269,7 +274,10 @@ impl FileExtImpl {
 
         let file_length = boxed_length.unwrap();
         let _100kb = 102400;
-        let step = _100kb;
+        let mut step = _100kb;
+        if block_size.is_some() {
+            step = block_size.unwrap();
+        }
         let mut start = 0;
         let mut end = step;
         if step >= file_length {
