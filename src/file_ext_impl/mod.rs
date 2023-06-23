@@ -280,7 +280,7 @@ impl FileExtImpl {
             step = block_size.unwrap();
         }
         let mut start = 0;
-        let mut end = step;
+        let mut end = start + step;
         if step >= file_length {
             end = file_length - 1;
         }
