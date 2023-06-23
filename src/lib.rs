@@ -754,28 +754,19 @@ impl FileExt {
         FileExtImpl::copy_file(from, to)
     }
 
-    /// Copies file block by block. If block size is None it is set to 100kb
-    /// ```
-    /// use file_ext::FileExt;
-    /// #[test]
-    /// fn copy_file_with_progress_callback() {
-    ///     let pwd = FileExt::working_directory().unwrap();
-    ///     let progress = |start, end, total| println!("progress {} of {}", end, total);
-    ///     FileExt::copy_file_with_progress_callback(vec![pwd.as_str(), "LICENSE"], vec![pwd.as_str(), None, "LICENSE_copy"], progress).unwrap();
-    ///
-    ///     let path = FileExt::build_path(vec![pwd.as_str(), "LICENSE_copy"].as_slice());
-    ///     FileExt::delete_file(path.as_str()).unwrap();
-    /// }
-    /// ```
-    pub fn copy_file_with_progress_callback<F: Fn(u64, u64, u64)>
+    /// Copies file block by block. If block size is None it is set to 100kb.
+    /// Calls the progress callback at the beginning of the block copy.
+    /// Calls the cancel callback at the end of the block copy.
+    pub fn copy_file_with_callbacks<F: FnMut(u64, u64, u64), C: FnMut(u64, u64, u64) -> bool>
                 (
                     from: Vec<&str>,
                     to: Vec<&str>,
                     block_size: Option<u64>,
-                    progress_callback: F
+                    progress_callback: F,
+                    cancel_callback: C
                 )
                     -> Result<(), String> {
-        FileExtImpl::copy_file_with_progress_callback(from, to, block_size, progress_callback)
+        FileExtImpl::copy_file_with_callbacks(from, to, block_size, progress_callback, cancel_callback)
     }
 
     /// Copies part of the file

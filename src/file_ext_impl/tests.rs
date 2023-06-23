@@ -106,11 +106,14 @@ fn copy_file() {
 fn copy_file_with_callback_and_block_size() {
     let block_size : u64 = 1000000;
     let pwd = FileExt::working_directory().unwrap();
-    FileExt::copy_file_with_progress_callback(
+    let progress_callback = |start, end, total| { let _ = format!("copying block {}-{} of {} bytes", start, end, total); };
+    let cancel_callback = |_start, _end, _total| { false };
+    FileExt::copy_file_with_callbacks(
         vec![pwd.as_str(), "LICENSE"],
         vec![pwd.as_str(), "LICENSE_copy3"],
         Some(block_size),
-        |start, end, total| { let _ = format!("copying block {}-{} of {} bytes", start, end, total); }
+        progress_callback,
+        cancel_callback
     ).unwrap();
 
     let path = FileExt::build_path(vec![pwd.as_str(), "LICENSE_copy3"].as_slice());

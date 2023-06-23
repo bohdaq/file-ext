@@ -257,13 +257,14 @@ impl FileExtImpl {
         Ok(())
     }
 
-    pub fn copy_file_with_progress_callback
-            <F: Fn(u64, u64, u64)>
+    pub fn copy_file_with_callbacks
+            <F: FnMut(u64, u64, u64), C: FnMut(u64, u64, u64) -> bool>
                 (
                     from: Vec<&str>,
                     to: Vec<&str>,
                     block_size: Option<u64>,
-                    progress_callback: F
+                    mut progress_callback: F,
+                    mut cancel_callback: C,
                 )
         -> Result<(), String> {
         let boxed_length = FileExtImpl::file_length(from.clone());
@@ -301,7 +302,10 @@ impl FileExtImpl {
 
             boxed_copy.unwrap();
 
-            if end == file_length - 1 {
+            let copying_cancelled_by_user = cancel_callback(start, end, file_length);
+            let reached_end_of_file = end == file_length - 1;
+
+            if reached_end_of_file || copying_cancelled_by_user {
                 continue_copying = false;
             } else {
                 start = end + 1;
