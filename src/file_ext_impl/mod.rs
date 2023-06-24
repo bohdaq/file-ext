@@ -263,9 +263,23 @@ impl FileExtImpl {
                     from: Vec<&str>,
                     to: Vec<&str>,
                     block_size: Option<u64>,
-                    mut progress_callback: F,
-                    mut cancel_callback: C,
+                    progress_callback: F,
+                    cancel_callback: C,
                 )
+        -> Result<(), String> {
+        FileExtImpl::copy_file_with_callbacks_starting_from_byte(from, to, 0, block_size, progress_callback, cancel_callback)
+    }
+
+    pub fn copy_file_with_callbacks_starting_from_byte
+    <F: FnMut(u64, u64, u64), C: FnMut(u64, u64, u64) -> bool>
+    (
+        from: Vec<&str>,
+        to: Vec<&str>,
+        starting_byte: u64,
+        block_size: Option<u64>,
+        mut progress_callback: F,
+        mut cancel_callback: C,
+    )
         -> Result<(), String> {
         let boxed_length = FileExtImpl::file_length(from.clone());
         if boxed_length.is_err() {
@@ -279,7 +293,7 @@ impl FileExtImpl {
         if block_size.is_some() {
             step = block_size.unwrap();
         }
-        let mut start = 0;
+        let mut start = starting_byte;
         let mut end = start + step;
         if step >= file_length {
             end = file_length - 1;

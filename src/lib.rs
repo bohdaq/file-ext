@@ -738,7 +738,7 @@ impl FileExt {
         FileExtImpl::file_length(path)
     }
 
-    /// Copies file
+    /// Copies file block by block. Block size is 100kb
     pub fn copy_file(from: Vec<&str>, to: Vec<&str>)-> Result<(), String> {
         FileExtImpl::copy_file(from, to)
     }
@@ -756,6 +756,20 @@ impl FileExt {
                 )
                     -> Result<(), String> {
         FileExtImpl::copy_file_with_callbacks(from, to, block_size, progress_callback, cancel_callback)
+    }
+
+    pub fn copy_file_with_callbacks_starting_from_byte
+    <F: FnMut(u64, u64, u64), C: FnMut(u64, u64, u64) -> bool>
+    (
+        from: Vec<&str>,
+        to: Vec<&str>,
+        starting_byte: u64,
+        block_size: Option<u64>,
+        progress_callback: F,
+        cancel_callback: C,
+    )
+        -> Result<(), String> {
+        FileExtImpl::copy_file_with_callbacks_starting_from_byte(from, to, starting_byte, block_size, progress_callback, cancel_callback)
     }
 
     /// Copies part of the file

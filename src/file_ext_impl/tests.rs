@@ -106,7 +106,8 @@ fn copy_file() {
 fn copy_file_with_callback_and_block_size() {
     let block_size : u64 = 1000000;
     let pwd = FileExt::working_directory().unwrap();
-    let progress_callback = |start, end, total| { let _ = format!("copying block {}-{} of {} bytes", start, end, total); };
+    let mut label = "".to_string();
+    let progress_callback = |start, end, total| { label = format!("copying block {}-{} of {} bytes", start, end, total).to_string(); };
     let cancel_callback = |_start, _end, _total| { false };
     FileExt::copy_file_with_callbacks(
         vec![pwd.as_str(), "LICENSE"],
@@ -117,5 +118,26 @@ fn copy_file_with_callback_and_block_size() {
     ).unwrap();
 
     let path = FileExt::build_path(vec![pwd.as_str(), "LICENSE_copy3"].as_slice());
+    FileExt::delete_file(path.as_str()).unwrap();
+}
+
+#[test]
+fn copy_file_with_callback_and_block_size_starting_from_byte() {
+    let block_size : u64 = 1000000;
+    let pwd = FileExt::working_directory().unwrap();
+    let mut label = "".to_string();
+    let progress_callback = |start, end, total| { label = format!("copying block {}-{} of {} bytes", start, end, total).to_string(); };
+    let cancel_callback = |_start, _end, _total| { false };
+    let starting_byte = 4;
+    FileExt::copy_file_with_callbacks_starting_from_byte(
+        vec![pwd.as_str(), "LICENSE"],
+        vec![pwd.as_str(), "LICENSE_copy4"],
+        starting_byte,
+        Some(block_size),
+        progress_callback,
+        cancel_callback
+    ).unwrap();
+
+    let path = FileExt::build_path(vec![pwd.as_str(), "LICENSE_copy4"].as_slice());
     FileExt::delete_file(path.as_str()).unwrap();
 }
