@@ -92,6 +92,15 @@ fn file_creation_deletion() {
     assert!(!exists);
 }
 
+#[test]
+fn length() {
+    let expected_length: u64 = 398;
+    let pwd = FileExt::working_directory().unwrap();
+    let length = FileExt::file_length(vec![pwd.as_str(), "LICENSE"]).unwrap();
+
+    assert_eq!(expected_length, length);
+}
+
 
 #[test]
 fn copy_file() {
