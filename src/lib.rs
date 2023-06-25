@@ -734,11 +734,33 @@ impl FileExt {
     }
 
     /// Returns file length in bytes
+    ///```
+    /// use file_ext::FileExt;
+    /// #[test]
+    /// fn length() {
+    ///    let expected_length: u64 = 398;
+    ///    let pwd = FileExt::working_directory().unwrap();
+    ///    let length = FileExt::file_length(vec![pwd.as_str(), "LICENSE"]).unwrap();
+    ///
+    ///    assert_eq!(expected_length, length);
+    /// }
+    /// ```
     pub fn file_length(path: Vec<&str>) -> Result<u64, String> {
         FileExtImpl::file_length(path)
     }
 
     /// Copies file block by block. Block size is 100kb
+    ///```
+    /// use file_ext::FileExt;
+    /// #[test]
+    /// fn copy_file() {pub fn copy_file(from: Vec<&str>, to: Vec<&str>)-> Result<(), String> {
+    ///    let pwd = FileExt::working_directory().unwrap();
+    ///    FileExt::copy_file(vec![pwd.as_str(), "LICENSE"], vec![pwd.as_str(), "LICENSE_copy2"]).unwrap();}
+    ///
+    ///    let path = FileExt::build_path(vec![pwd.as_str(), "LICENSE_copy2"].as_slice());
+    ///    FileExt::delete_file(path.as_str()).unwrap();
+    /// }
+    /// ```
     pub fn copy_file(from: Vec<&str>, to: Vec<&str>)-> Result<(), String> {
         FileExtImpl::copy_file(from, to)
     }
