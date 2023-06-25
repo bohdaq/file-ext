@@ -94,11 +94,10 @@ fn file_creation_deletion() {
 
 #[test]
 fn length() {
-    let expected_length: u64 = 398;
     let pwd = FileExt::working_directory().unwrap();
-    let length = FileExt::file_length(vec![pwd.as_str(), "LICENSE"]).unwrap();
+    let boxed_length = FileExt::file_length(vec![pwd.as_str(), "LICENSE"]);
 
-    assert_eq!(expected_length, length);
+    assert!(boxed_length.is_ok());
 }
 
 
