@@ -11,6 +11,7 @@ Hi, `file-ext` is a collection of utility functions to work with files. It is te
     1. Read file, if it doesn't exist create and write to file
     1. Write to file
     1. Delete 
+    1. Copy
 2. Directory
     1. Create
     2. Does directory exist
@@ -30,8 +31,6 @@ Hi, `file-ext` is a collection of utility functions to work with files. It is te
 ## Configuration
 No additional configuration.
 
-Minimum rust version is 1.66, as I'm testing on this specific version. However, if needed, you may try older Rust version with the _--ignore-rust-version_ flag.
-
 ## Demo
 Take a look at [mod.rs](https://github.com/bohdaq/file-ext/blob/main/src/lib.rs)
 
@@ -44,13 +43,13 @@ Take a look at [mod.rs](https://github.com/bohdaq/file-ext/blob/main/src/lib.rs)
 ## Build
 If you want to build `file-ext` on your own, make sure you have [Rust installed](https://www.rust-lang.org/tools/install).
 
-> $ cargo build --ignore-rust-version
+> $ cargo build
 
 
 ## Test
 If you want to test `file-ext`.
 
-> $ cargo test --ignore-rust-version
+> $ cargo test
 
 
 ## Community
