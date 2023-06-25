@@ -753,12 +753,12 @@ impl FileExt {
     ///```
     /// use file_ext::FileExt;
     /// #[test]
-    /// fn copy_file() {pub fn copy_file(from: Vec<&str>, to: Vec<&str>)-> Result<(), String> {
-    ///    let pwd = FileExt::working_directory().unwrap();
-    ///    FileExt::copy_file(vec![pwd.as_str(), "LICENSE"], vec![pwd.as_str(), "LICENSE_copy2"]).unwrap();}
+    /// fn copy_file() {
+    ///     let pwd = FileExt::working_directory().unwrap();
+    ///     FileExt::copy_file(vec![pwd.as_str(), "LICENSE"], vec![pwd.as_str(), "LICENSE_copy2"]).unwrap();
     ///
-    ///    let path = FileExt::build_path(vec![pwd.as_str(), "LICENSE_copy2"].as_slice());
-    ///    FileExt::delete_file(path.as_str()).unwrap();
+    ///     let path = FileExt::build_path(vec![pwd.as_str(), "LICENSE_copy2"].as_slice());
+    ///     FileExt::delete_file(path.as_str()).unwrap();
     /// }
     /// ```
     pub fn copy_file(from: Vec<&str>, to: Vec<&str>)-> Result<(), String> {
