@@ -277,6 +277,30 @@ impl FileExtImpl {
         to: Vec<&str>,
         starting_byte: u64,
         block_size: Option<u64>,
+        progress_callback: F,
+        cancel_callback: C,
+    )
+        -> Result<(), String> {
+        let boxed_length = FileExtImpl::file_length(from.clone());
+        if boxed_length.is_err() {
+            let message = boxed_length.err().unwrap();
+            return Err(message);
+        }
+
+        let file_length = boxed_length.unwrap();
+        let ending_byte = file_length - 1;
+        FileExtImpl::copy_file_with_callbacks_starting_from_byte_and_ending_at_byte(from, to, starting_byte, ending_byte, block_size, progress_callback, cancel_callback)
+    }
+
+
+    pub fn copy_file_with_callbacks_starting_from_byte_and_ending_at_byte
+    <F: FnMut(u64, u64, u64), C: FnMut(u64, u64, u64) -> bool>
+    (
+        from: Vec<&str>,
+        to: Vec<&str>,
+        starting_byte: u64,
+        ending_byte: u64,
+        block_size: Option<u64>,
         mut progress_callback: F,
         mut cancel_callback: C,
     )
@@ -288,6 +312,11 @@ impl FileExtImpl {
         }
 
         let file_length = boxed_length.unwrap();
+        if (file_length - 1) < ending_byte {
+            let message = format!("file length is {}, ending byte is {}", file_length, ending_byte);
+            return Err(message);
+        }
+
         let _100kb = 102400;
         let mut step = _100kb;
         if block_size.is_some() {
@@ -295,13 +324,13 @@ impl FileExtImpl {
         }
         let mut start = starting_byte;
         let mut end = start + step;
-        if step >= file_length {
-            end = file_length - 1;
+        if step >= ending_byte {
+            end = ending_byte - 1;
         }
 
         let mut continue_copying = true;
         while continue_copying {
-            progress_callback(start, end, file_length);
+            progress_callback(start, end, ending_byte);
             let boxed_copy = FileExtImpl::copy_part_of_file(
                 from.clone(),
                 to.clone(),
@@ -316,16 +345,16 @@ impl FileExtImpl {
 
             boxed_copy.unwrap();
 
-            let copying_cancelled_by_user = cancel_callback(start, end, file_length);
-            let reached_end_of_file = end == file_length - 1;
+            let copying_cancelled_by_user = cancel_callback(start, end, ending_byte);
+            let reached_end_of_file = end == ending_byte - 1;
 
             if reached_end_of_file || copying_cancelled_by_user {
                 continue_copying = false;
             } else {
                 start = end + 1;
                 end = end + step;
-                if start + step >= file_length {
-                    end = file_length - 1;
+                if start + step >= ending_byte {
+                    end = ending_byte - 1;
                 }
             }
 

@@ -841,9 +841,49 @@ impl FileExt {
         FileExtImpl::copy_file_with_callbacks_starting_from_byte(from, to, starting_byte, block_size, progress_callback, cancel_callback)
     }
 
-    /// Copies part of the file
-    pub fn copy_part_of_file(from: Vec<&str>, to: Vec<&str>, start: u64, end: u64) -> Result<(), String> {
-        FileExtImpl::copy_part_of_file(from, to, start, end)
+    /// Copies file block by block starting from specific byte up to ending byte.
+    /// If block size is None it is set to 100kb.
+    /// Calls the progress callback at the beginning of the block copy.
+    /// Calls the cancel callback at the end of the block copy.
+    ///```
+    /// use file_ext::FileExt;
+    /// #[test]
+    /// fn copy_file_with_callback_and_block_size_starting_from_byte_to_ending_byte() {
+    ///     let block_size : u64 = 1000000;
+    ///     let pwd = FileExt::working_directory().unwrap();
+    ///     let mut label = "".to_string();
+    ///     let progress_callback = |start, end, total| { label = format!("copying block {}-{} of {} bytes", start, end, total).to_string(); };
+    ///     let cancel_callback = |_start, _end, _total| { false };
+    ///     let starting_byte = 4;
+    ///     let ending_byte = 10;
+    ///     FileExt::copy_file_with_callbacks_starting_from_byte_and_ending_at_byte(
+    ///         vec![pwd.as_str(), "LICENSE"],
+    ///         vec![pwd.as_str(), "LICENSE_copy5"],
+    ///         starting_byte,
+    ///         ending_byte,
+    ///         Some(block_size),
+    ///         progress_callback,
+    ///         cancel_callback
+    ///     ).unwrap();
+    ///
+    ///     let path = FileExt::build_path(vec![pwd.as_str(), "LICENSE_copy5"].as_slice());
+    ///     FileExt::delete_file(path.as_str()).unwrap();
+    /// }
+    ///```
+    pub fn copy_file_with_callbacks_starting_from_byte_and_ending_at_byte
+    <F: FnMut(u64, u64, u64), C: FnMut(u64, u64, u64) -> bool>
+    (
+        from: Vec<&str>,
+        to: Vec<&str>,
+        starting_byte: u64,
+        ending_byte: u64,
+        block_size: Option<u64>,
+        progress_callback: F,
+        cancel_callback: C,
+    )
+        -> Result<(), String>
+    {
+        FileExtImpl::copy_file_with_callbacks_starting_from_byte_and_ending_at_byte(from, to, starting_byte, ending_byte, block_size, progress_callback, cancel_callback)
     }
 }
 
