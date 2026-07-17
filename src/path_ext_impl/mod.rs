@@ -10,12 +10,12 @@ mod tests;
 pub struct PathExtImpl;
 
 impl PathExtImpl {
-    #[cfg(target_family = "unix")]
+    #[cfg(any(target_family = "unix", target_family = "wasm"))]
     pub fn get_path_separator() -> String {
         SYMBOL.slash.to_string()
     }
 
-    #[cfg(target_family = "unix")]
+    #[cfg(any(target_family = "unix", target_family = "wasm"))]
     pub fn root() -> String {
         SYMBOL.empty_string.to_string()
     }
@@ -38,7 +38,7 @@ impl PathExtImpl {
         SYMBOL.reverse_slash.to_string()
     }
 
-    #[cfg(target_family = "unix")]
+    #[cfg(any(target_family = "unix", target_family = "wasm"))]
     pub fn get_temp_folder_path() -> Result<String, String>{
         Ok("/tmp".to_string())
     }

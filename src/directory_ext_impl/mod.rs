@@ -93,6 +93,14 @@ impl DirectoryExtImpl {
         Ok(())
     }
 
+    // WASI guests have no subprocess model to shell out to `rm` with (unlike
+    // the unix branch above) — `fs::remove_dir_all` is a plain wasi:filesystem
+    // call and does the same job directly.
+    #[cfg(target_family = "wasm")]
+    fn remove_directory_recursively_bypass_warnings(path: &str) -> Result<(), String> {
+        fs::remove_dir_all(path).map_err(|e| e.to_string())
+    }
+
     fn recursively_create_directories(processed_path: &str, remaining_path: &str) -> Result<(), String> {
         let boxed_split = remaining_path.split_once(PathExtImpl::get_path_separator().as_str());
         if boxed_split.is_none() {

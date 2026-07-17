@@ -125,7 +125,7 @@ impl FileExt {
         Ok(nanos)
     }
 
-    #[cfg(target_family = "unix")]
+    #[cfg(any(target_family = "unix", target_family = "wasm"))]
     /// # Examples
     ///
     /// ```
@@ -728,7 +728,7 @@ impl FileExt {
     ///      assert_eq!(temp_folder_path, "/tmp")
     ///  }
     /// ```
-    #[cfg(target_family = "unix")]
+    #[cfg(any(target_family = "unix", target_family = "wasm"))]
     pub fn get_temp_folder_path() -> Result<String, String>{
         PathExtImpl::get_temp_folder_path()
     }
